@@ -1,6 +1,6 @@
 <?php
 class Config {
-    const CONFIGFILE = 'config.json';
+    const CONFIGFILE = '../config.json';
     public static $_; 
     
     public static function initialize() {
