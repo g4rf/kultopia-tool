@@ -1,0 +1,9 @@
+{
+	"name": "Kultopia Tool API",
+	"version": "0.0.1",
+	"description": "Die API zum Kultopia Tool.",
+	"apidoc": {
+		"title": "Kultopia Tool API",
+		"url" : "https://tool.kultopia.org/api/"
+	}
+}

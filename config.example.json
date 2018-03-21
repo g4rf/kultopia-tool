@@ -1,0 +1,10 @@
+{  
+	"apiUrl": "/",
+	
+    "smtpServer": "",
+    "smtpPort": "",
+    "smtpUser": "",
+    "smtpPassword": "",
+    "smtpFrom": "",
+    "mailSignature": ""
+}
