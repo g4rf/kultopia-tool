@@ -51,7 +51,7 @@ $(".menu-item").click(function() {
     // do more stuff depending on section
     switch (section) {
         case "administration":
-            Administration.refreshTable();
+            Administration.refreshAccounts();
             break;
     }
 });

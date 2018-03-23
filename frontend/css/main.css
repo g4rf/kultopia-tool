@@ -261,7 +261,7 @@ form img {
 }
 
 .no-data {
-	color: #957fcc;
+	color: #aaa;
 	text-align: center;
 }
 
@@ -367,7 +367,6 @@ form img {
 }
 
 #header .menu-item {
-	display: none;
 	color: #fff;
 	font-weight: bold;
 	padding: 10px;
@@ -396,7 +395,7 @@ form img {
 	text-align: center;
 }
 
-#auth, #menu {
+#auth, #menu, #user-info {
     padding: 1%;
 }
 

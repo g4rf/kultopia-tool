@@ -41,7 +41,8 @@ class Auth {
             print json_encode([
                 'key' => $key,
                 'id' => $user->id,
-                'name' => $user->name
+                'name' => $user->name,
+                'isadmin' => $user->isadmin
             ]);
         }
     }

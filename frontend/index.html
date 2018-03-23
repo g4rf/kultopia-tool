@@ -16,9 +16,10 @@
 <!-- header -->
 <div id="header">
 	<span class="logo">Kultopia</span>
-	<span data-section="projects" class="menu-item menu-projects">Projekte</span>
-	<span data-section="administration"
-		  class="menu-item menu-administration">Administration</span>
+	<span data-section="projects" id="menu-projects"
+		  class="menu-item selected hidden">Projekte</span>
+	<span data-section="administration" id="menu-administration"
+		  class="menu-item hidden">Administration</span>
 </div>
 
 <!-- sidebar -->
@@ -34,14 +35,17 @@
         </label>
         <button>Anmelden</button>        
     </div>
+	
+	<div id="user-info" class="hidden">
+		<div class="email"></div>
+        <button id="logout">Abmelden</button>        
+    </div>
     
     <div id="menu" class="hidden">
-        <div class="user"></div>
-        <button id="logout">Abmelden</button>        
         <hr />
 		<div class="project-name"></div>
 		<hr />
-        <div data-section="application" class="menu-item selected">Antrag</div>
+        <div data-section="application" class="menu-item">Antrag</div>
     </div>
 	
 	<div id="copyright">
@@ -56,37 +60,39 @@
 	<div class="administration section hidden">
 		<h1>Administration</h1>
 		
-		<h2>Accounts</h2>
-		
-		<button class="new-account">+ Neuen Account anlegen</button>
-		<table><tr class="head">
-            <th>E-Mail</th>
-			<th>Name</th>
-            <th>Admin</th>
-            <th>&nbsp;</th>
-        </tr><tr class="template">
-			<td class="email"></td>
-			<td class="name"></td>
-			<td class="admin"></td>
-			<td>
-				<button class="disable">&#9940; Deaktivieren</button>
-			</td>
-		</tr><tr class="no-data">
-			<td colspan="4">Keine Accounts gefunden.</td>
-		</tr></table>
-		
-		<form class="template add">
-			<fieldset>
-				<legend>E-Mail</legend>
-				<input type="text" name="email" />
-			</fieldset>
-			<fieldset>
-				<legend>Admin</legend>
-				<label><input type="checkbox" name="isadmin" 
-					value="admin" />Admin-Rechte</label>
-			</fieldset>
-			<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
-		</form>
+		<div class="subsection accounts">
+			<h2>Accounts</h2>
+
+			<button class="new-account">+ Neuen Account anlegen</button>
+			<table><tr class="head">
+				<th>E-Mail</th>
+				<th>Name</th>
+				<th>Admin</th>
+				<th>&nbsp;</th>
+			</tr><tr class="template">
+				<td class="email"></td>
+				<td class="name"></td>
+				<td class="admin"></td>
+				<td>
+					<button class="disable">&#9940; Deaktivieren</button>
+				</td>
+			</tr><tr class="no-data">
+				<td colspan="4">Keine Accounts gefunden.</td>
+			</tr></table>
+
+			<form class="template add">
+				<fieldset>
+					<legend>E-Mail</legend>
+					<input type="text" name="email" />
+				</fieldset>
+				<fieldset>
+					<legend>Admin</legend>
+					<label><input type="checkbox" name="isadmin" 
+						value="admin" />Admin-Rechte</label>
+				</fieldset>
+				<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
+			</form>
+		</div>
     </div>
 
 </div>

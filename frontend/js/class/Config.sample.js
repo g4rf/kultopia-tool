@@ -1,5 +1,5 @@
 /**
- * Holds the configuration from the config.json file.
+ * Holds the configuration.
  * @type Object
  */
 var Config = {

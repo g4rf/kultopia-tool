@@ -51,9 +51,18 @@ class Accounts {
         if(! DB::$db->users->findOne(['email' => $email]))
             Helper::exitCleanWithCode (404);
         
+        // check if user is the loggedin user
+        $me = false;
+        $user = DB::$db->users->findOne(['email' => $email]);
+        if($user->email == Auth::getEmail()) $me = true;
+        
         // get data
         parse_str(file_get_contents('php://input'), $data); // get data
         
+        // check if own user wants to change his active status
+        if(array_key_exists('active', $data) && $me)
+                Helper::exitCleanWithCode(403);
+            
         // if it tries to change the name
         if(array_key_exists('name', $data)) {
             // name must not be empty
@@ -70,8 +79,7 @@ class Accounts {
         
         // allowed fields
         $allowed = ['name']; // user
-        if(Auth::isOperator()) // operator
-            if(!$me) $allowed[] = 'active'; // me cannot change own active status
+        if(!$me) $allowed[] = 'active'; // me cannot change own active status
         
         // change fields
         foreach($data as $key => $value) {

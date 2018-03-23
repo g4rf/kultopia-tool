@@ -4,20 +4,20 @@
  * Holds functions for the accounts section.
  * @namespace
  */
-var Accounts = {
+var Administration = {
     /**
      * Loads accounts from the API and puts it into the table.
      * @returns {jqXHR} see http://api.jquery.com/jQuery.ajax/
      */
-    refreshTable: function() {
+    refreshAccounts: function() {
         return API.call("accounts", {
             "200": function(accounts) {
-                var table = $(".section.accounts table");
+                var table = $(".subsection.accounts table");
                 
                 // empty table
                 $("tr", table).not(".head, .template, .no-data").remove();
 
-                // get some campaigns?
+                // get some?
                 accounts.length ? $(".no-data", table).hide() : 
                         $(".no-data", table).show();                    
                     
@@ -34,23 +34,16 @@ var Accounts = {
                         $(".email", newRow).append(" (" + _("unbestätigt") + ")");
                         $(newRow).addClass("unconfirmed");
                     }
-                    if(account.groups) {
-                        $(".groups", newRow).append(account.groups.join(", "));
+                    if(account.isadmin) {
+                        $(".isadmin", newRow).append(_("ja"));
                     }
                     if(! account.active) {
-                        $(".disable", newRow).empty().append(
-                            "<i class='fa fa-check'></i> " + _("Aktivieren"));
+                        $(".disable", newRow).empty().append(_("Aktivieren"));
                         $(newRow).addClass("inactive");
                     }                    
-
-                    // send message button
-                    $("button.send-message", newRow).data("partner", {
-                        "name": account.name + " (" + account.email + ")",
-                        "address": "@" + account.id
-                    });
-                    
+                   
                     // edit button
-                    $("button.edit", newRow).click(function() {
+                    /*$("button.edit", newRow).click(function() {
                         var dialog = Helper.dialog(
                             $(".section.accounts form.template.edit").clone()
                                 .removeClass("template"),
@@ -84,7 +77,7 @@ var Accounts = {
                         );
                         // write values to fields
                         Helper.fillFields(account, dialog);
-                    });
+                    });*/
                     
                     // disable button
                     $("button.disable", newRow).click(function() {
@@ -100,13 +93,13 @@ var Accounts = {
                                 Helper.closeDialog();
                             },
                             "403": function() {
-                                Helper.hint(_("Der eigene Account kann nicht verändert werden."));
+                                Helper.hint(_("Der eigene Account kann nicht deaktiviert werden."));
                                 Helper.closeDialog();
                             }
                         }, "PUT", {
                             "active": !account.active
                         }).always(function() { 
-                            Accounts.refreshTable();
+                            Administration.refreshAccounts();
                         });
                     });
                     
@@ -119,6 +112,7 @@ var Accounts = {
 };
 
 /* add account */
+/*== TODO ==*/
 $(".section.accounts .add").click(function() {
     Helper.dialog(
         $(".section.accounts form.template.add").clone().removeClass("template"),

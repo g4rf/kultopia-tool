@@ -40,6 +40,6 @@ $("[type='time']").val("00:00");
 $(window).on("load", function() {
     // try to login with saved key
     Auth.checkKey().always(function() {
-        // sniff for messages
+        
     });
 });
