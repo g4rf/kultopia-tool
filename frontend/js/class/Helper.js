@@ -35,6 +35,9 @@ var Helper = {
         $("#dialog .mainpane").empty().append(main);
         
         return $("#dialog").show(0, function() {
+            // center dialog
+            $("#dialog").center();
+            
             // focus on first input element, if any
             $('#dialog :input:visible:enabled:first').focus();
         });

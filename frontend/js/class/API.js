@@ -10,7 +10,7 @@ var API = {
      * @param {String} func The API function to call.
      * @param {Object} [callbacks] An object of functions with HTTP status codes
      *      as keys, see "statusCode" at http://api.jquery.com/jQuery.ajax/
-     * @param {String} [method=GET] HTTP method, e.g. GET, POST, PACTH, DELETE.
+     * @param {String} [method=GET] HTTP method, e.g. GET, POST, PUT, DELETE.
      * @param {Object|String|Array} [params] The request parameters, see
      *      "data" at http://api.jquery.com/jQuery.ajax/
      * @param {Object} [credentials] The credentials as object.email and

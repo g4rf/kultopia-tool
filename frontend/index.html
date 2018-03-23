@@ -16,8 +16,9 @@
 <!-- header -->
 <div id="header">
 	<span class="logo">Kultopia</span>
-	<span class="menu-item">Projekte</span>
-	<span class="menu-item">Administration</span>
+	<span data-section="projects" class="menu-item menu-projects">Projekte</span>
+	<span data-section="administration"
+		  class="menu-item menu-administration">Administration</span>
 </div>
 
 <!-- sidebar -->
@@ -38,7 +39,9 @@
         <div class="user"></div>
         <button id="logout">Abmelden</button>        
         <hr />
-        <div data-section="campaigns" class="menu-item selected">Konzept</div>
+		<div class="project-name"></div>
+		<hr />
+        <div data-section="application" class="menu-item selected">Antrag</div>
     </div>
 	
 	<div id="copyright">
@@ -49,32 +52,27 @@
 <!-- main content -->
 <div id="content" class="hidden">
     
-<!--***** Accounts *****-->
-	<div class="accounts section hidden">
-		<div>
-			<h1>Accounts</h1>
-			<button class="add"><i class="fa fa-plus"></i> Erstellen</button>
-		</div>
+<!--***** Administration *****-->
+	<div class="administration section hidden">
+		<h1>Administration</h1>
 		
+		<h2>Accounts</h2>
+		
+		<button class="new-account">+ Neuen Account anlegen</button>
 		<table><tr class="head">
             <th>E-Mail</th>
 			<th>Name</th>
-            <th>Gruppen</th>
+            <th>Admin</th>
             <th>&nbsp;</th>
         </tr><tr class="template">
 			<td class="email"></td>
 			<td class="name"></td>
-			<td class="groups"></td>
+			<td class="admin"></td>
 			<td>
-				<button class="send-message">
-					<i class="fa fa-envelope-o"></i></button>
-				<button class="edit">
-					<i class="fa fa-pencil"></i> Bearbeiten</button>
-				<button class="disable">
-					<i class="fa fa-ban"></i> Deaktivieren</button>
+				<button class="disable">&#9940; Deaktivieren</button>
 			</td>
 		</tr><tr class="no-data">
-			<td colspan="4">Keine Benutzer gefunden.</td>
+			<td colspan="4">Keine Accounts gefunden.</td>
 		</tr></table>
 		
 		<form class="template add">
@@ -83,26 +81,11 @@
 				<input type="text" name="email" />
 			</fieldset>
 			<fieldset>
-				<legend>Gruppen</legend>
-				<label><input type="checkbox" name="groups[]" value="admin" />admin</label>
-				<label><input type="checkbox" name="groups[]" value="tech" />tech</label>
-				<label><input type="checkbox" name="groups[]" value="user" />user</label>
+				<legend>Admin</legend>
+				<label><input type="checkbox" name="isadmin" 
+					value="admin" />Admin-Rechte</label>
 			</fieldset>
 			<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
-		</form>
-		
-		<form class="template edit">
-			<input type="hidden" name="id" />
-			<fieldset>
-				<legend>E-Mail</legend>
-				<input type="text" name="email" disabled />
-			</fieldset>
-			<fieldset>
-				<legend>Gruppen</legend>
-				<label><input type="checkbox" name="groups[]" value="admin"/> admin</label>
-				<label><input type="checkbox" name="groups[]" value="tech"/> tech</label>
-				<label><input type="checkbox" name="groups[]" value="user"/> user</label>
-			</fieldset>
 		</form>
     </div>
 
@@ -133,7 +116,7 @@
 <script src="js/class/Helper.js"></script>
 <script src="js/class/API.js"></script>
 <script src="js/class/Auth.js"></script>
-<script src="js/class/Accounts.js"></script>
+<script src="js/class/Administration.js"></script>
 
 <!-- other stuff -->
 <script src="js/events.js"></script>

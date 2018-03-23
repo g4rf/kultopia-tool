@@ -1,4 +1,4 @@
-/* global Auth, Campaigns, Accounts, Helper, API, Players, Materials, Map, Challenges, Trophies, Chat */
+/* global Auth, Helper, Administration */
 
 /* click, load and other events */
 
@@ -10,12 +10,18 @@
 });*/
 
 /* prevent form submission (as we are a one pager) */
+
 $(document).on("submit", "form", function(e) { 
     e.preventDefault();
     return false;
 });
 
 /* auth buttons */
+$("#auth input").keydown(function(e) {
+    if(e.keyCode == 13) {
+        $("#auth button").click();
+    }
+});
 $("#auth button").click(function() {
     Auth.login(
         $("#auth [name='email']").val(),
@@ -29,12 +35,12 @@ $("#logout").click(function() {
 });
 
 /* menu items */
-$("#menu .menu-item").click(function() {
+$(".menu-item").click(function() {
     // close dialog
     Helper.closeDialog();
     
     // mark menu item
-    $("#menu .menu-item").removeClass("selected");
+    $(".menu-item").removeClass("selected");
     $(this).addClass("selected");
     
     // open section
@@ -44,26 +50,8 @@ $("#menu .menu-item").click(function() {
     
     // do more stuff depending on section
     switch (section) {
-        case "campaigns":
-            Campaigns.refreshTable();
-            break;
-        case "accounts":
-            Accounts.refreshTable();
-            break;
-        case "players":
-            Players.loadCampaigns();
-            break;
-        case "materials":
-            Materials.loadCampaigns();
-            break;
-        case "challenges":
-            Challenges.loadCampaigns();
-            break;
-        case "trophies":
-            Trophies.loadCampaigns();
-            break;
-        case "map":
-            Map.initialize();
+        case "administration":
+            Administration.refreshTable();
             break;
     }
 });

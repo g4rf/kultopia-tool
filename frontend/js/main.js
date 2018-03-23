@@ -41,6 +41,5 @@ $(window).on("load", function() {
     // try to login with saved key
     Auth.checkKey().always(function() {
         // sniff for messages
-        //Chat.setGetMessagesTimeout(2);
     });
 });

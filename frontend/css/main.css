@@ -27,7 +27,7 @@ html {
 }
 
 a {
-	color: #DF0404; 
+	color: #957fcc;
 }
 
 a:hover {
@@ -43,12 +43,12 @@ a:hover {
  */
 
 ::-moz-selection {
-    background: #b3d4fc;
+    background: #fff;
     text-shadow: none;
 }
 
 ::selection {
-    background: #b3d4fc;
+    background: #fff;
     text-shadow: none;
 }
 
@@ -101,19 +101,19 @@ ul {
 button {
     margin: 10px 10px 10px 0;
     padding: 5px 10px;
-    border: solid 1px #DF0404;
+    border: solid 1px #957fcc;
 	border-radius: 20px; 
-    background-color: #DF0404;
+    background-color: #957fcc;
     /*font-weight: bold;*/
     text-align: center;
 	color: #fff; 
 }
 button:hover {
 	background-color: #fff;
-	color: #DF0404; 
+	color: #957fcc; 
 }
 button:focus {
-	border-color: #DF0404;
+	border-color: #957fcc;
 }
 
 /*
@@ -218,7 +218,7 @@ form img {
  */
 @keyframes blinking {
     from {
-		background-color: #DF0404;
+		background-color: #957fcc;
 	}
     to {
 		background-color: #fff;
@@ -226,7 +226,7 @@ form img {
 }
 
 .blinking {
-	background-color: #DF0404;
+	background-color: #957fcc;
 	animation-name: blinking;
     animation-duration: 2s;
 	animation-timing-function: linear;
@@ -253,7 +253,7 @@ form img {
 	color: #3388ff;
 }
 .red {
-	color: #DF0404;
+	color: #ff8080;
 }
 
 .template {
@@ -261,7 +261,7 @@ form img {
 }
 
 .no-data {
-	color: #888;
+	color: #957fcc;
 	text-align: center;
 }
 
@@ -293,7 +293,7 @@ form img {
     right: 30%;
     bottom: 5%;
     padding: 5px 10px;
-    background-color: rgba(230,0,4,0.5);
+	background-color: #47994f;
     border-radius: 20px;
     font-size: 1.1em;
     font-weight: bold;
@@ -315,21 +315,34 @@ form img {
     display: none;
     position: fixed;
 	max-height: 85%;
-	overflow: auto;
+	max-width: 90%;
 	left: 5%;
-	right: 5%;
 	top: 9%;
+	overflow: auto;
 	padding: 0.5%;
 	background-color: #fff;
 	border: solid 2px rgba(0,0,0,0.4);
 	border-radius: 5px;
+	box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
 }
-#dialog .message {
-    padding: 3%;
+#dialog .mainpane {
+    padding: 10px;
 }
 #dialog .buttonpane {
     border-top: solid 1px #ccc;
     text-align: right;
+}
+
+/***** menu items ****/
+
+.menu-item {
+    cursor: pointer;
+}
+.menu-item:hover {
+    background-color: #957fcc;
+}
+.menu-item.selected {
+    background-color: #c782ff;
 }
 
 /***** header ****/
@@ -337,17 +350,27 @@ form img {
 #header {
 	height: 50px; 
 	width: 100%; 
+	padding: 0 2%;
 	position: fixed; 
 	top: 0; 
 	left: 0; 
-	background-color: #DF0404;
+	background-color: #47994f;
+	line-height: 50px;
+	vertical-align: middle;
 }
 
-#header img {
-    width: auto;
-    height: 32px;
-    margin: 12px 15px 1%;
-	z-index: 2000; 
+#header .logo {
+	font-size: 30px;
+	text-transform: uppercase;
+	text-decoration: underline overline;
+	margin-right: 30px;
+}
+
+#header .menu-item {
+	display: none;
+	color: #fff;
+	font-weight: bold;
+	padding: 10px;
 }
 
 /***** sidebar ****/
@@ -377,25 +400,18 @@ form img {
     padding: 1%;
 }
 
-.menu-item {
-    cursor: pointer;
+#menu .menu-item {
 	padding: 3%;
 }
-.sub-item {
+#menu .sub-item {
 	margin-top: -6%;
 	padding-left: 16%;
-}
-.menu-item:hover {
-    color: #DF0404;
-}
-.menu-item.selected {
-    background-color: #ddd;
 }
 
 #menu .user {
 	font-weight: bold; 
 	font-size: 75%; 
-	color: #888; 
+	color: #957fcc; 
 }
 
 /***** content ****/
@@ -413,320 +429,6 @@ form img {
 .section h1 {
 	display: inline-block;
 }
-
-/***** map ****/
-.map {
-	position: absolute;
-	bottom: 0;
-	top: 0;
-	left: 0;
-	right: 0;
-}
-
-.map .container {
-	z-index: 1000;
-	position: absolute;
-	padding: 5px;
-	overflow: auto;
-	background-color: #fff;
-	border: solid 2px #888;
-	border: solid 2px rgba(128,128,128,0.5);	
-	border-radius: 4px;
-}
-
-.map .loading {
-	display: none;
-	position: absolute;
-	z-index: 10000;
-	height: 100px;
-	right: 0;
-	left: 0;
-	bottom: 10px;
-}
-.map .loading img {
-	top: 50%;
-	position: absolute;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -50px;
-}
-
-#map {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}
-
-.map .layers {
-	left: 1%;
-	bottom: 1%;
-}
-.map .layers form {
-	margin: 5px 0;
-}
-.map .layers .fa-refresh {
-	color: #080;
-	cursor: pointer;
-}
-
-/* remove "clear all" buttons */
-.leaflet-draw-actions-bottom li:last-child {
-    display: none !important;
-}
-
-.map .edit {
-	top: 1%;
-	right: 1%;
-	height: 96%;
-	overflow: auto;
-	width: 33%;
-}
-
-.marker {
-	width: 2em !important;
-	height: 2em !important;
-	margin: -1em !important;
-	border: solid 2px rgba(255,255,255,0.85);
-	border-radius: 50%;
-	opacity: 0.5;
-}
-.marker-new, .marker-score.highlight, .marker-region-highlight {
-	opacity: 1;
-}
-.marker-new {
-	background-color: #484;
-}
-.marker-region {
-	background-color: #3388ff;
-	border: solid 2px rgba(50,50,255,0.85);
-}
-.marker-region-highlight {
-	background-color: #0033ff;
-	border: solid 2px rgba(100,100,255,1);
-}
-.marker-score {
-	background-color: #888;
-	box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.5);
-}
-.marker-score.done {
-	background-color: #009644;
-}
-.marker-score.damaged {
-	background-color: #d90000;
-}
-.marker-score.empty {
-	background-color: #fff;
-}
-.marker-score.feedback0 {
-	background-color: #fff;
-}
-.marker-score.feedback1 {
-	background-color: #009644;
-}
-.marker-score.feedback2 {
-	background-color: #6db822;
-}
-.marker-score.feedback3 {
-	background-color: #d9d900;
-}
-.marker-score.feedback4 {
-	background-color: #d99100;
-}
-.marker-score.feedback5 {
-	background-color: #d94800;
-}
-.marker-score.feedback6 {
-	background-color: #d90000;
-}
-
-.challengeColor0 { color: #DF0101; border-color: #DF0101; }
-.challengeColor1 { color: #0B610B; border-color: #0B610B; }
-.challengeColor2 { color: #0000FF; border-color: #0000FF; }
-.challengeColor3 { color: #FF8000; border-color: #FF8000; }
-.challengeColor4 { color: #FF00FF; border-color: #FF00FF; }
-.challengeColor5 { color: #424242; border-color: #424242; }
-.challengeColor6 { color: #5E610B; border-color: #5E610B; }
-.challengeColor7 { color: #29088A; border-color: #29088A; }
-.challengeColor8 { color: #B404AE; border-color: #B404AE; }
-
-/*** chat & contacts ***/
-.unread {
-	border: solid 1px #DF0404 !important;
-}
-
-#conversations {
-	box-sizing: border-box;
-    background-color: #f5f5f5;
-    position: absolute;
-    right: 0;
-    width: 300px;
-    overflow: hidden;
-    overflow-y: scroll;
-    bottom: 0;
-    height: 100%;
-    padding: 5px;
-}
-
-#chat {
-	position: absolute;
-    height: 100%;
-    overflow: hidden;
-    background-color: #f5f5f5;
-    top: 0;
-    left: 0;
-    right: 300px;
-}
-#chat .messages-scroll {
-	position: absolute;
-    right: 10px;
-    left: 10px;
-    top: 10px;
-    bottom: 110px;
-    padding: 15px;
-    overflow: hidden;
-    background-color: #fff;
-    border: inset 1px #888;
-    overflow-y: scroll;
-}
-#chat .messages-container {
-	display: flex;
-	flex-direction: column-reverse;
-	align-items: flex-start;
-}
-
-#chat .messagebox {
-	border: solid 1px #888;
-	border-radius: 10px;
-	padding: 0 10px 5px;
-	margin: 5px;
-	max-width: 75%;
-	
-	display: inline-block;
-}
-#chat .messagebox .meta div {
-	display: inline-block;
-	font-size: 0.6em;
-	color: #888;
-}
-#chat .messagebox .meta .name {
-	font-weight: bold;
-}
-#chat .messagebox .message {
-	font-size: 0.9em;
-	line-height: 1.4em;
-	word-wrap: break-word;
-}
-#chat .me {
-	background-color: #eee;	
-	align-self: flex-end;
-	text-align: right;
-}
-#chat .you {
-	background-color: #fff;	
-	align-self: flex-start;
-	text-align: left;
-}
-#chat .unsend {
-	opacity: 0.5;
-}
-
-#chat .user-name {
-	opacity: 0.5;
-	font-style: italic;
-}
-
-#chat .new-message {
-	position: absolute;
-    z-index: 32000;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    height: 100px;
-    text-align: left;
-}
-#chat .new-message textarea {
-	display: block;
-    margin: 5px 0 10px;
-    font-size: 0.9em;
-    line-height: 1.5em;
-    height: 90px;
-    box-sizing: border-box;
-    top: 0;
-    width: 100%;
-    padding-right: 50px;
-}
-#chat .new-message button {
-	display: block;
-	margin: 19px 0;
-	width: 38px;
-	height: 38px;
-	top: 0;
-	position: absolute;
-	right: 12px;
-}
-
-.no-boxes {
-	text-align: center;
-	opacity: 0.7;
-	font-style: italic;
-}
-
-.contactbox {
-	height: 50px;
-	border: solid 1px #ddd;
-	background-color: #fff;
-	overflow: hidden;
-	text-align: left;
-	position: relative;
-	margin: 5px 0;
-	cursor: pointer;
-}
-.contactbox:hover {
-	background-color: rgba(255,50,50,0.7);
-}
-.contactbox .icon {
-	width: 40px;
-	height: 40px;
-	font-size: 23px;
-	line-height: 37px;
-	border: solid 1px #ddd;
-	background-color: #eee;
-	text-align: center;
-	position: absolute;
-	top: 0;
-	left: 0;
-	border-radius: 50%;
-	margin: 5px;
-}
-.contactbox .name {
-	position: absolute;
-	top: 0;
-	left: 0;
-	padding-left: 60px;
-	line-height: 30px;
-	font-size: 16px;
-	overflow: hidden;
-	white-space: nowrap;
-	box-sizing: border-box;
-	text-overflow: ellipsis;
-	width: 99%;
-}
-.contactbox .info {
-	position: absolute;
-	left: 0;
-	top: 30px;
-	padding-left: 60px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	line-height: 20px;
-	font-size: 11px;
-	font-style: italic;
-	opacity: 0.5;
-	width: 99%;
-	box-sizing: border-box;
-}
-
 
 
 

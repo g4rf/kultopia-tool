@@ -70,7 +70,7 @@ class Auth {
         
         // check lease time
         $minutes = $adminMinutes;
-        if(! Auth::isOperator()) $minutes = $userMinutes;
+        if(! Auth::isAdmin()) $minutes = $userMinutes;
         $timestamp = new DateTime();
         $timestamp->setTimestamp($credentials->timestamp);
         $timestamp->add(new DateInterval("PT{$minutes}M"));

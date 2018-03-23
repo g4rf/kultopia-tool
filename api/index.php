@@ -67,9 +67,13 @@ if(! empty($jsonp)) print "$jsonp(";
 if($request[0] == 'login') {
     Auth::login(filter_input(INPUT_POST, 'email'), 
             filter_input(INPUT_POST, 'password'));
+
+    
 } elseif ($request[0] == 'checkkey') {
     Auth::checkkey();
     Helper::exitCleanWithCode(204);
+
+    
 } elseif ($request[0] == 'logout') {
     Auth::logout();
 

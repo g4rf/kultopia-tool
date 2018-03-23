@@ -1,4 +1,4 @@
-/* global API, Helper, Campaigns */
+/* global API, Helper */
 
 /**
  * Holds infos and functions for the authentification with the API.
@@ -22,7 +22,11 @@ var Auth = {
             401: function() { // wrong credentials
                 Helper.dialog(_("Anmeldung fehlgeschlagen."), [{
                     name: _("OK"),
-                    callback: Auth.logout
+                    callback: function() {
+                        $("#auth [name='password']").focus();
+                        Helper.closeDialog();
+                        Auth.logout();                    
+                    }
                 }]);
             }
         }, "POST", {
@@ -37,10 +41,7 @@ var Auth = {
      */
     checkKey: function() {
         return API.call("checkkey", {
-            204: function() {
-                // load campaigns as it's the first visible thing
-                Campaigns.refreshTable();
-                
+            204: function() {                
                 $("#auth").addClass("hidden");
                 
                 $("#menu .user").text(Cookies.get("email"));
@@ -62,7 +63,7 @@ var Auth = {
         Cookies.remove("key");
 
         $("#menu, #content").addClass("hidden");
-        $("#auth input").val("");
+        $("#auth [name='password']").val("");
         $("#auth").removeClass("hidden");
         return API.call("logout", "GET");
     }
