@@ -67,12 +67,10 @@ if(! empty($jsonp)) print "$jsonp(";
 if($request[0] == 'login') {
     Auth::login(filter_input(INPUT_POST, 'email'), 
             filter_input(INPUT_POST, 'password'));
-
     
 } elseif ($request[0] == 'checkkey') {
     Auth::checkkey();
     Helper::exitCleanWithCode(204);
-
     
 } elseif ($request[0] == 'logout') {
     Auth::logout();
@@ -88,14 +86,19 @@ if($request[0] == 'login') {
 } elseif($request[0] == 'account' && $requestMethod == 'POST') {
     Auth::checkkey();
     Accounts::create();
+
 } elseif($request[0] == 'account' && $requestMethod == 'PUT') {
     Auth::checkkey();
     Accounts::update($request[1]);
+
+    
 } elseif($request[0] == 'activate') {
     if(empty($request[1]) || empty($request[2])) Helper::exitCleanWithCode(400);
     Accounts::activate($request[1], $request[2]);
+
+    /* not possible in this api
 } elseif($request[0] == 'register') {
-    Accounts::register();
+    Accounts::register();*/
 
     
 // nothing matched - bad request

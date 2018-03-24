@@ -37,12 +37,15 @@
     </div>
 	
 	<div id="user-info" class="hidden">
-		<div class="email"></div>
+		<div class="description">Name</div>
+			<div class="name"></div>
+		<div class="description">E-Mail</div>
+			<div class="email"></div>
         <button id="logout">Abmelden</button>        
+		<hr />
     </div>
     
-    <div id="menu" class="hidden">
-        <hr />
+    <div id="menu" class="hidden">        
 		<div class="project-name"></div>
 		<hr />
         <div data-section="application" class="menu-item">Antrag</div>
@@ -60,10 +63,87 @@
 	<div class="administration section hidden">
 		<h1>Administration</h1>
 		
+		<div class="subsection projects">
+			<h2>Projekte</h2>
+
+			<button class="add">+ Neues Projekt anlegen</button>
+			<table><tr class="head">
+				<th>Name</th>
+				<th>Beschreibung</th>
+				<th>Antragsteller:in(en)</th>
+				<th>Kurator:in(en)</th>
+				<th>Hauptprojekt</th>
+				<th></th>
+			</tr><tr class="template">
+				<td class="name"></td>
+				<td class="description"></td>
+				<td class="applicants"></td>
+				<td class="curators"></td>
+				<td class="parent"></td>
+				<td>
+					<button class="disable">&#9940; Deaktivieren</button>
+					<button class="edit">&#9998; Bearbeiten</button>
+				</td>
+			</tr><tr class="no-data">
+				<td colspan="6">Keine Projekte gefunden.</td>
+			</tr></table>
+
+			<form class="template add">
+				<fieldset>
+					<legend>Name</legend>
+					<input type="text" name="name" />
+				</fieldset>
+				<fieldset>
+					<legend>Beschreibung</legend>
+					<textarea name="description"></textarea>
+				</fieldset>
+				<fieldset>
+					<legend>Antragsteller:in(en)</legend>
+					<div class="applicants"></div>
+				</fieldset>
+				<fieldset>
+					<legend>Kurator:in(en)</legend>
+					<div class="curators"></div>
+				</fieldset>
+				<fieldset>
+					<legend>Hauptprojekt</legend>
+					<select name="parent">
+						<option value="">---</option>
+					</select>
+				</fieldset>
+			</form>
+			
+			<form class="template edit">
+				<input type="hidden" name="id" />
+				<fieldset>
+					<legend>Name</legend>
+					<input type="text" name="name" />
+				</fieldset>
+				<fieldset>
+					<legend>Beschreibung</legend>
+					<textarea name="description"></textarea>
+				</fieldset>
+				<fieldset>
+					<legend>Antragsteller:in(en)</legend>
+					<div class="options" data-name="applicants"></div>
+				</fieldset>
+				<fieldset>
+					<legend>Kurator:in(en)</legend>
+					<div class="options" data-name="curators"></div>
+				</fieldset>
+				<fieldset>
+					<legend>Hauptprojekt</legend>
+					<select name="parent">
+						<option value="">---</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
+		
 		<div class="subsection accounts">
 			<h2>Accounts</h2>
 
-			<button class="new-account">+ Neuen Account anlegen</button>
+			<button class="add">+ Neuen Account anlegen</button>
 			<table><tr class="head">
 				<th>E-Mail</th>
 				<th>Name</th>
@@ -72,9 +152,10 @@
 			</tr><tr class="template">
 				<td class="email"></td>
 				<td class="name"></td>
-				<td class="admin"></td>
+				<td class="isadmin center"></td>
 				<td>
-					<button class="disable">&#9940; Deaktivieren</button>
+					<button class="edit">&#9998; Bearbeiten</button>
+					<button class="disable">&#9940; Deaktivieren</button>					
 				</td>
 			</tr><tr class="no-data">
 				<td colspan="4">Keine Accounts gefunden.</td>
@@ -86,11 +167,22 @@
 					<input type="text" name="email" />
 				</fieldset>
 				<fieldset>
-					<legend>Admin</legend>
-					<label><input type="checkbox" name="isadmin" 
-						value="admin" />Admin-Rechte</label>
+					<legend>Name</legend>
+					<input type="text" name="name" />
 				</fieldset>
 				<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
+			</form>
+			
+			<form class="template edit">
+				<input type="hidden" name="id" />
+				<fieldset>
+					<legend>E-Mail</legend>
+					<input type="text" name="email" disabled />
+				</fieldset>
+				<fieldset>
+					<legend>Name</legend>
+					<input type="text" name="name" />
+				</fieldset>
 			</form>
 		</div>
     </div>

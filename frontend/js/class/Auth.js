@@ -14,10 +14,12 @@ var Auth = {
     login: function(email, password) {
         return API.call("login", {
             200: function(user) { // logged in
-                Cookies.set("email", email);
-                Cookies.set("key", user.key);
-                if(user.isadmin) Cookies.set("isadmin", true);
-                else Cookies.remove("isadmin");
+                Cookies.set("user-email", email);
+                Cookies.set("user-key", user.key);
+                Cookies.set("user-name", user.name);
+                Cookies.set("user-id", user.id);
+                if(user.isadmin) Cookies.set("user-isadmin", true);
+                else Cookies.remove("user-isadmin");
                 
                 Auth.checkKey();
             },
@@ -46,7 +48,8 @@ var Auth = {
             204: function() {                
                 $("#auth").addClass("hidden");
                 
-                $("#user-info .email").text(Cookies.get("email"));
+                $("#user-info .email").text(Cookies.get("user-email"));
+                $("#user-info .name").text(Cookies.get("user-name"));
                 $("#user-info").removeClass("hidden");
                 
                 $("#menu-projects").removeClass("hidden");
@@ -67,9 +70,11 @@ var Auth = {
      * @return {jqXHR} see http://api.jquery.com/jQuery.ajax/
      */
     logout: function() {
-        Cookies.remove("email");
-        Cookies.remove("key");
-        Cookies.remove("isadmin");
+        Cookies.remove("user-email");
+        Cookies.remove("user-name");
+        Cookies.remove("user-id");
+        Cookies.remove("user-key");
+        Cookies.remove("user-isadmin");
 
         $("#user-info, #menu, #content").addClass("hidden");
         $("#auth [name='password']").val("");
@@ -78,13 +83,37 @@ var Auth = {
     },
     
     /**
+     * Gets the logged in user name from the cookies.
+     * @return {jqXHR} see http://api.jquery.com/jQuery.ajax/
+     */
+    getName: function() {
+        return Cookies.get("user-name");
+    },
+    
+    /**
+     * Gets the logged in user name from the cookies.
+     * @return {jqXHR} see http://api.jquery.com/jQuery.ajax/
+     */
+    getEmail: function() {
+        return Cookies.get("user-email");
+    },
+    
+    /**
+     * Gets the logged in user name from the cookies.
+     * @return {jqXHR} see http://api.jquery.com/jQuery.ajax/
+     */
+    getId: function() {
+        return Cookies.get("user-id");
+    },
+    
+    /**
      * Checks if the user is admin, only for gui handling.
      * ! Be careful: It's only a cookie setting, so the user may fake this. 
      * Nevertheless it needs a real admin account to deal with the api.
-     * @return {jqXHR} see http://api.jquery.com/jQuery.ajax/
+     * @return {Boolean} true if admin, false otherwise
      */
     isAdmin: function() {
-        if(Cookies.get("isadmin")) return true;
+        if(Cookies.get("user-isadmin")) return true;
         return false;
     }
 };

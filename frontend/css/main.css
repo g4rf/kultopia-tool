@@ -316,6 +316,7 @@ form img {
     position: fixed;
 	max-height: 85%;
 	max-width: 90%;
+	min-width: 40%;
 	left: 5%;
 	top: 9%;
 	overflow: auto;
@@ -399,6 +400,13 @@ form img {
     padding: 1%;
 }
 
+#user-info .description {
+	font-weight: bold;
+	font-size: 0.7em;
+	margin-top: 5px;
+	text-decoration: underline;
+}
+
 #menu .menu-item {
 	padding: 3%;
 }
@@ -425,8 +433,8 @@ form img {
     padding: 2%;
 }
 
-.section h1 {
-	display: inline-block;
+.subsection {
+	margin-top: 50px;
 }
 
 

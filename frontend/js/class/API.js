@@ -28,9 +28,9 @@ var API = {
         // add credentials
         credentials = credentials || {};
         if(typeof credentials.email === "undefined") 
-            credentials.email = Cookies.get("email") || "";
+            credentials.email = Cookies.get("user-email") || "";
         if(typeof credentials.key === "undefined") 
-            credentials.key = Cookies.get("key") || "";
+            credentials.key = Cookies.get("user-key") || "";
         
         // add standard error handling
         if(typeof callbacks["400"] === "undefined") {

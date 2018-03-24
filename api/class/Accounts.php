@@ -42,7 +42,6 @@ class Accounts {
      * @apiError (401) Unauthorized Only registered users can update accounts.
      * @apiError (403) Forbidden You can only change your own account or have to be admin to change other accounts. You cannot change your own active status.
      * @apiError (404) NotFound User with this email not found.
-     * @apiError (409) Conflict The name already exists.
      */
     public static function update($email) {
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
@@ -70,15 +69,11 @@ class Accounts {
             // name is the same, so no real change
             if($user->name == $data['name']) {
                 unset($data['name']);
-            } else {
-            // check if name already exists
-                if(DB::$db->users->findOne(['name' => $data['name']])) 
-                    Helper::exitCleanWithCode(409);
             }
         }
         
         // allowed fields
-        $allowed = ['name']; // user
+        $allowed = ['name'];
         if(!$me) $allowed[] = 'active'; // me cannot change own active status
         
         // change fields
@@ -156,7 +151,11 @@ class Accounts {
                 $error)) {
             
             http_response_code(201);
-            print json_encode(DB::$db->users->findOne(['email' => $email]));
+            print json_encode(DB::$db->users->findOne([
+                'email' => $email
+            ],[
+                'projection' => ['_id' => 0, 'password' => 0, 'key' => 0]
+            ]));
             
         } else Helper::exitCleanWithCode(500, $error);
     }

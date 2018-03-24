@@ -56,7 +56,7 @@ class Auth {
      * @apiError (401) Unauthorized
      */
     public static function checkkey() {
-        $adminMinutes = 30;
+        $adminMinutes = 60;
         $userMinutes = 48 * 60;
                 
         $email = $_SERVER["PHP_AUTH_USER"];
