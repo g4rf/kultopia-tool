@@ -47,6 +47,13 @@ if ($requestMethod == 'OPTIONS') {
 // JSONP callback
 $jsonp = filter_input(INPUT_GET, 'callback');
 
+// log api access
+Helper::logApiAccess(
+    $requestMethod . ' /' . filter_input(INPUT_GET, 'request')
+    . " jsonp=$jsonp" 
+    . ' ' . file_get_contents('php://input')
+);
+
 // if jsonp return javascript
 if(! empty($jsonp))
     header("Content-type: text/javascript");
@@ -90,7 +97,6 @@ if($request[0] == 'login') {
 } elseif($request[0] == 'account' && $requestMethod == 'PUT') {
     Auth::checkkey();
     Accounts::update($request[1]);
-
     
 } elseif($request[0] == 'activate') {
     if(empty($request[1]) || empty($request[2])) Helper::exitCleanWithCode(400);
@@ -99,6 +105,22 @@ if($request[0] == 'login') {
     /* not possible in this api
 } elseif($request[0] == 'register') {
     Accounts::register();*/
+
+    
+// Projects
+} elseif($request[0] == 'projects') {
+    Auth::checkkey();
+    
+    if($requestMethod == 'GET') Projects::get();
+    else Helper::exitCleanWithCode (400);
+    
+} elseif($request[0] == 'project' && $requestMethod == 'POST') {
+    Auth::checkkey();
+    Projects::create();
+
+} elseif($request[0] == 'project' && $requestMethod == 'PUT') {
+    Auth::checkkey();
+    Projects::update($request[1]);
 
     
 // nothing matched - bad request

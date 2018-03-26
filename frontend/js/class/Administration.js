@@ -223,6 +223,7 @@ $(".subsection.projects .add").click(function() {
     API.call("accounts", {
         "200": function(accounts) {
             jQuery.each(accounts, function(index, account) {
+                console.log(index, account);
                 // applicants
                 $("<label />").append(
                     $("<input />").attr({
@@ -230,8 +231,8 @@ $(".subsection.projects .add").click(function() {
                         name: "applicants[]",
                         value: account.email
                     })
-                ).append(account.name + "(" + account.email + ")")
-                .appendTo(".applicants", form);
+                ).append(account.name + " (" + account.email + ")")
+                .appendTo($(".applicants", form));
                 // curators
                 $("<label />").append(
                     $("<input />").attr({
@@ -239,12 +240,12 @@ $(".subsection.projects .add").click(function() {
                         name: "curators[]",
                         value: account.email
                     })
-                ).append(account.name + "(" + account.email + ")")
-                .appendTo(".curators", form);
+                ).append(account.name + " (" + account.email + ")")
+                .appendTo($(".curators", form));
             });
             
             // fill parent
-            
+
             // open dialog
             Helper.dialog(
                 form,

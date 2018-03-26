@@ -1,4 +1,6 @@
 {  
+	"logApiAccess": "log/api.log",
+
 	"apiUrl": "/",
 	
     "smtpServer": "",

@@ -4,6 +4,20 @@
  */
 class Helper {
     /**
+     * Logs the API access in a file.
+     * @param A message to log.
+     */
+    public static function logApiAccess($message) {
+        $file = '../' . Config::$_['logApiAccess'];
+        $log = (new DateTime())->format('r') 
+                . ' ' . Auth::getEmail()
+                . ' ' . $message 
+                . "\n";
+        
+        file_put_contents($file, $log, FILE_APPEND);
+    }    
+    
+    /**
      * Clean the output and exit program with HTTP status code.
      * @param integer $code HTTP status code
      * @param string $msg optional message for the HTTP body

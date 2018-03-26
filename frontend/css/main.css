@@ -161,6 +161,7 @@ legend {
 }
 
 label {
+	display: block;
 	cursor: pointer;
 	margin-right: 5px;
 }
