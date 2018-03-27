@@ -37,14 +37,27 @@ class Projects {
                 'active' => $project->active,
                 'parent' => $project->parent
             ];
+            
+            // parent
+            $parent = DB::$db->projects->findOne([
+                'id' => $project->parent
+            ]);
+            if($parent) {
+                $temp['parent'] = [
+                    'id' => $parent->id,
+                    'name' => $parent->name
+                ];
+            }
+            
+            // applicants & curators
             if(Auth::isAdmin()) {
                 // add applicants
                 $resultApplicants = DB::$db->users->find([
                     'email' => ['$in' => $project->applicants]
                 ],[ 'sort' => ['email' => 1] ]);
-                $$temp->applicants = [];
+                $temp['applicants'] = [];
                 foreach($resultApplicants as $applicant) {
-                    $temp->applicants[] = [
+                    $temp['applicants'][] = [
                         'id' => $applicant->id,
                         'email' => $applicant->email,
                         'name' => $applicant->name,
@@ -57,9 +70,9 @@ class Projects {
                 $resultCurators = DB::$db->users->find([
                     'email' => ['$in' => $project->curators]
                 ],[ 'sort' => ['email' => 1] ]);
-                $$temp->$curators = [];
+                $temp['curators'] = [];
                 foreach($resultCurators as $curator) {
-                    $temp->$curators[] = [
+                    $temp['curators'][] = [
                         'id' => $curator->id,
                         'email' => $curator->email,
                         'name' => $curator->name,
@@ -142,148 +155,45 @@ class Projects {
     public static function create() {
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
-        // check if e-mail is set
-        $email = filter_input(INPUT_POST, 'email');
-        if(! $email) Helper::exitCleanWithCode(400);
-        
-        // check if e-mail exists
-        if(DB::$db->users->findOne(['email' => $email])) 
-            Helper::exitCleanWithCode(409);
-        
-        // check if name is set
-        $name = filter_input(INPUT_POST, 'name');
-        if(! $name) $name = '';
-        
-        // create user
-        $id = Helper::createId();
-        $key = Helper::createKey(30);
-        $password = Helper::password();
-        DB::$db->users->insertOne([
-            'id' => $id,
-            'email' => $email,
-            'name' => $name,
-            'active' => 1,
-            'key' => $key,
-            'password' => $password
-        ]);
-        
-        // send mail with key
-        $body = "Hallo,\n"
-                . "\n"
-                . "es wurde im Kultopia-Tool ein Account für die E-Mail-Adresse "
-                . "$email angelegt. Falls das nicht beabsichtigt war, ignoriere "
-                . "diese E-Mail.\n"
-                . "\n"
-                . "Das Passwort lautet: $password\n"
-                . "\n"
-                . "Um den Account zu aktivieren, folge dem Link:\n"
-                . "\n"
-                . Config::$_['apiUrl'] . "activate/$id/$key\n"
-                . "\n"
-                . "Gutes Gelingen!";
-        
-        if(Helper::mail($email, 'Account für Kultopia aktivieren', $body,
-                $error)) {
-            
-            http_response_code(201);
-            print json_encode(DB::$db->users->findOne([
-                'email' => $email
-            ],[
-                'projection' => ['_id' => 0, 'password' => 0, 'key' => 0]
-            ]));
-            
-        } else Helper::exitCleanWithCode(500, $error);
-    }
-    
-    /**
-     * @apiIgnore Users can't register on their own.
-     * 
-     * @api {post} /account/register Register a new user account and sends an activation e-mail.
-     * @apiGroup Accounts
-     * @apiParam {String} email The e-mail address of the new user.
-     * @apiParam {String} name The name of the new user.
-     * @apiSuccess (201) NoContent Account created, e-mail send.
-     * @apiError (400) BadRequest Parameter email or name missing.
-     * @apiError (409) Conflict E-mail or name already exists. The HTTP body contains the conflicting parameter ("email" or "name").
-     */
-    public static function register() {
-        Helper::exitCleanWithCode(501);
-        
-        // check if e-mail is set
-        $email = filter_input(INPUT_POST, 'email');
-        if(! $email) Helper::exitCleanWithCode(400);
-        
         // check if name is set
         $name = filter_input(INPUT_POST, 'name');
         if(! $name) Helper::exitCleanWithCode(400);
         
-        // check if e-mail exists
-        if(DB::$db->users->findOne(['email' => $email])) 
-            Helper::exitCleanWithCode(409, 'email');
+        // check if description is set
+        $description = filter_input(INPUT_POST, 'description');
+        if(! $description) $description = '';
         
-        // check if name exists
-        if(DB::$db->users->findOne(['name' => $name])) 
-            Helper::exitCleanWithCode(409, 'name');
+        // check if parent is set
+        $parent = filter_input(INPUT_POST, 'parent');
+        if(! $parent) $parent = null;
         
-        // create user
+        // applicants
+        $applicants = filter_input(INPUT_POST, 'applicants', FILTER_DEFAULT,
+                FILTER_REQUIRE_ARRAY);
+        if(! $applicants) $applicants = [];
+        
+        // curators
+        $curators = filter_input(INPUT_POST, 'curators', FILTER_DEFAULT,
+                FILTER_REQUIRE_ARRAY);
+        if(! $curators) $curators = [];
+        
+        // create project
         $id = Helper::createId();
-        $key = Helper::createKey(30);
-        $password = Helper::password();
-        DB::$db->users->insertOne([
+        DB::$db->projects->insertOne([
             'id' => $id,
-            'email' => $email,
             'name' => $name,
-            'active' => 1,
-            'key' => $key,
-            'password' => $password
+            'description' => $description,
+            'active' => true,
+            'parent' => $parent,
+            'applicants' => $applicants,
+            'curators' => $curators
         ]);
         
-        // send mail with key
-        $body = "Hallo,\n"
-                . "\n"
-                . "Du hast Dich mit der E-Mail-Adresse $email für das "
-                . "Kultopia-Tool registriert. Falls das nicht beabsichtigt war, "
-                . "ignoriere diese E-Mail.\n"
-                . "\n"
-                . "Dein Passwort lautet: $password\n"
-                . "\n"
-                . "Um den Account zu aktivieren, folge dem Link:\n"
-                . "\n"
-                . Config::$_['apiUrl'] . "activate/$id/$key\n"
-                . "\n"
-                . "Gutes Gelingen!";
-        
-        if(Helper::mail($email, 'Registrierung Kultopia', $body,
-                $error)) {
-            
-            http_response_code(201);
-            
-        } else Helper::exitCleanWithCode(500, $error);
-    }
-    
-    /**
-     * Activates an account with the given key.
-     * @param string $id The id of the account.
-     * @param string $key The key to activate the account.
-     */
-    public static function activate($id, $key) {
-        ob_clean();
-        header("Content-type: text/plain");
-        
-        $updateResult = DB::$db->users->updateOne([
-            'id' => $id,
-            'key' => $key
-        ], [
-            '$unset' => ['key' => '']
-        ]);
-        
-        if($updateResult->getModifiedCount()) {    
-            print "Account aktiviert.";
-        } else {
-            //http_response_code(410);
-            print "Der Account wurde bereits aktiviert oder nicht gefunden.";
-        }
-        
-        exit();
+        http_response_code(201);
+        print json_encode(DB::$db->projects->findOne([
+            'id' => $id
+        ],[
+            'projection' => ['_id' => 0]
+        ]));
     }
 }

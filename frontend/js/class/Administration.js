@@ -30,17 +30,21 @@ var Administration = {
                     $(newRow).data("data", project);
                     $(".name", newRow).append(project.name);
                     $(".description", newRow).append(project.description);
+                    // parent
+                    if(project.parent) {
+                        $(".parent", newRow).append(project.parent.name);
+                    }
                     // applicants
-                    jQuery.each(projects.applicants, function(index, applicant) {
+                    jQuery.each(project.applicants, function(index, applicant) {
                         $("<div>&#149; </div>").append(applicant.name)
-                            .append("(" + applicant.email + ")")
-                            .appendTo(".applicants", newRow);
+                            .append(" (" + applicant.email + ")")
+                            .appendTo($(".applicants", newRow));
                     });
                     // curators
-                    jQuery.each(projects.curators, function(index, curator) {
+                    jQuery.each(project.curators, function(index, curator) {
                         $("<div>&#149; </div>").append(curator.name)
-                            .append("(" + curator.email + ")")
-                            .appendTo(".curators", newRow);
+                            .append(" (" + curator.email + ")")
+                            .appendTo($(".curators", newRow));
                     });
                     // active
                     if(! project.active) {
@@ -55,7 +59,8 @@ var Administration = {
                                 .removeClass("template"),
                             [{
                                 "name": _("Abbrechen"),
-                                "callback": Helper.closeDialog
+                                "callback": Helper.closeDialog,
+                                "class": "cancel"
                             }, {
                                 "name": _("Ändern"),
                                 "callback": function() {
@@ -157,7 +162,8 @@ var Administration = {
                                 .removeClass("template"),
                             [{
                                 "name": _("Abbrechen"),
-                                "callback": Helper.closeDialog
+                                "callback": Helper.closeDialog,
+                                "class": "cancel"
                             }, {
                                 "name": _("Ändern"),
                                 "callback": function() {
@@ -220,19 +226,21 @@ var Administration = {
 $(".subsection.projects .add").click(function() {
     var form = $(".subsection.projects form.template.add").clone()
             .removeClass("template");
+    
+    // fill applicants & curators
     API.call("accounts", {
         "200": function(accounts) {
             jQuery.each(accounts, function(index, account) {
-                console.log(index, account);
                 // applicants
                 $("<label />").append(
                     $("<input />").attr({
                         type: "checkbox",
                         name: "applicants[]",
                         value: account.email
-                    })
-                ).append(account.name + " (" + account.email + ")")
-                .appendTo($(".applicants", form));
+                })).append(
+                    $("<span />").append(
+                        account.name + " (" + account.email + ")")
+                ).appendTo($(".applicants", form));
                 // curators
                 $("<label />").append(
                     $("<input />").attr({
@@ -243,36 +251,47 @@ $(".subsection.projects .add").click(function() {
                 ).append(account.name + " (" + account.email + ")")
                 .appendTo($(".curators", form));
             });
-            
-            // fill parent
-
-            // open dialog
-            Helper.dialog(
-                form,
-                [{
-                    "name": _("Abbrechen"),
-                    "callback": Helper.closeDialog
-                }, {
-                    "name": _("Anlegen"),
-                    "callback": function() {
-                        var form = $("#dialog form");
-
-                        API.call("account", {
-                            "201": function() {
-                                Administration.refreshAccounts();
-                                Helper.hint(_("Account angelegt und E-Mail versandt."));
-                                Helper.closeDialog();
-                            },
-                            "409": function() {
-                                Helper.hint(_("E-Mail-Adresse existiert bereits."));
-                                $("input[name='email']", form).focus();
-                            }
-                        }, "POST", $(form).serialize());
-                    }
-                }]
-            );
         }
     });
+
+    // fill parent
+    API.call("projects", {
+        "200": function(projects) {
+            jQuery.each(projects, function(index, project) {
+                $("<option />").attr({
+                    "value": project.id
+                }).append(project.name)
+                    .appendTo($("[name='parent']", form));
+            });
+        }
+    });
+
+    // open dialog
+    Helper.dialog(
+        form,
+        [{
+            "name": _("Abbrechen"),
+            "callback": Helper.closeDialog,
+            "class": "cancel"
+        }, {
+            "name": _("Anlegen"),
+            "callback": function() {
+                var form = $("#dialog form");
+
+                API.call("project", {
+                    "201": function() {
+                        Administration.refreshProjects();
+                        Helper.hint(_("Projekt angelegt."));
+                        Helper.closeDialog();
+                    },
+                    "400": function() {
+                        Helper.hint(_("Der Name fehlt."));
+                        $("input[name='name']", form).focus();
+                    }
+                }, "POST", $(form).serialize());
+            }
+        }]
+    );
 });
 
 /* add account */
@@ -281,7 +300,8 @@ $(".subsection.accounts .add").click(function() {
         $(".subsection.accounts form.template.add").clone().removeClass("template"),
         [{
             "name": _("Abbrechen"),
-            "callback": Helper.closeDialog
+            "callback": Helper.closeDialog,
+            "class": "cancel"
         }, {
             "name": _("Anlegen"),
             "callback": function() {

@@ -52,6 +52,7 @@ $(".menu-item").click(function() {
     switch (section) {
         case "administration":
             Administration.refreshAccounts();
+            Administration.refreshProjects();
             break;
     }
 });

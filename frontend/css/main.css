@@ -115,6 +115,9 @@ button:hover {
 button:focus {
 	border-color: #957fcc;
 }
+button.cancel {
+	opacity: 0.6;
+}
 
 /*
  * tables
@@ -205,8 +208,12 @@ textarea {
 	overflow: auto;
 	background-color: #fff;
 }
-.checkboxgroup label {
-	display: block;
+.checkboxgroup input:checked + span {
+	color: #47994f;
+	text-decoration: underline;
+}
+.checkboxgroup label:hover {
+    color: #2b2;
 }
 
 form img {

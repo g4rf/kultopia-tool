@@ -26,9 +26,11 @@ var Helper = {
         // add buttons to button pane
         $("#dialog .buttonpane").empty();
         jQuery.each(buttons, function(index, button) {
-            $("<button />").append(button.name)
-                    .prependTo("#dialog .buttonpane")
-                    .click(button.callback);
+            $("<button />").attr({
+                "class": button.class})
+                .append(button.name)
+                .prependTo("#dialog .buttonpane")
+                .click(button.callback);
         });
         
         // fill main pane

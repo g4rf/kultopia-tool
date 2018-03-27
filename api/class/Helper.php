@@ -11,7 +11,8 @@ class Helper {
         $file = '../' . Config::$_['logApiAccess'];
         $log = (new DateTime())->format('r') 
                 . ' ' . Auth::getEmail()
-                . ' ' . $message 
+                . ' ' . preg_replace('/password=[^&$]*/i', 'password=*****',
+                                $message)
                 . "\n";
         
         file_put_contents($file, $log, FILE_APPEND);
