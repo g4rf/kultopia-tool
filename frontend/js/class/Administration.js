@@ -12,7 +12,13 @@ var Administration = {
     refreshProjects: function() {
         return API.call("projects", {
             "200": function(projects) {
-                var table = $(".subsection.projects .table");
+                var table = $(".section.administration-projects .table");
+                
+                // save expanded projects
+                var expandedIds = [];
+                $(".expanded", table).each(function(index, expanded) {
+                    expandedIds.push($(expanded).attr("id"));
+                });
                 
                 // empty table
                 $(".entry", table).not(".template").remove();
@@ -26,6 +32,10 @@ var Administration = {
                     var _new = $(".template", table).clone()
                             .removeClass("template");
 
+                    // expand if it was expanded before
+                    if(expandedIds.indexOf(project.id) > -1)
+                        _new.addClass("expanded");
+                    
                     // add data
                     $(_new).attr({
                         "id": project.id
@@ -110,7 +120,7 @@ var Administration = {
                         $(_new).appendTo(table);
                     } else { // sub project
                         $(_new).appendTo(
-                                $("#" + project.parent.id + " .subprojects:first"));
+                            $("#" + project.parent.id + " .subprojects:first"));
                     }
                 });
             }
@@ -124,7 +134,7 @@ var Administration = {
     refreshAccounts: function() {
         return API.call("accounts", {
             "200": function(accounts) {
-                var table = $(".subsection.accounts table");
+                var table = $(".section.administration-accounts table");
                 
                 // empty table
                 $("tr", table).not(".head, .template, .no-data").remove();

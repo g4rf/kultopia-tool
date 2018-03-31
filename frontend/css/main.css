@@ -81,6 +81,13 @@ video {
 }
 
 /*
+ * headings
+ */
+h4 {
+    margin-bottom: 3px;
+}
+
+/*
  * Justify paragraphs.
  */
 p {
@@ -147,7 +154,7 @@ table tr.unconfirmed td {
 }
 
 /*
- * .tables, more for lists
+ * .tables, like lists
  */
 .table .entry {
 	width: 100%;
@@ -264,6 +271,20 @@ form img {
 	animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+
+.expand-button {
+	cursor: pointer;
+}
+.expand-button:hover {
+	text-decoration: underline;
+}
+.expandable {
+	overflow: hidden;
+	height: 0;
+}
+.expandable.expanded {
+	height: auto;
 }
 
 /*

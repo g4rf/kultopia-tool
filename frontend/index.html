@@ -18,7 +18,7 @@
 	<span class="logo">Kultopia</span>
 	<span data-section="projects" id="menu-projects"
 		  class="menu-item selected hidden">Projekte</span>
-	<span data-section="administration" id="menu-administration"
+	<span data-section="administration-projects" id="menu-administration"
 		  class="menu-item hidden">Administration</span>
 </div>
 
@@ -49,9 +49,18 @@
 		<hr />
     </div>
     
-    <div id="menu" class="hidden">        
-		<div class="project-name"></div>
-		<hr />
+	<div id="administration-menu" class="menu hidden">        
+		<div class="bold">Administration</div>
+		<br />
+        <div data-section="administration-projects" 
+			 class="menu-item">Projekte</div>
+		<div data-section="administration-accounts" 
+			 class="menu-item">Accounts</div>
+    </div>
+	
+    <div id="menu" class="menu hidden">        
+		<div class="bold project-name"></div>
+		<br />
         <div data-section="application" class="menu-item">Antrag</div>
     </div>
 	
@@ -64,134 +73,134 @@
 <div id="content" class="hidden">
     
 <!--***** Administration *****-->
-	<div class="administration section hidden">
-		<h1>Administration</h1>
+	<div class="projects section hidden">
+		<h1>Projekte</h1>
+	</div>
 		
-		<div class="subsection projects">
-			<h2>Projekte</h2>
+	<div class="administration-projects section hidden">
+		<h1>Projekte</h1>
 
-			<button class="add">+ Neues Projekt anlegen</button>
-			
-			<div class="table">
-				<div class="no-data">Keine Projekte gefunden.</div>
+		<button class="add">+ Neues Projekt anlegen</button>
 
-				<div class="entry template">
-					<div class="buttonpane">
-						<button class="edit">&#9998; Bearbeiten</button>
-						<button class="disable">&#9940; Deaktivieren</button>
-					</div>
-					<h3 class="name"></h3>					
-					<p class="description"></p>
-					
-					<h4>Antragssteller:in(en)</h4>
-					<div class="applicants"></div>
-					
-					<h4>Kurator:in(en)</h4>
-					<div class="curators"></div>
-					
-					<h4>Unterprojekte</h4>
-					<div class="subprojects"></div>
-				</div>
-			</div>
-			
-			<form class="template add">
-				<fieldset>
-					<legend>Name</legend>
-					<input type="text" name="name" />
-				</fieldset>
-				<fieldset>
-					<legend>Beschreibung</legend>
-					<textarea name="description"></textarea>
-				</fieldset>
-				<fieldset>
-					<legend>Antragsteller:in(en)</legend>
-					<div class="applicants checkboxgroup"></div>
-				</fieldset>
-				<fieldset>
-					<legend>Kurator:in(en)</legend>
-					<div class="curators checkboxgroup"></div>
-				</fieldset>
-				<fieldset>
-					<legend>Hauptprojekt</legend>
-					<select name="parent">
-						<option value="">---</option>
-					</select>
-				</fieldset>
-			</form>
-			
-			<form class="template edit">
-				<input type="hidden" name="id" />
-				<fieldset>
-					<legend>Name</legend>
-					<input type="text" name="name" />
-				</fieldset>
-				<fieldset>
-					<legend>Beschreibung</legend>
-					<textarea name="description"></textarea>
-				</fieldset>
-				<fieldset>
-					<legend>Antragsteller:in(en)</legend>
-					<div class="options" data-name="applicants"></div>
-				</fieldset>
-				<fieldset>
-					<legend>Kurator:in(en)</legend>
-					<div class="options" data-name="curators"></div>
-				</fieldset>
-				<fieldset>
-					<legend>Hauptprojekt</legend>
-					<select name="parent">
-						<option value="">---</option>
-					</select>
-				</fieldset>
-			</form>
-		</div>
-		
-		<div class="subsection accounts">
-			<h2>Accounts</h2>
+		<div class="table">
+			<div class="no-data">Keine Projekte gefunden.</div>
 
-			<button class="add">+ Neuen Account anlegen</button>
-			<table><tr class="head">
-				<th>E-Mail</th>
-				<th>Name</th>
-				<th>Admin</th>
-				<th>&nbsp;</th>
-			</tr><tr class="template">
-				<td class="email"></td>
-				<td class="name"></td>
-				<td class="isadmin center"></td>
-				<td>
+			<div class="entry template expandable" style="min-height:65px">
+				<div class="buttonpane">
 					<button class="edit">&#9998; Bearbeiten</button>
-					<button class="disable">&#9940; Deaktivieren</button>					
-				</td>
-			</tr><tr class="no-data">
-				<td colspan="4">Keine Accounts gefunden.</td>
-			</tr></table>
+					<button class="disable">&#9940; Deaktivieren</button>
+				</div>
+				<h3 class="name expand-button"></h3>					
+				<p class="description"></p>
 
-			<form class="template add">
-				<fieldset>
-					<legend>E-Mail</legend>
-					<input type="text" name="email" />
-				</fieldset>
-				<fieldset>
-					<legend>Name</legend>
-					<input type="text" name="name" />
-				</fieldset>
-				<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
-			</form>
-			
-			<form class="template edit">
-				<input type="hidden" name="id" />
-				<fieldset>
-					<legend>E-Mail</legend>
-					<input type="text" name="email" disabled />
-				</fieldset>
-				<fieldset>
-					<legend>Name</legend>
-					<input type="text" name="name" />
-				</fieldset>
-			</form>
+				<h4>Antragssteller:in(en)</h4>
+				<div class="applicants"></div>
+
+				<h4>Kurator:in(en)</h4>
+				<div class="curators"></div>
+
+				<h4>Unterprojekte</h4>
+				<div class="subprojects"></div>
+			</div>
 		</div>
-    </div>
+
+		<form class="template add">
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+			<fieldset>
+				<legend>Beschreibung</legend>
+				<textarea name="description"></textarea>
+			</fieldset>
+			<fieldset>
+				<legend>Antragsteller:in(en)</legend>
+				<div class="applicants checkboxgroup"></div>
+			</fieldset>
+			<fieldset>
+				<legend>Kurator:in(en)</legend>
+				<div class="curators checkboxgroup"></div>
+			</fieldset>
+			<fieldset>
+				<legend>Hauptprojekt</legend>
+				<select name="parent">
+					<option value="">---</option>
+				</select>
+			</fieldset>
+		</form>
+
+		<form class="template edit">
+			<input type="hidden" name="id" />
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+			<fieldset>
+				<legend>Beschreibung</legend>
+				<textarea name="description"></textarea>
+			</fieldset>
+			<fieldset>
+				<legend>Antragsteller:in(en)</legend>
+				<div class="options" data-name="applicants"></div>
+			</fieldset>
+			<fieldset>
+				<legend>Kurator:in(en)</legend>
+				<div class="options" data-name="curators"></div>
+			</fieldset>
+			<fieldset>
+				<legend>Hauptprojekt</legend>
+				<select name="parent">
+					<option value="">---</option>
+				</select>
+			</fieldset>
+		</form>
+	</div>
+		
+	<div class="administration-accounts section hidden">
+		<h1>Accounts</h1>
+
+		<button class="add">+ Neuen Account anlegen</button>
+		<table><tr class="head">
+			<th>E-Mail</th>
+			<th>Name</th>
+			<th>Admin</th>
+			<th>&nbsp;</th>
+		</tr><tr class="template">
+			<td class="email"></td>
+			<td class="name"></td>
+			<td class="isadmin center"></td>
+			<td>
+				<button class="edit">&#9998; Bearbeiten</button>
+				<button class="disable">&#9940; Deaktivieren</button>					
+			</td>
+		</tr><tr class="no-data">
+			<td colspan="4">Keine Accounts gefunden.</td>
+		</tr></table>
+
+		<form class="template add">
+			<fieldset>
+				<legend>E-Mail</legend>
+				<input type="text" name="email" />
+			</fieldset>
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+			<p>An die E-Mail-Adresse wird eine E-Mail mit dem Passwort gesandt.</p>
+		</form>
+
+		<form class="template edit">
+			<input type="hidden" name="id" />
+			<fieldset>
+				<legend>E-Mail</legend>
+				<input type="text" name="email" disabled />
+			</fieldset>
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+		</form>
+	</div>
 
 </div>
 

@@ -10,10 +10,26 @@
 });*/
 
 /* prevent form submission (as we are a one pager) */
-
 $(document).on("submit", "form", function(e) { 
     e.preventDefault();
     return false;
+});
+
+/* expandable elements */
+$(document).on("click", ".expandable .expand-button", function(event) {
+    var button = $(this);
+    var expandable = button.parent(".expandable");
+    
+    if(expandable.hasClass("expanded")) {
+        // collapse
+        //expandable.animate({"height": 0});
+        expandable.removeClass("expanded");
+    } else {
+        // expand
+        // expandable.animate({"height": "auto"});
+        expandable.addClass("expanded");
+    }
+    event.stopPropagation();
 });
 
 /* auth buttons */
@@ -63,9 +79,21 @@ $(".menu-item").click(function() {
     
     // do more stuff depending on section
     switch (section) {
-        case "administration":
-            Administration.refreshAccounts();
+        case "projects":
+            $("#menu").addClass("hidden");
+            $("#administration-menu").addClass("hidden");
+            break;
+        case "administration-projects":
+            $("#menu").addClass("hidden");
+            $("#administration-menu").removeClass("hidden");
+            $("#menu-administration").addClass("selected");
+            $("#administration-menu [data-section='administration-projects']")
+                    .addClass("selected");
             Administration.refreshProjects();
+            break;
+        case "administration-accounts":
+            $("#menu-administration").addClass("selected");
+            Administration.refreshAccounts();
             break;
     }
 });
