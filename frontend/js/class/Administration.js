@@ -12,10 +12,10 @@ var Administration = {
     refreshProjects: function() {
         return API.call("projects", {
             "200": function(projects) {
-                var table = $(".subsection.projects table");
+                var table = $(".subsection.projects .table");
                 
                 // empty table
-                $("tr", table).not(".head, .template, .no-data").remove();
+                $(".entry", table).not(".template").remove();
 
                 // get some?
                 projects.length ? $(".no-data", table).hide() : 
@@ -23,33 +23,31 @@ var Administration = {
                     
                 // add rows
                 jQuery.each(projects, function(index, project) {
-                    var newRow = $("tr.template", table).clone()
+                    var _new = $(".template", table).clone()
                             .removeClass("template");
 
                     // add data
-                    $(newRow).data("data", project);
-                    $(".name", newRow).append(project.name);
-                    $(".description", newRow).append(project.description);
-                    // parent
-                    if(project.parent) {
-                        $(".parent", newRow).append(project.parent.name);
-                    }
+                    $(_new).attr({
+                        "id": project.id
+                    }).data("data", project);
+                    $(".name", _new).append(project.name);
+                    $(".description", _new).append(project.description);
                     // applicants
                     jQuery.each(project.applicants, function(index, applicant) {
                         $("<div>&#149; </div>").append(applicant.name)
                             .append(" (" + applicant.email + ")")
-                            .appendTo($(".applicants", newRow));
+                            .appendTo($(".applicants", _new));
                     });
                     // curators
                     jQuery.each(project.curators, function(index, curator) {
                         $("<div>&#149; </div>").append(curator.name)
                             .append(" (" + curator.email + ")")
-                            .appendTo($(".curators", newRow));
+                            .appendTo($(".curators", _new));
                     });
                     // active
                     if(! project.active) {
-                        $(".disable", newRow).empty().append(_("Aktivieren"));
-                        $(newRow).addClass("inactive");
+                        $(".disable", _new).empty().append(_("Aktivieren"));
+                        $(_new).addClass("inactive");
                     }
                    
                     // edit button
@@ -89,7 +87,7 @@ var Administration = {
                     });*/
                     
                     // disable button
-                    $("button.disable", newRow).click(function() {
+                    $("button.disable", _new).click(function() {
                         API.call("project/" + project.id, {
                             "200": function(changedProject) {
                                 Administration.refreshProjects();
@@ -108,7 +106,12 @@ var Administration = {
                     });
                     
                     // add to table
-                    $(table).append(newRow);
+                    if(! project.parent) { // main project
+                        $(_new).appendTo(table);
+                    } else { // sub project
+                        $(_new).appendTo(
+                                $("#" + project.parent.id + " .subprojects:first"));
+                    }
                 });
             }
         });

@@ -134,15 +134,39 @@ table td {
 table tr:nth-child(even) td {
 	background-color: #F5F5F5;
 }
-table tr:hover td {
-	background-color: #eee;
-}
 table tr.inactive td {
 	background-color: #fdd;
 }
+table tr:hover td {
+	background-color: #eee;
+}
+
 table tr.unconfirmed td {
 	/*color: #999;*/
 	opacity: 0.5;
+}
+
+/*
+ * .tables, more for lists
+ */
+.table .entry {
+	width: 100%;
+	border: solid 1px #ccc;
+	padding: 0.5em;
+}
+.table .entry {
+	background-color: #fff;
+}
+.table .entry.inactive {
+	background-color: #fdd;
+}
+
+.table .entry .buttonpane {
+	float: right;
+}
+
+.table .entry .subprojects {
+	margin-left: 50px;
 }
 
 /*
@@ -255,6 +279,13 @@ form img {
 
 .bold {
 	font-weight: bold;
+}
+.italic {
+	font-style: italic;
+}
+
+.small {
+	font-size: 0.75em;
 }
 
 .blue {
@@ -441,10 +472,13 @@ form img {
     padding: 2%;
 }
 
+.section {
+	padding-bottom: 100px;
+}
+
 .subsection {
 	margin-top: 50px;
 }
-
 
 
 

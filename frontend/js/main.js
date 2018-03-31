@@ -1,4 +1,4 @@
-/* global Auth, Chat */
+/* global Auth */
 
 // this is for correct timezone support
 Date.prototype.toDateInputValue = (function() {

@@ -23,10 +23,23 @@ $("#auth input").keydown(function(e) {
     }
 });
 $("#auth button").click(function() {
-    Auth.login(
-        $("#auth [name='email']").val(),
-        $("#auth [name='password']").val()
-    );
+    var email = $("#auth [name='email']").val();
+    var password = $("#auth [name='password']").val();
+    var saveCredentials = $("#auth [name='save-credentials']").prop("checked");
+    
+    if(saveCredentials) {
+        // save credentials
+        Cookies.set("auth-save-credentials", saveCredentials, { expires: 5 });
+        Cookies.set("auth-email", email, { expires: 5 });
+        Cookies.set("auth-password", password, { expires: 5 });
+    } else {
+        // delete credentials
+        Cookies.remove("auth-save-credentials", { expires: 5 });
+        Cookies.remove("auth-email", { expires: 5 });
+        Cookies.remove("auth-password", { expires: 5 });
+    }
+    
+    Auth.login(email, password);
 });
 $("#logout").click(function() {
     Auth.logout().always(function() {

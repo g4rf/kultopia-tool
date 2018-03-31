@@ -4,21 +4,6 @@
  */
 class Helper {
     /**
-     * Logs the API access in a file.
-     * @param A message to log.
-     */
-    public static function logApiAccess($message) {
-        $file = '../' . Config::$_['logApiAccess'];
-        $log = (new DateTime())->format('r') 
-                . ' ' . Auth::getEmail()
-                . ' ' . preg_replace('/password=[^&$]*/i', 'password=*****',
-                                $message)
-                . "\n";
-        
-        file_put_contents($file, $log, FILE_APPEND);
-    }    
-    
-    /**
      * Clean the output and exit program with HTTP status code.
      * @param integer $code HTTP status code
      * @param string $msg optional message for the HTTP body
@@ -111,34 +96,7 @@ class Helper {
         }
         return str_shuffle($randomCode);
     }
-    
-    /**
-     * Converts a MongoDB\BSON\UTCDateTime to an ISO8601 date for the API.
-     * @param MongoDB\BSON\UTCDateTime $mongoDate The MongoDB date.
-     * @return string An ISO8601 date. On error it returns the current date.
-     */
-    public static function mongo2ApiDate($mongoDate = null) {
-        try {
-            if($mongoDate == null) return (new DateTime())->format('c');
-            return $mongoDate->toDateTime()->format('c');
-        } catch (Exception $ex) {
-            return (new DateTime())->format('c');
-        }
-    }
-    
-    /**
-     * Converts an ISO8601 date to a MongoDB\BSON\UTCDateTime.
-     * @param string $iso An ISO8601 date.
-     * @return \MongoDB\BSON\UTCDateTime A MongoDB date.
-     */
-    public static function api2MongoDate($iso = 'now') {
-        try {
-            return new MongoDB\BSON\UTCDateTime(new DateTime($iso));
-        } catch (Exception $e) {
-            Helper::exitCleanWithCode(400, $e->getMessage());
-        }
-    }
-    
+
     /**
      * Moves an uploaded file to the upload directory and gives back the full URL.
      * @param string $name The index-name in the $_FILES array.
@@ -161,4 +119,20 @@ class Helper {
             
         } return '';
     }*/
+    
+    
+    /**
+     * Logs the API access in a file.
+     * @param A message to log.
+     */
+    public static function logApiAccess($message) {
+        $file = '../' . Config::$_['logApiAccess'];
+        $log = (new DateTime())->format('r') 
+                . ' ' . Auth::getEmail()
+                . ' ' . preg_replace('/password=[^&$]*/i', 'password=*****',
+                                $message)
+                . "\n";
+        
+        file_put_contents($file, $log, FILE_APPEND);
+    }
 }

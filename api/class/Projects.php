@@ -14,7 +14,7 @@ class Projects {
         // if admin, get all projects
         if(Auth::isAdmin()) {
             $result = DB::$db->projects->find([],[
-                'sort' => ['name' => 1]
+                'sort' => ['parent' => 1, 'created' => -1]
             ]);
         } else {
             // if user, only active projects where user is applicant or curator
@@ -25,9 +25,10 @@ class Projects {
                     ['curators' => Auth::getEmail()],
                 ]
             ],[
-                'sort' => ['name' => 1]
+                '$sort' => ['name' => 1]
             ]);
         }
+        
         $projects = [];
         foreach($result as $project) {
             $temp = [
@@ -49,8 +50,11 @@ class Projects {
                 ];
             }
             
-            // applicants & curators
+            // created, applicants & curators
             if(Auth::isAdmin()) {
+                // created
+                $temp['created'] = DB::mongo2ApiDate($project->created);
+                        
                 // add applicants
                 $resultApplicants = DB::$db->users->find([
                     'email' => ['$in' => $project->applicants]
@@ -81,6 +85,7 @@ class Projects {
                     ];
                 }
             }
+            
             $projects[] = $temp;
         }
         
@@ -120,13 +125,14 @@ class Projects {
         
         // allowed fields
         $allowed = ['name', 'description', 'applicants', 'curators', 'active',
-            'parent'];
+            'parent', 'created'];
         
         // change fields
         foreach($data as $key => $value) {
             if(! in_array($key, $allowed)) continue;
             
             if($value == 'false') $value = false;
+            if($value == 'true') $value = true;
             
             DB::$db->projects->updateOne(['id' => $id],[
                 '$set' => [$key => $value]
@@ -181,6 +187,7 @@ class Projects {
         $id = Helper::createId();
         DB::$db->projects->insertOne([
             'id' => $id,
+            'created' => DB::api2MongoDate(),
             'name' => $name,
             'description' => $description,
             'active' => true,

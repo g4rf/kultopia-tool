@@ -26,13 +26,17 @@
 <div id="sidebar">
     <div id="auth">
         <label>
-            Name:<br />
+            <span class="small">Name:</span><br />
             <input type="text" name="email" autofocus />
         </label>
         <label>
-            Passwort:<br />
+            <span class="small">Passwort:</span><br />
             <input type="password" name="password" />
         </label>
+		<label>
+			<input type="checkbox" name="save-credentials" />
+			<span class="small">Zugangsdaten speichern</span>
+		</label>
         <button>Anmelden</button>        
     </div>
 	
@@ -67,27 +71,29 @@
 			<h2>Projekte</h2>
 
 			<button class="add">+ Neues Projekt anlegen</button>
-			<table><tr class="head">
-				<th>Name</th>
-				<th>Beschreibung</th>
-				<th>Antragsteller:in(en)</th>
-				<th>Kurator:in(en)</th>
-				<th>Hauptprojekt</th>
-				<th></th>
-			</tr><tr class="template">
-				<td class="name"></td>
-				<td class="description"></td>
-				<td class="applicants"></td>
-				<td class="curators"></td>
-				<td class="parent"></td>
-				<td>
-					<button class="edit">&#9998; Bearbeiten</button>
-					<button class="disable">&#9940; Deaktivieren</button>					
-				</td>
-			</tr><tr class="no-data">
-				<td colspan="6">Keine Projekte gefunden.</td>
-			</tr></table>
+			
+			<div class="table">
+				<div class="no-data">Keine Projekte gefunden.</div>
 
+				<div class="entry template">
+					<div class="buttonpane">
+						<button class="edit">&#9998; Bearbeiten</button>
+						<button class="disable">&#9940; Deaktivieren</button>
+					</div>
+					<h3 class="name"></h3>					
+					<p class="description"></p>
+					
+					<h4>Antragssteller:in(en)</h4>
+					<div class="applicants"></div>
+					
+					<h4>Kurator:in(en)</h4>
+					<div class="curators"></div>
+					
+					<h4>Unterprojekte</h4>
+					<div class="subprojects"></div>
+				</div>
+			</div>
+			
 			<form class="template add">
 				<fieldset>
 					<legend>Name</legend>

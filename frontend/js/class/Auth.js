@@ -78,7 +78,16 @@ var Auth = {
 
         $("#user-info, #menu, #content").addClass("hidden");
         $("#auth [name='password']").val("");
+        
+        // fill auth form if cookie is set
+        if(Cookies.get("auth-save-credentials")) {
+            $("#auth [name='save-credentials']").prop("checked", true);
+            $("#auth [name='email']").val(Cookies.get("auth-email"));
+            $("#auth [name='password']").val(Cookies.get("auth-password"));
+        }
+
         $("#auth").removeClass("hidden");
+        
         return API.call("logout", "GET");
     },
     
