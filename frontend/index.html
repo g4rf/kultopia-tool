@@ -1,6 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="de"><head>
-    
+
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Kultopia - Verwaltungstool</title>
@@ -9,9 +9,9 @@
 
     <link rel="stylesheet" href="css/vendor/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-	
+
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-    
+
 </head><body>
 <!-- header -->
 <div id="header">
@@ -37,33 +37,38 @@
 			<input type="checkbox" name="save-credentials" />
 			<span class="small">Zugangsdaten speichern</span>
 		</label>
-        <button>Anmelden</button>        
+        <button>Anmelden</button>
     </div>
-	
+
 	<div id="user-info" class="hidden">
 		<div class="description">Name</div>
 			<div class="name"></div>
 		<div class="description">E-Mail</div>
 			<div class="email"></div>
-        <button id="logout">Abmelden</button>        
+        <button id="logout">Abmelden</button>
 		<hr />
     </div>
-    
-	<div id="administration-menu" class="menu hidden">        
+
+	<div id="administration-menu" class="menu hidden">
 		<div class="bold">Administration</div>
 		<br />
-        <div data-section="administration-projects" 
+        <div data-section="administration-projects"
 			 class="menu-item">Projekte</div>
-		<div data-section="administration-accounts" 
+		<div data-section="administration-accounts"
 			 class="menu-item">Accounts</div>
     </div>
-	
-    <div id="menu" class="menu hidden">        
+
+    <div id="menu" class="menu hidden">
 		<div class="bold project-name"></div>
 		<br />
-        <div data-section="application" class="menu-item">Antrag</div>
+		<div data-section="project-consulting" class="menu-item">Beratung</div>
+        <div data-section="project-application" class="menu-item">Konzeption</div>
+		<div data-section="project-report" class="menu-item">Sachbericht</div>
+		<div data-section="project-accounting" class="menu-item">KFP</div>
+		<div data-section="project-press" class="menu-item">Presse</div>
+		<div data-section="project-uploads" class="menu-item">Dokumente & Bilder</div>
     </div>
-	
+
 	<div id="copyright">
 		&copy; 2018 <a href="https://jankossick.de" target="_blank">Jan Kossick</a>
 	</div>
@@ -71,12 +76,50 @@
 
 <!-- main content -->
 <div id="content" class="hidden">
-    
-<!--***** Administration *****-->
-	<div class="projects section hidden">
+
+
+<!--***** Projekte *****-->
+	<div class="projects section">
 		<h1>Projekte</h1>
+
+		<table><tr class="head">
+			<th>Name</th>
+			<th>Beratung</th>
+			<th>Gesamtkosten</th>
+			<th>Personalkosten/VwU</th>
+			<th>Abgerufene Mittel</th>
+			<th>Bewilligungsstatus</th>
+			<th>&nbsp;</th>
+		</tr><tr class="template">
+			<td class="name"></td>
+			<td class="consulting"></td>
+			<td class="total-cost"></td>
+			<td class="staff-cost"></td>
+			<td class="used-funds"></td>
+			<td class="status"></td>
+			<td>
+				<button class="application"
+						data-section="application"
+						title="Konzeption">&#128220;</button>
+				<button class="report">&#128203;</button>
+				<button class="accounting">&#128176;</button>
+				<button class="press">&#128240;</button>
+				<button class="uploads">&#128228;</button>
+			</td>
+		</tr><tr class="no-data">
+			<td colspan="7">Keine Projekte gefunden.</td>
+		</tr></table>
 	</div>
-		
+
+	<div class="project-consulting section hidden">
+		<h1>Beratung</h1>
+	</div>
+
+	<div class="project-application section hidden">
+		<h1>Konzeption / Antrag</h1>
+	</div>
+
+<!--***** Administration *****-->
 	<div class="administration-projects section hidden">
 		<h1>Projekte</h1>
 
@@ -90,7 +133,7 @@
 					<button class="edit">&#9998; Bearbeiten</button>
 					<button class="disable">&#9940; Deaktivieren</button>
 				</div>
-				<h3 class="name expand-button"></h3>					
+				<h3 class="name expand-button"></h3>
 				<p class="description"></p>
 
 				<h4>Antragssteller:in(en)</h4>
@@ -141,11 +184,11 @@
 			</fieldset>
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
-				<div class="options" data-name="applicants"></div>
+				<div class="applicants checkboxgroup"></div>
 			</fieldset>
 			<fieldset>
 				<legend>Kurator:in(en)</legend>
-				<div class="options" data-name="curators"></div>
+				<div class="curators checkboxgroup"></div>
 			</fieldset>
 			<fieldset>
 				<legend>Hauptprojekt</legend>
@@ -155,7 +198,7 @@
 			</fieldset>
 		</form>
 	</div>
-		
+
 	<div class="administration-accounts section hidden">
 		<h1>Accounts</h1>
 
@@ -171,7 +214,7 @@
 			<td class="isadmin center"></td>
 			<td>
 				<button class="edit">&#9998; Bearbeiten</button>
-				<button class="disable">&#9940; Deaktivieren</button>					
+				<button class="disable">&#9940; Deaktivieren</button>
 			</td>
 		</tr><tr class="no-data">
 			<td colspan="4">Keine Accounts gefunden.</td>
@@ -216,7 +259,7 @@
 
 <!-- overlay for ajax requests -->
 <div id="ajax"><img src="pic/ajax-loader.gif" alt="Loading..." /></div>
-        
+
 <!-- frameworks, plugins -->
 <script src="js/vendor/js.cookie-2.1.3.js"></script>
 <script src="js/vendor/jquery-3.1.1.min.js"></script>
@@ -230,6 +273,7 @@
 <script src="js/class/API.js"></script>
 <script src="js/class/Auth.js"></script>
 <script src="js/class/Administration.js"></script>
+<script src="js/class/Projects.js"></script>
 
 <!-- other stuff -->
 <script src="js/events.js"></script>

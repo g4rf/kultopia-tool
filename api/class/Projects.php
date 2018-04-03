@@ -110,7 +110,7 @@ class Projects {
     public static function update($id) {
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
-        // check if user exists
+        // check if project exists
         if(! DB::$db->projects->findOne(['id' => $id]))
             Helper::exitCleanWithCode (404);
         

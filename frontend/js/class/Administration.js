@@ -1,7 +1,7 @@
 /* global API, Helper, Auth */
 
 /**
- * Holds functions for the accounts section.
+ * Holds functions for the administration.
  * @namespace
  */
 var Administration = {
@@ -61,10 +61,10 @@ var Administration = {
                     }
                    
                     // edit button
-                    /*$("button.edit", newRow).click(function() {
+                    $("button.edit", _new).click(function() {
                         var dialog = Helper.dialog(
-                            $(".subsection.accounts form.template.edit").clone()
-                                .removeClass("template"),
+                            $(".section.administration-projects form.template.edit")
+                                .clone().removeClass("template"),
                             [{
                                 "name": _("Abbrechen"),
                                 "callback": Helper.closeDialog,
@@ -74,18 +74,18 @@ var Administration = {
                                 "callback": function() {
                                     var form = $("#dialog form");
 
-                                    API.call("account/" + account.email, {
+                                    API.call("project/" + project.id, {
                                         "200": function() {
-                                            Administration.refreshAccounts();
-                                            Helper.hint(_("Account geändert."));
+                                            Administration.refreshProjects();
+                                            Helper.hint(_("Projekt geändert."));
+                                            Helper.closeDialog();
+                                        },
+                                        "400": function() {
+                                            Helper.hint(_("Der Projektname darf nicht leer sein."));
                                             Helper.closeDialog();
                                         },
                                         "401": function() {
-                                            Helper.hint(_("Nur Administratoren dürfen Accounts anpassen."));
-                                            Helper.closeDialog();
-                                        },
-                                        "403": function() {
-                                            Helper.hint(_("Der eigene Account kann nicht verändert werden."));
+                                            Helper.hint(_("Nur Administratoren dürfen Projekte anpassen."));
                                             Helper.closeDialog();
                                         }
                                     }, "PUT", $(form).serialize());
@@ -93,8 +93,57 @@ var Administration = {
                             }]
                         );
                         // write values to fields
-                        Helper.fillFields(account, dialog);
-                    });*/
+                        Helper.fillFields(project, dialog);
+                        // fill applicants & curators
+                        API.call("accounts", {
+                            "200": function(accounts) {
+                                jQuery.each(accounts, function(index, account) {
+                                    // applicants
+                                    $("<label />").append(
+                                        $("<input />").attr({
+                                            type: "checkbox",
+                                            name: "applicants[]",
+                                            value: account.email
+                                    })).append(
+                                        $("<span />").append(
+                                            account.name + " (" + account.email + ")")
+                                    ).appendTo($(".applicants", dialog));
+                                    jQuery.each(project.applicants, function(index, applicant) {
+                                        $("input[name='applicants[]'][value='" + applicant.email + "']", dialog).prop("checked", true);
+                                    });
+                                    // curators
+                                    $("<label />").append(
+                                        $("<input />").attr({
+                                            type: "checkbox",
+                                            name: "curators[]",
+                                            value: account.email
+                                        })
+                                    ).append(
+                                        $("<span />").append(
+                                            account.name + " (" + account.email + ")")
+                                    ).appendTo($(".curators", dialog));
+                                    jQuery.each(project.curators, function(index, curator) {
+                                        $("input[name='curators[]'][value='" + curator.email + "']", dialog).prop("checked", true);
+                                    });
+                                });
+                            }
+                        });
+
+                        // fill parent
+                        API.call("projects", {
+                            "200": function(parents) {
+                                jQuery.each(parents, function(index, parent) {
+                                    var option = $("<option />").attr({
+                                        "value": parent.id
+                                    }).append(parent.name)
+                                    .appendTo($("[name='parent']", dialog));
+                                    if(parent.id == project.parent.id) {
+                                        option.prop("selected", true);
+                                    }
+                                });
+                            }
+                        });
+                    });
                     
                     // disable button
                     $("button.disable", _new).click(function() {
@@ -236,8 +285,8 @@ var Administration = {
 };
 
 /* add project */
-$(".subsection.projects .add").click(function() {
-    var form = $(".subsection.projects form.template.add").clone()
+$(".section.administration-projects .add").click(function() {
+    var form = $(".section.administration-projects form.template.add").clone()
             .removeClass("template");
     
     // fill applicants & curators
@@ -261,8 +310,10 @@ $(".subsection.projects .add").click(function() {
                         name: "curators[]",
                         value: account.email
                     })
-                ).append(account.name + " (" + account.email + ")")
-                .appendTo($(".curators", form));
+                ).append(
+                    $("<span />").append(
+                        account.name + " (" + account.email + ")")
+                ).appendTo($(".curators", form));
             });
         }
     });
@@ -308,9 +359,10 @@ $(".subsection.projects .add").click(function() {
 });
 
 /* add account */
-$(".subsection.accounts .add").click(function() {
+$(".section.administration-accounts .add").click(function() {
     Helper.dialog(
-        $(".subsection.accounts form.template.add").clone().removeClass("template"),
+        $(".section.administration-accounts form.template.add").clone()
+                .removeClass("template"),
         [{
             "name": _("Abbrechen"),
             "callback": Helper.closeDialog,

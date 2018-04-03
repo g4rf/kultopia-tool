@@ -1,4 +1,4 @@
-/* global Auth, Helper, Administration */
+/* global Auth, Helper, Administration, Application, Projects, Consulting */
 
 /* click, load and other events */
 
@@ -68,27 +68,38 @@ $(".menu-item").click(function() {
     // close dialog
     Helper.closeDialog();
     
-    // mark menu item
-    $(".menu-item").removeClass("selected");
-    $(this).addClass("selected");
-    
     // open section
     var section = $(this).data("section");
     $("#content .section").addClass("hidden");
     $("#content ." + section).removeClass("hidden");
+    
+    // mark menu item
+    $(".menu-item").removeClass("selected");
+    $(".menu-item[data-section='" + section + "']").addClass("selected");
     
     // do more stuff depending on section
     switch (section) {
         case "projects":
             $("#menu").addClass("hidden");
             $("#administration-menu").addClass("hidden");
+            Projects.refresh();
+            break;
+        case "project-consulting":
+            $("#menu").removeClass("hidden");
+            $("#administration-menu").addClass("hidden");
+            Consulting.load();            
+            break;
+        case "project-application":
+            $("#menu").removeClass("hidden");
+            $("#administration-menu").addClass("hidden");
+            Application.load();            
             break;
         case "administration-projects":
             $("#menu").addClass("hidden");
             $("#administration-menu").removeClass("hidden");
             $("#menu-administration").addClass("selected");
-            $("#administration-menu [data-section='administration-projects']")
-                    .addClass("selected");
+            /*$("#administration-menu [data-section='administration-projects']")
+                    .addClass("selected");*/
             Administration.refreshProjects();
             break;
         case "administration-accounts":

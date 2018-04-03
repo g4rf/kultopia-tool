@@ -1,4 +1,4 @@
-/* global API, Helper */
+/* global API, Helper, Projects */
 
 /**
  * Holds infos and functions for the authentification with the API.
@@ -58,6 +58,8 @@ var Auth = {
                 else $("#menu-administration").addClass("hidden");
                 
                 $("#content").removeClass("hidden");
+                
+                Projects.refresh();
             },
             401: function() { // outdated key
                 Auth.logout();
