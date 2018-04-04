@@ -1,4 +1,4 @@
-/* global API, Helper, Auth */
+/* global API, Helper, Auth, Administration */
 
 /**
  * Holds functions for the projects section.
@@ -31,133 +31,29 @@ var Projects = {
                     var newRow = $("tr.template", table).clone()
                             .removeClass("template");
 
-                    // add data
-                    $(newRow).data("data", project);
-                    
-                   
-                    // select project
-                    newRow.click(function() {
-                        Projects.current = project;
-                        $(".project-name").empty().append(project.name);
+                    // add data and id
+                    $(newRow).data("data", project).attr({
+                        "id": project.id
                     });
                     
-                    // name and click
-                    $(".name", newRow).append(project.name).click(function() {
+                    // add name
+                    $(".name", newRow).append(project.name);
+                                       
+                    // select project
+                    newRow.css("cursor", "pointer").click(function() {
+                        Projects.current = project;
+                        $(".project-name").empty().append(project.name);
                         $(".menu-item[data-section='project-consulting']").click();
-                    }).css("cursor", "pointer");
-                    // application button
-                    $("button.application", newRow).click(function() {
-                        $(".menu-item[data-section='project-application']").click();
                     });
                     
                     // add to table
-                    $(table).append(newRow);
+                    if(Auth.isAdmin() && project.parent) { // has parent
+                        newRow.insertAfter($("#" + project.parent.id, table));
+                        $("td:first", newRow).css("padding-left", "20px")
+                                .prepend("&rdsh;");
+                    } else $(table).append(newRow);
                 });
             }
         });
     }
 };
-
-/* add project */
-$(".section.administration-projects .add").click(function() {
-    var form = $(".section.administration-projects form.template.add").clone()
-            .removeClass("template");
-    
-    // fill applicants & curators
-    API.call("accounts", {
-        "200": function(accounts) {
-            jQuery.each(accounts, function(index, account) {
-                // applicants
-                $("<label />").append(
-                    $("<input />").attr({
-                        type: "checkbox",
-                        name: "applicants[]",
-                        value: account.email
-                })).append(
-                    $("<span />").append(
-                        account.name + " (" + account.email + ")")
-                ).appendTo($(".applicants", form));
-                // curators
-                $("<label />").append(
-                    $("<input />").attr({
-                        type: "checkbox",
-                        name: "curators[]",
-                        value: account.email
-                    })
-                ).append(
-                    $("<span />").append(
-                        account.name + " (" + account.email + ")")
-                ).appendTo($(".curators", form));
-            });
-        }
-    });
-
-    // fill parent
-    API.call("projects", {
-        "200": function(projects) {
-            jQuery.each(projects, function(index, project) {
-                $("<option />").attr({
-                    "value": project.id
-                }).append(project.name)
-                    .appendTo($("[name='parent']", form));
-            });
-        }
-    });
-
-    // open dialog
-    Helper.dialog(
-        form,
-        [{
-            "name": _("Abbrechen"),
-            "callback": Helper.closeDialog,
-            "class": "cancel"
-        }, {
-            "name": _("Anlegen"),
-            "callback": function() {
-                var form = $("#dialog form");
-
-                API.call("project", {
-                    "201": function() {
-                        Administration.refreshProjects();
-                        Helper.hint(_("Projekt angelegt."));
-                        Helper.closeDialog();
-                    },
-                    "400": function() {
-                        Helper.hint(_("Der Name fehlt."));
-                        $("input[name='name']", form).focus();
-                    }
-                }, "POST", $(form).serialize());
-            }
-        }]
-    );
-});
-
-/* add account */
-$(".section.administration-accounts .add").click(function() {
-    Helper.dialog(
-        $(".section.administration-accounts form.template.add").clone()
-                .removeClass("template"),
-        [{
-            "name": _("Abbrechen"),
-            "callback": Helper.closeDialog,
-            "class": "cancel"
-        }, {
-            "name": _("Anlegen"),
-            "callback": function() {
-                var form = $("#dialog form");
-                
-                API.call("account", {
-                    "201": function() {
-                        Administration.refreshAccounts();
-                        Helper.hint(_("Account angelegt und E-Mail versandt."));
-                        Helper.closeDialog();
-                    },
-                    "409": function() {
-                        Helper.hint(_("E-Mail-Adresse existiert bereits."));
-                        $("input[name='email']", form).focus();
-                    }
-                }, "POST", $(form).serialize());
-            }
-        }]
-    );
-});

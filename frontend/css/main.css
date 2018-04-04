@@ -136,7 +136,7 @@ table {
 table td {
 	border-top: solid 1px #ccc;
 	border-left: solid 1px #ccc;
-	padding: 0 5px;
+	padding: 5px;
 }
 table tr:nth-child(even) td {
 	background-color: #F5F5F5;
@@ -482,6 +482,11 @@ form img {
 	font-weight: bold; 
 	font-size: 75%; 
 	color: #957fcc; 
+}
+
+#menu .project-name {
+	font-size: 1.5em;
+	word-wrap: break-word;
 }
 
 /***** content ****/

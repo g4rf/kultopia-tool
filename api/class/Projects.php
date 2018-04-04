@@ -25,7 +25,7 @@ class Projects {
                     ['curators' => Auth::getEmail()],
                 ]
             ],[
-                '$sort' => ['name' => 1]
+                'sort' => ['created' => -1]
             ]);
         }
         
@@ -103,7 +103,7 @@ class Projects {
      * @apiParam {String} [parent] The id of the parent project.
      * @apiParam {Boolean} [active] Sets if the project is active.
      * @apiSuccess (200) {Object} project The modified project.
-     * @apiError (400) BadRequest Parameter name must not be emty.
+     * @apiError (400) BadRequest Parameter name must not be empty, the parent project have to exist and the parent project must not be a child of another project.
      * @apiError (401) Unauthorized Only admins can update projects.
      * @apiError (404) NotFound Project with this id not found.
      */
@@ -121,6 +121,18 @@ class Projects {
         if(array_key_exists('name', $data)) {
             // name must not be empty
             if(strlen($data['name']) == 0) Helper::exitCleanWithCode (400);
+        }
+        
+        // if it tries to change the parent
+        if(array_key_exists('parent', $data)) {
+            // avoid self reference
+            if($id == $data['parent']) Helper::exitCleanWithCode (400);
+            
+            $parent = DB::$db->projects->findOne(['id' => $data['parent']]);            
+            // is there a parent with this id?
+            if(! $parent) Helper::exitCleanWithCode (400);
+            // parent project's  parent property must be null
+            if($parent->parent != null) Helper::exitCleanWithCode (400);
         }
         
         // allowed fields
@@ -155,7 +167,7 @@ class Projects {
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
      * @apiSuccess (201) project Project created.
-     * @apiError (400) BadRequest Parameter name missing.
+     * @apiError (400) BadRequest Parameter name missing, parent project have to exist and must not be a child.
      * @apiError (401) Unauthorized Only admins are allowed to create accounts.
      */
     public static function create() {
@@ -170,8 +182,15 @@ class Projects {
         if(! $description) $description = '';
         
         // check if parent is set
-        $parent = filter_input(INPUT_POST, 'parent');
-        if(! $parent) $parent = null;
+        $parentId = filter_input(INPUT_POST, 'parent');
+        if(! $parentId) $parentId = null;
+        else {
+            $parent = DB::$db->projects->findOne(['id' => $parentId]);
+            // is there a parent with this id?
+            if(! $parent) Helper::exitCleanWithCode (400);
+            // parent project's parent property must be null
+            if($parent->parent != null) Helper::exitCleanWithCode (400);
+        }        
         
         // applicants
         $applicants = filter_input(INPUT_POST, 'applicants', FILTER_DEFAULT,
@@ -191,7 +210,7 @@ class Projects {
             'name' => $name,
             'description' => $description,
             'active' => true,
-            'parent' => $parent,
+            'parent' => $parentId,
             'applicants' => $applicants,
             'curators' => $curators
         ]);

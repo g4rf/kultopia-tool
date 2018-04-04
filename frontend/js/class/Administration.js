@@ -82,7 +82,6 @@ var Administration = {
                                         },
                                         "400": function() {
                                             Helper.hint(_("Der Projektname darf nicht leer sein."));
-                                            Helper.closeDialog();
                                         },
                                         "401": function() {
                                             Helper.hint(_("Nur Administratoren dürfen Projekte anpassen."));
@@ -133,11 +132,16 @@ var Administration = {
                         API.call("projects", {
                             "200": function(parents) {
                                 jQuery.each(parents, function(index, parent) {
+                                    // no child projects
+                                    if(parent.parent != null) return;
+                                    // add option
                                     var option = $("<option />").attr({
                                         "value": parent.id
                                     }).append(parent.name)
                                     .appendTo($("[name='parent']", dialog));
-                                    if(parent.id == project.parent.id) {
+                                    // select current parent
+                                    if(project.parent &&
+                                            parent.id == project.parent.id) {
                                         option.prop("selected", true);
                                     }
                                 });
@@ -169,7 +173,7 @@ var Administration = {
                         $(_new).appendTo(table);
                     } else { // sub project
                         $(_new).appendTo(
-                            $("#" + project.parent.id + " .subprojects:first"));
+                            $("#" + project.parent.id + " .subprojects:first", table));
                     }
                 });
             }
@@ -322,6 +326,9 @@ $(".section.administration-projects .add").click(function() {
     API.call("projects", {
         "200": function(projects) {
             jQuery.each(projects, function(index, project) {
+                // no child projects
+                if(project.parent != null) return;
+                // add option
                 $("<option />").attr({
                     "value": project.id
                 }).append(project.name)

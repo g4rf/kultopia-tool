@@ -87,12 +87,12 @@ $(".menu-item").click(function() {
         case "project-consulting":
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");
-            Consulting.load();            
+            //Consulting.load();            
             break;
         case "project-application":
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");
-            Application.load();            
+            //Application.load();            
             break;
         case "administration-projects":
             $("#menu").addClass("hidden");
