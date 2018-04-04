@@ -3,11 +3,11 @@
 /* click, load and other events */
 
 /* ajax events */
-/*$(document).ajaxStart(function() {
+$(document).ajaxStart(function() {
     $("#ajax").fadeIn('fast');
 }).ajaxStop(function() {
     $("#ajax").fadeOut('fast');
-});*/
+});
 
 /* prevent form submission (as we are a one pager) */
 $(document).on("submit", "form", function(e) { 
@@ -92,7 +92,7 @@ $(".menu-item").click(function() {
         case "project-application":
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");
-            //Application.load();            
+            Application.load();            
             break;
         case "administration-projects":
             $("#menu").addClass("hidden");

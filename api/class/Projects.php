@@ -128,11 +128,13 @@ class Projects {
             // avoid self reference
             if($id == $data['parent']) Helper::exitCleanWithCode (400);
             
-            $parent = DB::$db->projects->findOne(['id' => $data['parent']]);            
-            // is there a parent with this id?
-            if(! $parent) Helper::exitCleanWithCode (400);
-            // parent project's  parent property must be null
-            if($parent->parent != null) Helper::exitCleanWithCode (400);
+            $parent = DB::$db->projects->findOne(['id' => $data['parent']]);
+            // if no parent, no change
+            if(!$parent) unset($data['parent']);
+            else {
+                // parent project's parent property must be null
+                if($parent->parent != null) Helper::exitCleanWithCode (400);
+            }
         }
         
         // allowed fields
