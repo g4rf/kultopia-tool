@@ -122,6 +122,21 @@ if($request[0] == 'login') {
     Auth::checkkey();
     Projects::update($request[1]);
 
+// Templates
+} elseif($request[0] == 'templates') {
+    Auth::checkkey();
+    
+    if($requestMethod == 'GET') Templates::get();
+    else Helper::exitCleanWithCode (400);
+    
+} elseif($request[0] == 'template' && $requestMethod == 'POST') {
+    Auth::checkkey();
+    Templates::create();
+
+} elseif($request[0] == 'template' && $requestMethod == 'PUT') {
+    Auth::checkkey();
+    Templates::update($request[1]);
+
     
 // nothing matched - bad request
 } else {

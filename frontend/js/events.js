@@ -1,4 +1,4 @@
-/* global Auth, Helper, Administration, Application, Projects, Consulting */
+/* global Auth, Helper, Administration, Application, Projects, Consulting, Templates */
 
 /* click, load and other events */
 
@@ -101,6 +101,10 @@ $(".menu-item").click(function() {
             /*$("#administration-menu [data-section='administration-projects']")
                     .addClass("selected");*/
             Administration.refreshProjects();
+            break;
+        case "administration-templates":
+            $("#menu-administration").addClass("selected");
+            Templates.refresh();
             break;
         case "administration-accounts":
             $("#menu-administration").addClass("selected");

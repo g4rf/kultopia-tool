@@ -54,6 +54,8 @@
 		<br />
         <div data-section="administration-projects"
 			 class="menu-item">Projekte</div>
+		<div data-section="administration-templates"
+			 class="menu-item">Vorlagen</div>
 		<div data-section="administration-accounts"
 			 class="menu-item">Accounts</div>
     </div>
@@ -157,6 +159,10 @@
 				<textarea name="description"></textarea>
 			</fieldset>
 			<fieldset>
+				<legend>Vorlage für Konzeption/Antrag</legend>
+				<select name="template-application"></select>
+			</fieldset>
+			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
 				<div class="applicants checkboxgroup"></div>
 			</fieldset>
@@ -183,6 +189,10 @@
 				<textarea name="description"></textarea>
 			</fieldset>
 			<fieldset>
+				<legend>Vorlage für Konzeption/Antrag</legend>
+				<select name="templateApplication"></select>
+			</fieldset>
+			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
 				<div class="applicants checkboxgroup"></div>
 			</fieldset>
@@ -195,6 +205,74 @@
 				<select name="parent">
 					<option value="">---</option>
 				</select>
+			</fieldset>
+		</form>
+	</div>
+
+	<div class="administration-templates section hidden">
+		<h1>Vorlagen</h1>
+
+		<button class="add">+ Neue Vorlage anlegen</button>
+		<table><tr class="head">
+			<th>Name</th>
+			<th>Typ</th>
+			<th>Beschreibung</th>
+			<th>&nbsp;</th>
+		</tr><tr class="template">
+			<td class="name"></td>
+			<td class="type"></td>
+			<td class="description"></td>
+			<td>
+				<button class="edit">&#9998; Bearbeiten</button>
+			</td>
+		</tr><tr class="no-data">
+			<td colspan="4">Keine Vorlagen gefunden.</td>
+		</tr></table>
+
+		<form class="template add">
+			<fieldset>
+				<legend>Typ</legend>
+				<select name="type">
+					<option value="application">Konzeption / Antrag</option>
+					<option value="report">Sachbericht</option>
+					<option value="accounting">KFP</option>
+				</select>
+			</fieldset>
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+			<fieldset>
+				<legend>Beschreibung</legend>
+				<input type="text" name="description" />
+			</fieldset>
+			<fieldset>
+				<legend>Struktur</legend>
+				<textarea name="structure" class="code"></textarea>
+			</fieldset>
+		</form>
+
+		<form class="template edit">
+			<input type="hidden" name="id" />
+			<fieldset>
+				<legend>Typ</legend>
+				<select name="type">
+					<option value="application">Konzeption / Antrag</option>
+					<option value="report">Sachbericht</option>
+					<option value="accounting">KFP</option>
+				</select>
+			</fieldset>
+			<fieldset>
+				<legend>Name</legend>
+				<input type="text" name="name" />
+			</fieldset>
+			<fieldset>
+				<legend>Beschreibung</legend>
+				<input type="text" name="description" />
+			</fieldset>
+			<fieldset>
+				<legend>Struktur</legend>
+				<textarea name="structure" class="code"></textarea>
 			</fieldset>
 		</form>
 	</div>
@@ -273,6 +351,7 @@
 <script src="js/class/API.js"></script>
 <script src="js/class/Auth.js"></script>
 <script src="js/class/Administration.js"></script>
+<script src="js/class/Templates.js"></script>
 <script src="js/class/Projects.js"></script>
 <script src="js/class/Application.js"></script>
 

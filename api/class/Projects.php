@@ -36,7 +36,8 @@ class Projects {
                 'name' => $project->name,
                 'description' => $project->description,
                 'active' => $project->active,
-                'parent' => $project->parent
+                'parent' => $project->parent,
+                'templateApplication' => $project->templateApplication
             ];
             
             // parent
@@ -98,6 +99,7 @@ class Projects {
      * @apiParam {String} id The id.
      * @apiParam {String} [name] The name.
      * @apiParam {String} [description] The description.
+     * @apiParam {String} [templateApplication] The template for the application.
      * @apiParam {Array} [applicants] The applicants.
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
@@ -139,7 +141,7 @@ class Projects {
         
         // allowed fields
         $allowed = ['name', 'description', 'applicants', 'curators', 'active',
-            'parent', 'created'];
+            'parent', 'created', 'templateApplication'];
         
         // change fields
         foreach($data as $key => $value) {
@@ -166,11 +168,12 @@ class Projects {
      * @apiParam {String} name The name.
      * @apiParam {String} [description] The description.
      * @apiParam {Array} [applicants] The applicants.
+     * @apiParam {Array} [templateApplication] The template for the application.
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
      * @apiSuccess (201) project Project created.
      * @apiError (400) BadRequest Parameter name missing, parent project have to exist and must not be a child.
-     * @apiError (401) Unauthorized Only admins are allowed to create accounts.
+     * @apiError (401) Unauthorized Only admins are allowed to create projects.
      */
     public static function create() {
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
@@ -182,6 +185,10 @@ class Projects {
         // check if description is set
         $description = filter_input(INPUT_POST, 'description');
         if(! $description) $description = '';
+        
+        // check if application template is set
+        $templateApplication = filter_input(INPUT_POST, 'templateApplication');
+        if(! $templateApplication) $templateApplication = null;
         
         // check if parent is set
         $parentId = filter_input(INPUT_POST, 'parent');
@@ -211,6 +218,7 @@ class Projects {
             'created' => DB::api2MongoDate(),
             'name' => $name,
             'description' => $description,
+            'templateApplication' => $templateApplication,
             'active' => true,
             'parent' => $parentId,
             'applicants' => $applicants,

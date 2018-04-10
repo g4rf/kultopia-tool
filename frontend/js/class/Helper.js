@@ -89,6 +89,8 @@ var Helper = {
                     field.val(value);
                 } else if(field.is("textarea")) {
                     field.empty().append(value);
+                } else if(field.is("select")) {
+                    field.val(value);
                 }
             }
         });

@@ -232,9 +232,18 @@ input[type='number'] {
 form select {
 	width: 100%;
 }
+
 textarea {
     resize: vertical;
 	height: 10em;
+}
+textarea.code {
+	height: 400px;
+	font-family: monospace;
+	resize: both;
+	white-space: pre;
+	-moz-tab-size: 1.5em;
+	tab-size: 1.5em;
 }
 
 .checkboxgroup {

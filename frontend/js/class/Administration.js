@@ -93,6 +93,20 @@ var Administration = {
                         );
                         // write values to fields
                         Helper.fillFields(project, dialog);
+                        // fill application template
+                        API.call("templates", {
+                            "200": function(templates) {
+                                var select = $("[name='templateApplication']", dialog);
+                                jQuery.each(templates, function(index, template) {
+                                    if(template.type != "application") return;
+                                    $("<option />").attr({"value": template.id})
+                                            .append(template.name)
+                                            .appendTo(select);
+                                });
+                                console.log(project);
+                                select.val(project.templateApplication);
+                            }
+                        });
                         // fill applicants & curators
                         API.call("accounts", {
                             "200": function(accounts) {
@@ -224,8 +238,8 @@ var Administration = {
                     // edit button
                     $("button.edit", newRow).click(function() {
                         var dialog = Helper.dialog(
-                            $(".subsection.accounts form.template.edit").clone()
-                                .removeClass("template"),
+                            $(".section.administration-accounts form.template.edit")
+                                .clone().removeClass("template"),
                             [{
                                 "name": _("Abbrechen"),
                                 "callback": Helper.closeDialog,
@@ -293,6 +307,19 @@ $(".section.administration-projects .add").click(function() {
     var form = $(".section.administration-projects form.template.add").clone()
             .removeClass("template");
     
+    // fill application template
+    API.call("templates", {
+        "200": function(templates) {
+            var select = $("[name='templateApplication']", form);
+            jQuery.each(templates, function(index, template) {
+                if(template.type != "application") return;
+                $("<option />").attr({"value": template.id})
+                        .append(template.name)
+                        .appendTo(select);
+            });
+        }
+    });
+                        
     // fill applicants & curators
     API.call("accounts", {
         "200": function(accounts) {
