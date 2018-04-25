@@ -43,12 +43,14 @@ a:hover {
  */
 
 ::-moz-selection {
-    background: #fff;
+    background: #555;
+    color: #ccc;
     text-shadow: none;
 }
 
 ::selection {
-    background: #fff;
+    background: #555;
+    color: #ccc;
     text-shadow: none;
 }
 
@@ -517,6 +519,15 @@ form img {
 	margin-top: 50px;
 }
 
+
+/* ==========================================================================
+   Vendor classes
+   ========================================================================== */
+
+.trumbowyg-button-pane button {
+    margin: 0;
+    color: #333;
+}
 
 
 /* ==========================================================================

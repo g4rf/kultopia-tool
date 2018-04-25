@@ -1,10 +1,19 @@
-/* global API, Helper, Auth */
+/* global API, Helper, Auth, Options */
 
 /**
  * Holds functions for the administration.
  * @namespace
  */
 var Administration = {
+    /**
+     * Loads the frontpage text.
+     */
+    loadFrontpage: function() {
+        Options.get("frontpage", function(text) {
+            $(".section.administration-frontpage textarea").trumbowyg("html", text);
+        });
+    },
+    
     /**
      * Loads projects from the API and puts them into the table.
      * @returns {jqXHR} see http://api.jquery.com/jQuery.ajax/
@@ -302,6 +311,11 @@ var Administration = {
     }
 };
 
+$(".section.administration-frontpage .save").click(function() {
+    Options.set("frontpage", 
+        $(".section.administration-frontpage textarea").trumbowyg("html"));
+});
+        
 /* add project */
 $(".section.administration-projects .add").click(function() {
     var form = $(".section.administration-projects form.template.add").clone()

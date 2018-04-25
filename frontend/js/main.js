@@ -1,4 +1,4 @@
-/* global Auth */
+/* global Auth, Options */
 
 // this is for correct timezone support
 Date.prototype.toDateInputValue = (function() {
@@ -36,8 +36,35 @@ $("[type='date']").val(new Date().toDateInputValue());
 // set all time inputs to 00:00
 $("[type='time']").val("00:00");
 
+// initialize trumbowyg wysiwyg editor
+$.trumbowyg.svgPath = "/pic/icons.svg";
+$('textarea.wysiwyg').trumbowyg({
+    btns: [
+        ['viewHTML'],
+        ['historyUndo', 'historyRedo'],
+        ['formatting'],
+        ['strong', 'em', 'del'],
+        ['foreColor', 'backColor'],
+        //['superscript', 'subscript'],
+        ['link'],
+        ['base64'],
+        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+        ['unorderedList', 'orderedList'],
+        ['horizontalRule'],
+        ['removeformat']
+    ],
+    lang: 'de',
+    autogrow: true,
+    removeformatPasted: true,
+    urlProtocol: true
+});
+
 // start processing
 $(window).on("load", function() {
+    Options.get("frontpage", function(value) {
+        $(".section.frontpage").empty().append(value);
+    });
+    
     // try to login with saved key
     Auth.checkKey().always(function() {
         

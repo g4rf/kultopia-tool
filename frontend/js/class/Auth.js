@@ -57,7 +57,7 @@ var Auth = {
                     $("#menu-administration").removeClass("hidden");
                 else $("#menu-administration").addClass("hidden");
                 
-                $("#content").removeClass("hidden");
+                $("#frontpage").addClass("hidden");
                 
                 Projects.refresh();
             },
@@ -78,7 +78,7 @@ var Auth = {
         Cookies.remove("user-key");
         Cookies.remove("user-isadmin");
 
-        $("#user-info, #menu, #content").addClass("hidden");
+        $("#user-info, #menu, #administration-menu, .section").addClass("hidden");
         $("#auth [name='password']").val("");
         
         // fill auth form if cookie is set
@@ -88,7 +88,7 @@ var Auth = {
             $("#auth [name='password']").val(Cookies.get("auth-password"));
         }
 
-        $("#auth").removeClass("hidden");
+        $("#auth, .section.frontpage").removeClass("hidden");
         
         return API.call("logout", "GET");
     },

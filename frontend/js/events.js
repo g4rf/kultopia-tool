@@ -58,6 +58,9 @@ $("#auth button").click(function() {
     Auth.login(email, password);
 });
 $("#logout").click(function() {
+    Cookies.remove("auth-save-credentials", { expires: 5 });
+    Cookies.remove("auth-email", { expires: 5 });
+    Cookies.remove("auth-password", { expires: 5 });
     Auth.logout().always(function() {
         window.location.reload();
     });
@@ -109,6 +112,10 @@ $(".menu-item").click(function() {
         case "administration-accounts":
             $("#menu-administration").addClass("selected");
             Administration.refreshAccounts();
+            break;            
+        case "administration-frontpage":
+            $("#menu-administration").addClass("selected");
+            Administration.loadFrontpage();
             break;
     }
 });

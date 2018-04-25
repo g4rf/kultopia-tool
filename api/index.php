@@ -82,6 +82,15 @@ if($request[0] == 'login') {
 } elseif ($request[0] == 'logout') {
     Auth::logout();
 
+// Options
+} elseif($request[0] == 'options' && $requestMethod == 'GET') {
+    // !! be careful, everyone can read options
+    Options::get($request[1]);
+    
+} elseif($request[0] == 'options' && $requestMethod == 'PUT') {
+    Auth::checkkey();
+    Options::update($request[1]);
+
     
 // Accounts
 } elseif($request[0] == 'accounts') {
