@@ -1,4 +1,4 @@
-/* global API, Helper, Auth, Options */
+/* global API, Helper, Auth, Options, trumbowygOptions */
 
 /**
  * Holds functions for the administration.
@@ -100,8 +100,10 @@ var Administration = {
                                 }
                             }]
                         );
+                        // load trumbowyg
+                        $('textarea.wysiwyg-dialog', dialog).trumbowyg(trumbowygOptions);
                         // write values to fields
-                        Helper.fillFields(project, dialog);
+                        Helper.fillFields(project, dialog);                        
                         // fill application template
                         API.call("templates", {
                             "200": function(templates) {
@@ -112,7 +114,6 @@ var Administration = {
                                             .append(template.name)
                                             .appendTo(select);
                                 });
-                                console.log(project);
                                 select.val(project.templateApplication);
                             }
                         });
@@ -150,7 +151,6 @@ var Administration = {
                                 });
                             }
                         });
-
                         // fill parent
                         API.call("projects", {
                             "200": function(parents) {
@@ -320,6 +320,9 @@ $(".section.administration-frontpage .save").click(function() {
 $(".section.administration-projects .add").click(function() {
     var form = $(".section.administration-projects form.template.add").clone()
             .removeClass("template");
+    
+    // load trumbowyg
+    $('textarea.wysiwyg-dialog', form).trumbowyg(trumbowygOptions);
     
     // fill application template
     API.call("templates", {

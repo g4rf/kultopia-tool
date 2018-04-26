@@ -37,6 +37,7 @@ class Projects {
                 'description' => $project->description,
                 'active' => $project->active,
                 'parent' => $project->parent,
+                'consultingText' => $project->consultingText,
                 'templateApplication' => $project->templateApplication
             ];
             
@@ -92,6 +93,91 @@ class Projects {
         
         print json_encode($projects);
     }
+    
+    /**
+     * @api {get} /project/:id Get one project for the logged in user.
+     * @apiGroup Projects
+     * @apiSuccess (200) {Object} project The project.
+     * @apiError (401) Unauthorized Only registered users can get projects.
+     * @apiError (404) NotFound No project found.
+     */
+    public static function getOne($id) {        
+        // if admin, get access to all projects
+        if(Auth::isAdmin()) {
+            $result = DB::$db->projects->findOne(['id' => $id]);
+        } else {
+            // if user, only active projects where user is applicant or curator
+            $result = DB::$db->projects->findOne([
+                'id' => $id,
+                'active' => ['$in' => [1,'1',true,'true']],
+                '$or' => [
+                    ['applicants' => Auth::getEmail()],
+                    ['curators' => Auth::getEmail()],
+                ]
+            ]);
+        }
+        
+        if(! $result) Helper::exitCleanWithCode(404);
+        
+        $project = [
+            'id' => $result->id,
+            'name' => $result->name,
+            'description' => $result->description,
+            'active' => $result->active,
+            'parent' => $result->parent,
+            'consultingText' => $result->consultingText,
+            'templateApplication' => $result->templateApplication
+        ];
+            
+        // parent
+        $parent = DB::$db->projects->findOne([
+            'id' => $result->parent
+        ]);
+        if($parent) {
+            $project['parent'] = [
+                'id' => $parent->id,
+                'name' => $parent->name
+            ];
+        }
+            
+        // created, applicants & curators
+        if(Auth::isAdmin()) {
+            // created
+            $project['created'] = DB::mongo2ApiDate($result->created);
+
+            // add applicants
+            $resultApplicants = DB::$db->users->find([
+                'email' => ['$in' => $result->applicants]
+            ],[ 'sort' => ['email' => 1] ]);
+            $project['applicants'] = [];
+            foreach($resultApplicants as $applicant) {
+                $project['applicants'][] = [
+                    'id' => $applicant->id,
+                    'email' => $applicant->email,
+                    'name' => $applicant->name,
+                    'active' => $applicant->active,
+                    'confirmed' => !isset($applicant->key)
+                ];
+            }
+
+            // add curators
+            $resultCurators = DB::$db->users->find([
+                'email' => ['$in' => $result->curators]
+            ],[ 'sort' => ['email' => 1] ]);
+            $project['curators'] = [];
+            foreach($resultCurators as $curator) {
+                $project['curators'][] = [
+                    'id' => $curator->id,
+                    'email' => $curator->email,
+                    'name' => $curator->name,
+                    'active' => $curator->active,
+                    'confirmed' => !isset($curator->key)
+                ];
+            }
+        }
+        
+        print json_encode($project);
+    }
    
     /**
      * @api {put} /project/:id Modify the project with the given id.
@@ -140,8 +226,8 @@ class Projects {
         }
         
         // allowed fields
-        $allowed = ['name', 'description', 'applicants', 'curators', 'active',
-            'parent', 'created', 'templateApplication'];
+        $allowed = ['name', 'description', 'consultingText', 'applicants',
+            'curators', 'active', 'parent', 'created', 'templateApplication'];
         
         // change fields
         foreach($data as $key => $value) {
@@ -186,6 +272,10 @@ class Projects {
         $description = filter_input(INPUT_POST, 'description');
         if(! $description) $description = '';
         
+        // check if consultingText is set
+        $consultingText = filter_input(INPUT_POST, 'consultingText');
+        if(! $consultingText) $consultingText = '';
+        
         // check if application template is set
         $templateApplication = filter_input(INPUT_POST, 'templateApplication');
         if(! $templateApplication) $templateApplication = null;
@@ -218,6 +308,7 @@ class Projects {
             'created' => DB::api2MongoDate(),
             'name' => $name,
             'description' => $description,
+            'consultingText' => $consultingText,
             'templateApplication' => $templateApplication,
             'active' => true,
             'parent' => $parentId,

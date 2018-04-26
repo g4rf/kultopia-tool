@@ -57,7 +57,8 @@ var Auth = {
                     $("#menu-administration").removeClass("hidden");
                 else $("#menu-administration").addClass("hidden");
                 
-                $("#frontpage").addClass("hidden");
+                $(".section.frontpage").addClass("hidden");
+                $(".section.projects").removeClass("hidden");
                 
                 Projects.refresh();
             },

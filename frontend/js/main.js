@@ -38,7 +38,7 @@ $("[type='time']").val("00:00");
 
 // initialize trumbowyg wysiwyg editor
 $.trumbowyg.svgPath = "/pic/icons.svg";
-$('textarea.wysiwyg').trumbowyg({
+var trumbowygOptions = {
     btns: [
         ['viewHTML'],
         ['historyUndo', 'historyRedo'],
@@ -51,13 +51,14 @@ $('textarea.wysiwyg').trumbowyg({
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
         ['unorderedList', 'orderedList'],
         ['horizontalRule'],
-        ['removeformat']
+        //['removeformat'],
+        ['fullscreen']
     ],
     lang: 'de',
-    autogrow: true,
     removeformatPasted: true,
     urlProtocol: true
-});
+};
+$('textarea.wysiwyg').trumbowyg(trumbowygOptions);
 
 // start processing
 $(window).on("load", function() {

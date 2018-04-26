@@ -122,6 +122,10 @@ if($request[0] == 'login') {
     
     if($requestMethod == 'GET') Projects::get();
     else Helper::exitCleanWithCode (400);
+
+} elseif($request[0] == 'project' && $requestMethod == 'GET') {
+    Auth::checkkey();
+    Projects::getOne($request[1]);
     
 } elseif($request[0] == 'project' && $requestMethod == 'POST') {
     Auth::checkkey();

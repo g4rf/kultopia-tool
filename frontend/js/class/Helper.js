@@ -87,6 +87,8 @@ var Helper = {
 
                 if(field.is("input") && field.prop("type") != "file") {
                     field.val(value);
+                } else if(field.hasClass("trumbowyg-textarea")) {
+                    field.trumbowyg('html', value);
                 } else if(field.is("textarea")) {
                     field.empty().append(value);
                 } else if(field.is("select")) {

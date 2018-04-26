@@ -90,7 +90,7 @@ $(".menu-item").click(function() {
         case "project-consulting":
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");
-            //Consulting.load();            
+            Consulting.load();            
             break;
         case "project-application":
             $("#menu").removeClass("hidden");

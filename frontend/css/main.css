@@ -161,7 +161,7 @@ table tr.unconfirmed td {
 .table .entry {
 	width: 100%;
 	border: solid 1px #ccc;
-	padding: 0.5em;
+	padding: 0.5em 0.5em 3em 0.5em;
 }
 .table .entry {
 	background-color: #fff;
@@ -237,15 +237,18 @@ form select {
 
 textarea {
     resize: vertical;
-	height: 10em;
+	height: 350px;
+}
+form textarea {
+    height: 150px;
 }
 textarea.code {
-	height: 400px;
+	height: 350px;
 	font-family: monospace;
 	resize: both;
 	white-space: pre;
-	-moz-tab-size: 1.5em;
-	tab-size: 1.5em;
+	-moz-tab-size: 4;
+	tab-size: 4;
 }
 
 .checkboxgroup {
@@ -389,7 +392,7 @@ form img {
     position: fixed;
 	max-height: 85%;
 	max-width: 90%;
-	min-width: 40%;
+	min-width: 900px;
 	left: 5%;
 	top: 9%;
 	overflow: auto;
