@@ -85,7 +85,7 @@ var Helper = {
                 // string
                 var field = $("[name='" + key + "']", form);
 
-                if(field.is("input") && field.prop("type") != "file") {
+                if(field.is("input") && field.prop("type") !== "file") {
                     field.val(value);
                 } else if(field.hasClass("trumbowyg-textarea")) {
                     field.trumbowyg('html', value);
@@ -128,7 +128,7 @@ var Helper = {
      * @returns {String} A css rgba color.
      */
     stringToColor: function(str, a) {
-        if(typeof a == "undefined") a = 1;
+        if(typeof a === "undefined") a = 1;
         
         var hex = Helper.intToRGB(Helper.hashCode(str));
         var r = hex.substr(0, 2), g = hex.substr(2, 2), b = hex.substr(4, 2);

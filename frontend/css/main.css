@@ -213,6 +213,11 @@ label input {
 	margin: 3px 0 0 0; 
 }
 
+.label-caption {
+    font-size: 0.9em;
+    padding: 0.5em 0;
+}
+
 input, textarea, select, .checkboxgroup {
 	padding: 3px 6px;
 	border: solid 1px #ccc;

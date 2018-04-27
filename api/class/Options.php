@@ -37,7 +37,7 @@ class Options {
         // update
         DB::$db->options->updateOne(['key' => $key],[
             '$set' => ['value' => $data['value']]
-        ], [
+        ],[
             'upsert' => true
         ]);
         

@@ -28,6 +28,29 @@ class Templates {
         
         print json_encode($templates);
     }
+    
+    /**
+     * @api {get} /template/:id Gets a template.
+     * @apiGroup Templates
+     * @apiSuccess (200) {Object} template The template.
+     * @apiError (401) Unauthorized Only registered users can get templates.
+     * @apiError (404) NotFound Id not found.
+     */
+    public static function getOne($id) {        
+        $result = DB::$db->templates->findOne(['id' => $id]);
+        
+        if(! $result) Helper::exitCleanWithCode(404);
+        
+        $template = [
+            'id' => $result->id,
+            'name' => $result->name,
+            'description' => $result->description,
+            'type' => $result->type,
+            'structure' => $result->structure
+        ];
+        
+        print json_encode($template);
+    }
    
     /**
      * @api {put} /template/:id Modify the template with the given id.

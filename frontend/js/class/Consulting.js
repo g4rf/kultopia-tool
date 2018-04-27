@@ -9,11 +9,9 @@ var Consulting = {
      * Loads the current consulting text from the database.
      */
     load: function() {        
-        API.call("project/" + Projects.current.id, {
-            "200": function(project) {                
-                $(".section.project-consulting").empty()
-                        .append(project.consultingText);
-            }
+        Projects.get(function(project) {                
+            $(".section.project-consulting").empty()
+                    .append(project.consultingText);
         });        
     }
 };

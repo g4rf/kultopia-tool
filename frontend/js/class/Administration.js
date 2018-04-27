@@ -103,7 +103,7 @@ var Administration = {
                         // load trumbowyg
                         $('textarea.wysiwyg-dialog', dialog).trumbowyg(trumbowygOptions);
                         // write values to fields
-                        Helper.fillFields(project, dialog);                        
+                        Helper.fillFields(project, dialog);
                         // fill application template
                         API.call("templates", {
                             "200": function(templates) {

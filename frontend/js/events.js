@@ -15,6 +15,9 @@ $(document).on("submit", "form", function(e) {
     return false;
 });
 
+/* dialog background click */
+$("#dialog-background").click(Helper.closeDialog);
+
 /* expandable elements */
 $(document).on("click", ".expandable .expand-button", function(event) {
     var button = $(this);
@@ -34,7 +37,7 @@ $(document).on("click", ".expandable .expand-button", function(event) {
 
 /* auth buttons */
 $("#auth input").keydown(function(e) {
-    if(e.keyCode == 13) {
+    if(e.keyCode === 13) {
         $("#auth button").click();
     }
 });

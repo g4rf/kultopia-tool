@@ -141,6 +141,10 @@ if($request[0] == 'login') {
     
     if($requestMethod == 'GET') Templates::get();
     else Helper::exitCleanWithCode (400);
+
+} elseif($request[0] == 'template' && $requestMethod == 'GET') {
+    Auth::checkkey();
+    Templates::getOne($request[1]);
     
 } elseif($request[0] == 'template' && $requestMethod == 'POST') {
     Auth::checkkey();
@@ -150,6 +154,15 @@ if($request[0] == 'login') {
     Auth::checkkey();
     Templates::update($request[1]);
 
+    
+// Applications
+} elseif($request[0] == 'application' && $requestMethod == 'GET') {
+    Auth::checkkey();
+    Applications::get($request[1]);
+    
+} elseif($request[0] == 'application' && $requestMethod == 'PUT') {
+    Auth::checkkey();
+    Applications::update($request[1]);
     
 // nothing matched - bad request
 } else {

@@ -11,6 +11,23 @@ var Projects = {
     current: null,
     
     /**
+     * Gets the project with the given id.
+     * @param {Function} callback The callback.
+     * @param {String} [id] The id of the project. Defaults to Projects.current.id.
+     * @returns {jqXHR} The XHR object of the ajax call.
+     */
+    get: function(callback, id) {
+        if(typeof id === "undefined") id = Projects.current.id;
+        
+        return API.call("project/" + id, {
+            "200": callback,
+            "400": function() {
+                callback(false);
+            }
+        });
+    },
+    
+    /**
      * Loads projects from the API and puts them into the table.
      * @returns {jqXHR} see http://api.jquery.com/jQuery.ajax/
      */

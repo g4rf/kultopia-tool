@@ -6,6 +6,21 @@
  */
 var Templates = {
     /**
+     * Gets the template with the given id.
+     * @param {String} id The id of the template.
+     * @param {Function} callback The callback.     
+     * @returns {jqXHR} The XHR object of the ajax call.
+     */
+    get: function(id, callback) {
+        return API.call("template/" + id, {
+            "200": callback,
+            "400": function() {
+                callback(false);
+            }
+        });
+    },    
+   
+    /**
      * Loads templates from the API and puts them into the table.
      * @returns {jqXHR} see http://api.jquery.com/jQuery.ajax/
      */
