@@ -104,17 +104,28 @@ var Administration = {
                         $('textarea.wysiwyg-dialog', dialog).trumbowyg(trumbowygOptions);
                         // write values to fields
                         Helper.fillFields(project, dialog);
-                        // fill application template
+                        // fill templates
                         API.call("templates", {
                             "200": function(templates) {
-                                var select = $("[name='templateApplication']", dialog);
+                                var applications = $("[name='templateApplication']", dialog);
+                                var budgets = $("[name='templateBudget']", dialog);
                                 jQuery.each(templates, function(index, template) {
-                                    if(template.type != "application") return;
-                                    $("<option />").attr({"value": template.id})
-                                            .append(template.name)
-                                            .appendTo(select);
+                                    switch(template.type) {
+                                        case "application":
+                                            $("<option />").attr({"value": template.id})
+                                                .append(template.name)
+                                                .appendTo(applications);
+                                            break;
+                                        case "budget":
+                                            $("<option />").attr({"value": template.id})
+                                                .append(template.name)
+                                                .appendTo(budgets);
+                                            break;
+                                    }
+                                    
                                 });
-                                select.val(project.templateApplication);
+                                applications.val(project.templateApplication);
+                                budgets.val(project.templateBudget);
                             }
                         });
                         // fill applicants & curators
@@ -327,12 +338,21 @@ $(".section.administration-projects .add").click(function() {
     // fill application template
     API.call("templates", {
         "200": function(templates) {
-            var select = $("[name='templateApplication']", form);
+            var applications = $("[name='templateApplication']", form);
+            var budgets = $("[name='templateBudget']", form);
             jQuery.each(templates, function(index, template) {
-                if(template.type != "application") return;
-                $("<option />").attr({"value": template.id})
-                        .append(template.name)
-                        .appendTo(select);
+                switch(template.type) {
+                    case "application":
+                        $("<option />").attr({"value": template.id})
+                            .append(template.name)
+                            .appendTo(applications);
+                        break;
+                    case "budget":
+                        $("<option />").attr({"value": template.id})
+                            .append(template.name)
+                            .appendTo(budgets);
+                        break;
+                }                
             });
         }
     });

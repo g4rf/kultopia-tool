@@ -143,4 +143,50 @@ class Auth {
             'isadmin' => ['$in' => [1,'1',true,'true']],
         ]);
     }
+    
+    /**
+     * Checks if the current user is curator of the given project.
+     * @param string $projectId The id of the project.
+     * @return object the project if user is curator, false otherwise
+     */
+    public static function isCurator($projectId) {
+        return DB::$db->projects->findOne([
+            'id' => $projectId,
+            'active' => ['$in' => [1,'1',true,'true']],
+            '$or' => [
+                ['curators' => Auth::getEmail()]
+            ]
+        ]);
+    }
+    
+    /**
+     * Checks if the current user is applicant of the given project.
+     * @param string $projectId The id of the project.
+     * @return object the project if user is applicant, false otherwise
+     */
+    public static function isApplicant($projectId) {
+        return DB::$db->projects->findOne([
+            'id' => $projectId,
+            'active' => ['$in' => [1,'1',true,'true']],
+            '$or' => [
+                ['applicants' => Auth::getEmail()]
+            ]
+        ]);
+    }
+    
+    /**
+     * Checks if the current user is applicant or curator of the given project.
+     * @param string $projectId The id of the project.
+     * @return object the project if user is applicant or curator, false otherwise
+     */
+    public static function isApplicantOrCurator($projectId) {
+        return DB::$db->projects->findOne([
+            'id' => $projectId,
+            'active' => ['$in' => [1,'1',true,'true']],
+            '$or' => [
+                ['applicants' => Auth::getEmail()],
+                ['curators' => Auth::getEmail()]
+            ]
+        ]);
+    }
 }

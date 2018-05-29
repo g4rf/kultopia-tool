@@ -11,6 +11,7 @@ class Accounts {
      * @apiError (401) Unauthorized Only admins can get accounts.
      */
     public static function get() {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         $users = [];        
@@ -44,6 +45,7 @@ class Accounts {
      * @apiError (404) NotFound User with this email not found.
      */
     public static function update($email) {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if user exists
@@ -101,6 +103,7 @@ class Accounts {
      * @apiError (409) Conflict E-mail already exists.
      */
     public static function create() {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if e-mail is set

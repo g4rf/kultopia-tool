@@ -11,6 +11,7 @@ class Options {
      * @apiError (404) NotFound Options does not exists (yet).
      */
     public static function get($key) {
+        // !! be careful, everyone can read options
         $option = DB::$db->options->findOne(['key' => $key]);
         
         if(!$option) Helper::exitCleanWithCode(404);
@@ -26,6 +27,7 @@ class Options {
      * @apiError (401) Unauthorized Only admins can update options.
      */
     public static function update($key) {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // get data

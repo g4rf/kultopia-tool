@@ -11,6 +11,8 @@ class Applications {
      * @apiError (401) Unauthorized Only admins, and for the project registered users can get the application.
      */
     public static function get($projectId) {        
+        Auth::checkkey();
+        
         //*** get project
         // if admin, get access to all projects
         if(Auth::isAdmin()) {
@@ -46,6 +48,8 @@ class Applications {
      * @apiError (401) Unauthorized Only admins, and for the project registered users can update the application.
      */
     public static function update($projectId) {        
+        Auth::checkkey();
+        
         //*** get project
         // if admin, get access to all projects
         if(Auth::isAdmin()) {

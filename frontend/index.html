@@ -68,10 +68,11 @@
 		<br />
 		<div data-section="project-consulting" class="menu-item">Beratung</div>
         <div data-section="project-application" class="menu-item">Konzeption</div>
-		<div data-section="project-accounting" class="menu-item">KFP</div>
-        <div data-section="project-report" class="menu-item">Sachbericht</div>
-		<div data-section="project-press" class="menu-item">Presse</div>
-		<div data-section="project-uploads" class="menu-item">Dokumente & Bilder</div>
+        <div data-section="project-budget" class="menu-item">KFP</div>
+		<!--div data-section="project-accounting" class="menu-item">Buchungen</div-->
+        <!--div data-section="project-report" class="menu-item">Sachbericht</div-->
+		<!--div data-section="project-press" class="menu-item">Presse</div-->
+		<!--div data-section="project-uploads" class="menu-item">Dokumente & Bilder</div-->
     </div>
 
 	<div id="copyright">
@@ -117,6 +118,57 @@
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
 		<form></form>
+	</div>
+    
+    <!--***** KFP *****-->
+	<div class="project-budget section hidden">
+		<h1>Kosten- und Finanzierungsplan</h1>
+        <h2>Hinweise</h2>
+        <p>
+            Sammle erstmal alle Ausgaben ohne sofort die Kosten 
+            zu benennen. Gehe im Kopf das gesamte Projekt durch. Vergesse zum 
+            Beispiel nicht: gemietete Büroräume, die auch anteilig für das 
+            Projekt genutzt werden oder Personal- und Honorarkosten für 
+            Veranstaltungshilfskräfte, Gebühren für die Sondernutzung von 
+            öffentlichen Räumen, GEMA und andere Verwertungsgesellschaften.
+        </p><p>
+            Ermittle die Kosten für alle Ausgaben. Denke daran, das manche 
+            Positionen mehrmals anfallen (z.B. Miete, Telefon). Hole dazu ggf.
+            Angebote ein und befrage Kolleg:innen, Freunde, Bekannte oder Firmen.
+        </p><p>
+            Fasse ähnliche Ausgaben zu einer Kostenstelle zusammen (z.B. 
+            Festnetzanschluss, Handy, Internet zu "Telekommunikation" oder Miete
+            Beamer, Miete Musikanlage, Miete Lichtanlage zu "Mieten"). Häufig
+            gebrauchte Kostenstellen haben wir bereits angelegt, weitere
+            kannst du selbst anlegen.
+        </p><p>
+            Füge dann die einzelnen Positionen (Ausgaben) den Kostenstellen 
+            hinzu. Für jede Position gebe ggf. noch weitere Details und den
+            Wert in Euro an.
+        </p>
+        <p class="italic">Alle Eingaben und Änderungen werden sofort 
+            gespeichert.</p>
+        <form>
+            <h3>Ausgaben</h3>
+            
+            <div class="expenses">
+                <div class="template category">
+                    <div class="category-name"></div>
+                    <div class="category-value"></div>
+                    <div class="template cost-center">
+                        <div class="cost-center-name"></div>
+                        <div class="cost-center-value"></div>
+                        <div class="template position">
+                            <div class="position-name"></div>
+                            <div class="position-detail"></div>
+                            <div class="position-value"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Einnahmen</h3>
+        </form>
 	</div>
 
 <!--***** Administration *****-->
@@ -169,7 +221,11 @@
 			</fieldset>
 			<fieldset>
 				<legend>Vorlage für Konzeption/Antrag</legend>
-				<select name="template-application"></select>
+				<select name="templateApplication"></select>
+			</fieldset>
+            <fieldset>
+				<legend>Vorlage für KFP</legend>
+				<select name="templateBudget"></select>
 			</fieldset>
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
@@ -204,6 +260,10 @@
 			<fieldset>
 				<legend>Vorlage für Konzeption/Antrag</legend>
 				<select name="templateApplication"></select>
+			</fieldset>
+            <fieldset>
+				<legend>Vorlage für KFP</legend>
+				<select name="templateBudget"></select>
 			</fieldset>
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
@@ -247,8 +307,8 @@
 				<legend>Typ</legend>
 				<select name="type">
 					<option value="application">Konzeption / Antrag</option>
-					<option value="report">Sachbericht</option>
-					<option value="accounting">KFP</option>
+                    <option value="budget">KFP</option>
+                    <option value="report">Sachbericht</option>					
 				</select>
 			</fieldset>
 			<fieldset>
@@ -261,7 +321,7 @@
 			</fieldset>
 			<fieldset>
 				<legend>Struktur</legend>
-                <div class="italic">Achtung: Ein Input mit dem Namen "id" oder "_id" wird ignoriert!</div>
+                <div class="italic">Achtung: Felder mit der Bezeichnung "id" oder "_id" werden ignoriert!</div>
 				<textarea name="structure" class="code"></textarea>
 			</fieldset>
 		</form>
@@ -272,8 +332,8 @@
 				<legend>Typ</legend>
 				<select name="type">
 					<option value="application">Konzeption / Antrag</option>
-					<option value="report">Sachbericht</option>
-					<option value="accounting">KFP</option>
+                    <option value="budget">KFP</option>
+					<option value="report">Sachbericht</option>					
 				</select>
 			</fieldset>
 			<fieldset>
@@ -286,7 +346,7 @@
 			</fieldset>
 			<fieldset>
 				<legend>Struktur</legend>
-                <div class="italic">Achtung: Ein Input mit dem Namen "id" oder "_id" wird ignoriert!</div>
+                <div class="italic">Achtung: Felder mit der Bezeichnung "id" oder "_id" werden ignoriert!</div>
 				<textarea name="structure" class="code"></textarea>
 			</fieldset>
 		</form>
@@ -381,6 +441,7 @@
 <script src="js/class/Projects.js"></script>
 <script src="js/class/Consulting.js"></script>
 <script src="js/class/Application.js"></script>
+<script src="js/class/Budget.js"></script>
 
 <!-- other stuff -->
 <script src="js/events.js"></script>

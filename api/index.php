@@ -82,29 +82,24 @@ if($request[0] == 'login') {
 } elseif ($request[0] == 'logout') {
     Auth::logout();
 
+    
 // Options
 } elseif($request[0] == 'options' && $requestMethod == 'GET') {
-    // !! be careful, everyone can read options
     Options::get($request[1]);
     
 } elseif($request[0] == 'options' && $requestMethod == 'PUT') {
-    Auth::checkkey();
     Options::update($request[1]);
 
     
 // Accounts
 } elseif($request[0] == 'accounts') {
-    Auth::checkkey();
-    
     if($requestMethod == 'GET') Accounts::get();
     else Helper::exitCleanWithCode (400);
     
 } elseif($request[0] == 'account' && $requestMethod == 'POST') {
-    Auth::checkkey();
     Accounts::create();
 
 } elseif($request[0] == 'account' && $requestMethod == 'PUT') {
-    Auth::checkkey();
     Accounts::update($request[1]);
     
 } elseif($request[0] == 'activate') {
@@ -118,51 +113,48 @@ if($request[0] == 'login') {
     
 // Projects
 } elseif($request[0] == 'projects') {
-    Auth::checkkey();
-    
     if($requestMethod == 'GET') Projects::get();
     else Helper::exitCleanWithCode (400);
 
 } elseif($request[0] == 'project' && $requestMethod == 'GET') {
-    Auth::checkkey();
     Projects::getOne($request[1]);
     
 } elseif($request[0] == 'project' && $requestMethod == 'POST') {
-    Auth::checkkey();
     Projects::create();
 
 } elseif($request[0] == 'project' && $requestMethod == 'PUT') {
-    Auth::checkkey();
     Projects::update($request[1]);
 
 // Templates
 } elseif($request[0] == 'templates') {
-    Auth::checkkey();
-    
     if($requestMethod == 'GET') Templates::get();
     else Helper::exitCleanWithCode (400);
 
 } elseif($request[0] == 'template' && $requestMethod == 'GET') {
-    Auth::checkkey();
     Templates::getOne($request[1]);
     
 } elseif($request[0] == 'template' && $requestMethod == 'POST') {
-    Auth::checkkey();
     Templates::create();
 
 } elseif($request[0] == 'template' && $requestMethod == 'PUT') {
-    Auth::checkkey();
     Templates::update($request[1]);
 
     
 // Applications
 } elseif($request[0] == 'application' && $requestMethod == 'GET') {
-    Auth::checkkey();
     Applications::get($request[1]);
     
 } elseif($request[0] == 'application' && $requestMethod == 'PUT') {
-    Auth::checkkey();
     Applications::update($request[1]);
+
+    
+// Budget
+} elseif($request[0] == 'budget' && $requestMethod == 'GET') {
+    Budget::get($request[1]);
+    
+} elseif($request[0] == 'budget' && $requestMethod == 'PUT') {
+    Budget::update($request[1]);
+    
     
 // nothing matched - bad request
 } else {

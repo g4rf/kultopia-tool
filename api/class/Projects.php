@@ -10,7 +10,9 @@ class Projects {
      * @apiSuccess (200) {Array} projects An array of projects.
      * @apiError (401) Unauthorized Only registered users can get projects.
      */
-    public static function get() {        
+    public static function get() {
+        Auth::checkkey();
+        
         // if admin, get all projects
         if(Auth::isAdmin()) {
             $result = DB::$db->projects->find([],[
@@ -38,7 +40,8 @@ class Projects {
                 'active' => $project->active,
                 'parent' => $project->parent,
                 'consultingText' => $project->consultingText,
-                'templateApplication' => $project->templateApplication
+                'templateApplication' => $project->templateApplication,
+                'templateBudget' => $project->templateBudget
             ];
             
             // parent
@@ -101,7 +104,8 @@ class Projects {
      * @apiError (401) Unauthorized Only registered users can get projects.
      * @apiError (404) NotFound No project found.
      */
-    public static function getOne($id) {        
+    public static function getOne($id) {
+        Auth::checkkey();
         // if admin, get access to all projects
         if(Auth::isAdmin()) {
             $result = DB::$db->projects->findOne(['id' => $id]);
@@ -126,7 +130,8 @@ class Projects {
             'active' => $result->active,
             'parent' => $result->parent,
             'consultingText' => $result->consultingText,
-            'templateApplication' => $result->templateApplication
+            'templateApplication' => $result->templateApplication,
+            'templateBudget' => $result->templateBudget
         ];
             
         // parent
@@ -196,6 +201,7 @@ class Projects {
      * @apiError (404) NotFound Project with this id not found.
      */
     public static function update($id) {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if project exists
@@ -227,7 +233,8 @@ class Projects {
         
         // allowed fields
         $allowed = ['name', 'description', 'consultingText', 'applicants',
-            'curators', 'active', 'parent', 'created', 'templateApplication'];
+            'curators', 'active', 'parent', 'created', 'templateApplication',
+            'templateBudget'];
         
         // change fields
         foreach($data as $key => $value) {
@@ -262,6 +269,7 @@ class Projects {
      * @apiError (401) Unauthorized Only admins are allowed to create projects.
      */
     public static function create() {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if name is set
@@ -279,6 +287,10 @@ class Projects {
         // check if application template is set
         $templateApplication = filter_input(INPUT_POST, 'templateApplication');
         if(! $templateApplication) $templateApplication = null;
+        
+        // check if budget template is set
+        $templateBudget = filter_input(INPUT_POST, 'templateBudget');
+        if(! $templateBudget) $templateBudget = null;
         
         // check if parent is set
         $parentId = filter_input(INPUT_POST, 'parent');
@@ -310,6 +322,7 @@ class Projects {
             'description' => $description,
             'consultingText' => $consultingText,
             'templateApplication' => $templateApplication,
+            'templateBudget' => $templateBudget,
             'active' => true,
             'parent' => $parentId,
             'applicants' => $applicants,

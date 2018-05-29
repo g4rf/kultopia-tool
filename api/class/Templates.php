@@ -11,6 +11,7 @@ class Templates {
      * @apiError (401) Unauthorized Only registered users can get templates.
      */
     public static function get() {        
+        Auth::checkkey();
         $result = DB::$db->templates->find([],[
             'sort' => ['type' => 1, 'name' => 1]
         ]);
@@ -36,7 +37,9 @@ class Templates {
      * @apiError (401) Unauthorized Only registered users can get templates.
      * @apiError (404) NotFound Id not found.
      */
-    public static function getOne($id) {        
+    public static function getOne($id) {
+        Auth::checkkey();
+        
         $result = DB::$db->templates->findOne(['id' => $id]);
         
         if(! $result) Helper::exitCleanWithCode(404);
@@ -65,6 +68,7 @@ class Templates {
      * @apiError (404) NotFound Template with this id not found.
      */
     public static function update($id) {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if template exists
@@ -107,6 +111,7 @@ class Templates {
      * @apiError (401) Unauthorized Only admins are allowed to create templates.
      */
     public static function create() {
+        Auth::checkkey();
         if(! Auth::isAdmin()) Helper::exitCleanWithCode (401);
         
         // check if name is set
