@@ -149,25 +149,35 @@
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
         <form>
-            <h3>Ausgaben</h3>
-            
-            <div class="expenses">
-                <div class="template category">
-                    <div class="category-name"></div>
-                    <div class="category-value"></div>
-                    <div class="template cost-center">
-                        <div class="cost-center-name"></div>
-                        <div class="cost-center-value"></div>
-                        <div class="template position">
-                            <div class="position-name"></div>
-                            <div class="position-detail"></div>
-                            <div class="position-value"></div>
-                        </div>
+            <div class="template">
+                <div class="category">
+                    <div class="category-name inline-block one"></div>
+                    <div class="category-value inline-block currency"></div>
+                </div>
+                <div class="cost-center">
+                    <div class="cost-center-name  inline-block one">
+                        <input type="text" name="cost-center-name" />
+                    </div>
+                    <div class="cost-center-value inline-block currency"></div>
+                </div>
+                <div class="position">
+                    <div class="position-name inline-block two">
+                        <input type="text" name="position-name" />
+                    </div>
+                    <div class="position-detail inline-block text">
+                        <input type="text" name="position-detail" />
+                    </div>
+                    <div class="position-value inline-block currency">
+                        <input type="number" name="position-value" />
                     </div>
                 </div>
             </div>
             
+            <h3>Ausgaben</h3>
+            <div class="expenses"></div>
+            
             <h3>Einnahmen</h3>
+            <div class="earnings"></div>
         </form>
 	</div>
 
@@ -261,10 +271,10 @@
 				<legend>Vorlage für Konzeption/Antrag</legend>
 				<select name="templateApplication"></select>
 			</fieldset>
-            <fieldset>
+            <!--fieldset> It has no effext to change the budget template later, as it is only used while creating a project.
 				<legend>Vorlage für KFP</legend>
 				<select name="templateBudget"></select>
-			</fieldset>
+			</fieldset-->
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
 				<div class="applicants checkboxgroup"></div>

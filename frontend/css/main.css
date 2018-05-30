@@ -338,6 +338,10 @@ form img {
 	color: #ff8080;
 }
 
+.inline-block {
+    display: inline-block;
+}
+
 .template {
 	display: none !important;
 }
@@ -525,6 +529,28 @@ form img {
 
 .subsection {
 	margin-top: 50px;
+}
+
+/***** budget *****/
+.project-budget form {
+    max-width: 800px;
+    border: solid 1px #888;
+}
+.project-budget .one {
+    width: 90%;
+}
+.project-budget .two {
+    width: 45%;
+}
+.project-budget .currency {
+    font-family: monospace;
+    font-size: 1em;
+    width: 10%;
+}
+.project-budget .currency input {
+    width: 100%;
+    font-family: monospace;
+    font-size: 1em;
 }
 
 

@@ -40,8 +40,7 @@ class Projects {
                 'active' => $project->active,
                 'parent' => $project->parent,
                 'consultingText' => $project->consultingText,
-                'templateApplication' => $project->templateApplication,
-                'templateBudget' => $project->templateBudget
+                'templateApplication' => $project->templateApplication
             ];
             
             // parent
@@ -130,8 +129,7 @@ class Projects {
             'active' => $result->active,
             'parent' => $result->parent,
             'consultingText' => $result->consultingText,
-            'templateApplication' => $result->templateApplication,
-            'templateBudget' => $result->templateBudget
+            'templateApplication' => $result->templateApplication
         ];
             
         // parent
@@ -233,8 +231,7 @@ class Projects {
         
         // allowed fields
         $allowed = ['name', 'description', 'consultingText', 'applicants',
-            'curators', 'active', 'parent', 'created', 'templateApplication',
-            'templateBudget'];
+            'curators', 'active', 'parent', 'created', 'templateApplication'];
         
         // change fields
         foreach($data as $key => $value) {
@@ -265,7 +262,7 @@ class Projects {
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
      * @apiSuccess (201) project Project created.
-     * @apiError (400) BadRequest Parameter name missing, parent project have to exist and must not be a child.
+     * @apiError (400) BadRequest Parameter name or templateBudget are missing, parent project have to exist and must not be a child.
      * @apiError (401) Unauthorized Only admins are allowed to create projects.
      */
     public static function create() {
@@ -275,6 +272,10 @@ class Projects {
         // check if name is set
         $name = filter_input(INPUT_POST, 'name');
         if(! $name) Helper::exitCleanWithCode(400);
+        
+        // check if budget template is set
+        $templateBudget = filter_input(INPUT_POST, 'templateBudget');
+        if(! $templateBudget) Helper::exitCleanWithCode(400);
         
         // check if description is set
         $description = filter_input(INPUT_POST, 'description');
@@ -287,10 +288,6 @@ class Projects {
         // check if application template is set
         $templateApplication = filter_input(INPUT_POST, 'templateApplication');
         if(! $templateApplication) $templateApplication = null;
-        
-        // check if budget template is set
-        $templateBudget = filter_input(INPUT_POST, 'templateBudget');
-        if(! $templateBudget) $templateBudget = null;
         
         // check if parent is set
         $parentId = filter_input(INPUT_POST, 'parent');
@@ -322,12 +319,15 @@ class Projects {
             'description' => $description,
             'consultingText' => $consultingText,
             'templateApplication' => $templateApplication,
-            'templateBudget' => $templateBudget,
             'active' => true,
             'parent' => $parentId,
             'applicants' => $applicants,
             'curators' => $curators
         ]);
+        
+        // create new budget
+        if(! Budget::create($id, $templateBudget))
+                Helper::exitCleanWithCode(); // Internal error; should not be happen
         
         http_response_code(201);
         print json_encode(DB::$db->projects->findOne([

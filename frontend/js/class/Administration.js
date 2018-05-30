@@ -420,7 +420,7 @@ $(".section.administration-projects .add").click(function() {
                         Helper.closeDialog();
                     },
                     "400": function() {
-                        Helper.hint(_("Der Name fehlt."));
+                        Helper.hint(_("Der Name oder eine KFP-Vorlage fehlen."));
                         $("input[name='name']", form).focus();
                     }
                 }, "POST", $(form).serialize());

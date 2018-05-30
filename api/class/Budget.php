@@ -56,23 +56,16 @@ class Budget {
         //*** get data
         parse_str(file_get_contents('php://input'), $data);
         
-        //*** get application
-        if(! $project->budgetId) {
-            // set new application
-            $project->budgetId = Helper::createId();
-            DB::$db->projects->updateOne(['id' => $projectId],[
-                '$set' => ['budgetId' => $project->budgetId]
-            ]);
-            
-        }
+        //*** get budget        
         $id = $project->budgetId;
         
         // delete existing budget
         DB::$db->budgets->deleteOne(['id' => $id]);
-        DB::$db->budgets->insertOne(['id' => $id]);
         
-        // change fields
-        foreach($data as $key => $value) {
+        $budget = [];
+        // build budget structure
+        // TODO
+        /*foreach($data as $key => $value) {
             if($key == '_id') continue; // _id not allowed
             if($key == 'id') continue; // id not allowed
             
@@ -82,12 +75,39 @@ class Budget {
             DB::$db->budgets->updateOne(['id' => $id],[
                 '$set' => [$key => $value]
             ]);
-        }
+        }*/
+        // insert budget to database
+        DB::$db->budgets->insertOne($budget);
         
         print json_encode(DB::$db->budget->findOne([
             'id' => $id
         ],[
             'projection' => ['_id' => 0, 'id' => 0]
         ]));
+    }
+    
+    /**
+     * This is not an api function! Creates the first budget whilst creating a project.
+     * ATTENTION: If you do this with an existing project, it will overwrite the existing budget with the template.
+     * @param string $projectId The id of the project.
+     * @param string $templateId The id of the budget template.
+     * @return object|boolean On success the new budget, false on failure.
+     */
+    public static function create($projectId, $templateId) {        
+        // get template
+        $budget = DB::$db->templates->findOne(['id' => $templateId]);
+        if(! $budget) return false;
+        
+        unset($budget->_id); // delete mongo id
+        $budget->id = Helper::createId(); // create new budget id
+        //
+        // insert into budget collection
+        DB::$db->budgets->insertOne($budget);
+        
+        // save budget id to project
+        DB::$db->projects->updateOne(['id' => $projectId],[
+            '$set' => ['budgetId' => $budget->id]
+        ]);
+        return $budget;
     }
 }

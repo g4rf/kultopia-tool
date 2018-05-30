@@ -9,29 +9,29 @@ var Budget = {
      * Loads the current budget form and the data from the database.
      */
     load: function() {
-        // load template from database
-        Templates.get(Projects.current.templateBudget, function(template) {
-            // parse the structure
-            var structure = JSON.parse(template.structure);
-            
-            // clear the form
-            var form = $(".project-budget form").empty();
-            
-            /*** build the form ***/
-            // expenses
-            jQuery.each(structure.expenses, function(category, centers) { // Kostenstelle eng: cost center
+        // load budget from database    
+        API.call("budget/" + Projects.current.id, {
+            "200": function(data) {
+                // parse the structure
+                var structure = JSON.parse(data.structure);
+
+                // the form
+                var form = $(".project-budget form");
+                // the templates
+                var templates = $(".template", form);
                 
-            });
-            // earnings
-            
-            // load the budget data from database
-            API.call("budget/" + Projects.current.id, {
-                "200": function(data) {
-                    console.log(data);
-                    // fill in the data in the form
-                    Helper.fillFields(data, form);
-                }
-            });
+                /*** build the form ***/
+                // expenses
+                var expenses = $(".expenses", form).empty();
+                
+                jQuery.each(structure.expenses, function(category, costcenters) { // Kostenstelle eng: cost center
+                    var categoryElement = $(".category", templates).clone();
+                    $(".category-name", categoryElement).append(category);
+                    expenses.append(categoryElement);
+                });
+
+                // earnings
+            }
         });
     },
     
@@ -39,19 +39,32 @@ var Budget = {
      * Saves the budget data to the database.
      */
     save: function() {
+        return;
         var form = $(".project-budget form");
+        var data = {};
+        
+        // build data
+        // TODO
+        
         API.call("budget/" + Projects.current.id, {
             "200": function(data) {
                 console.log(data);
                 // fill in the data in the form
                 Helper.fillFields(data, form);
             }
-        }, "PUT", form.serialize());
+        }, "PUT", data);
+    },
+    
+    /**
+     * Update the sums of the cost-centers and the categories
+     */
+    updateSums: function() {
+        // TODO
     }
 };
 
 /** save inputs **/
-$(".project-budget form").on("change", "textare, input", Budget.save);
-
-/** update sums **/
-// TODO
+$(".project-budget form").on("keyup", "textare, input", function() {
+    Budget.updateSums();
+    Budget.save();    
+});
