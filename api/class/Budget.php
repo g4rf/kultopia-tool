@@ -62,24 +62,15 @@ class Budget {
         // delete existing budget
         DB::$db->budgets->deleteOne(['id' => $id]);
         
-        $budget = [];
-        // build budget structure
-        // TODO
-        /*foreach($data as $key => $value) {
-            if($key == '_id') continue; // _id not allowed
-            if($key == 'id') continue; // id not allowed
-            
-            if($value == 'false') $value = false;
-            if($value == 'true') $value = true;
-            
-            DB::$db->budgets->updateOne(['id' => $id],[
-                '$set' => [$key => $value]
-            ]);
-        }*/
-        // insert budget to database
+        // build new one
+        $budget = $data;
+        $budget['id'] = $id;
+        $budget = (object)$budget;
+        
+        // insert budget in database
         DB::$db->budgets->insertOne($budget);
         
-        print json_encode(DB::$db->budget->findOne([
+        print json_encode(DB::$db->budgets->findOne([
             'id' => $id
         ],[
             'projection' => ['_id' => 0, 'id' => 0]
@@ -95,12 +86,13 @@ class Budget {
      */
     public static function create($projectId, $templateId) {        
         // get template
-        $budget = DB::$db->templates->findOne(['id' => $templateId]);
-        if(! $budget) return false;
+        $budgetTemplate = DB::$db->templates->findOne(['id' => $templateId]);
+        if(! $budgetTemplate) return false;
         
-        unset($budget->_id); // delete mongo id
-        $budget->id = Helper::createId(); // create new budget id
-        //
+        $newBudget = json_decode($budgetTemplate->structure, true);
+        $newBudget['id'] = Helper::createId();
+        $budget = (object)$newBudget;
+
         // insert into budget collection
         DB::$db->budgets->insertOne($budget);
         

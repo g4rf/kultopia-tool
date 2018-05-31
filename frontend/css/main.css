@@ -127,6 +127,17 @@ button:focus {
 button.cancel {
 	opacity: 0.6;
 }
+button.delete {
+    color: #f00;
+    border: none;
+    background: transparent;
+    margin: 0;
+    padding: 0 0 0 1%;
+    font-style: normal;    
+}
+button.delete:before {
+    content: "❎";
+}
 
 /*
  * tables
@@ -466,6 +477,7 @@ form img {
     bottom: 0;
     width: 15%;
     overflow: auto;
+    overflow-x: hidden;
     padding: 1%;
     background-color: #F5F5F5;
     /*border-right: solid 1px rgba(0,0,0,0.4);*/    
@@ -532,25 +544,78 @@ form img {
 }
 
 /***** budget *****/
-.project-budget form {
+.project-budget .total {
+    width: auto;
+}
+
+.project-budget form, .project-budget .total {
+    cursor: default;
     max-width: 800px;
     border: solid 1px #888;
+    margin: 10px auto;
 }
 .project-budget .one {
-    width: 90%;
+    width: 74%;
 }
 .project-budget .two {
-    width: 45%;
+    width: 37%;
+}
+.project-budget .three {
+    width: 25%;
+}
+.project-budget form h3 {
+    border-top: double 4px;
 }
 .project-budget .currency {
     font-family: monospace;
-    font-size: 1em;
-    width: 10%;
+    font-size: 1.5em;
+    width: 20%;
+    padding: 5px;
+    text-align: right;
 }
 .project-budget .currency input {
     width: 100%;
-    font-family: monospace;
-    font-size: 1em;
+    text-align: right;
+    font-style: normal;
+}
+
+.project-budget .category {
+    font-weight: bold;
+    border-top: solid 1px #aaa;
+    margin-bottom: 40px;
+}
+.project-budget .category-name {
+    width: 77%;
+}
+
+.project-budget .cost-center {
+    margin-left: 20px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    border-top: dotted 1px #aaa;
+    background-color: #eee;
+}
+.project-budget .add-cost-center {
+    margin-left: 20px;
+}
+
+.project-budget .position {
+    margin-left: 40px;
+    font-style: italic;
+    background-color: #bbb;
+}
+.project-budget .position:nth-child(odd) {
+    background-color: #ddd;
+}
+.project-budget .add-position {
+    margin-left: 40px;
+}
+
+.project-budget .earning-name, .project-budget .earning-detail {
+    width: 30%;
+}
+.project-budget .earning-status {
+    width: 13%;
 }
 
 

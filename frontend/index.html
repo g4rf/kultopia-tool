@@ -67,7 +67,7 @@
 		<div class="bold project-name"></div>
 		<br />
 		<div data-section="project-consulting" class="menu-item">Beratung</div>
-        <div data-section="project-application" class="menu-item">Konzeption</div>
+        <div data-section="project-application" class="menu-item">Konzeption (Antrag)</div>
         <div data-section="project-budget" class="menu-item">KFP</div>
 		<!--div data-section="project-accounting" class="menu-item">Buchungen</div-->
         <!--div data-section="project-report" class="menu-item">Sachbericht</div-->
@@ -76,7 +76,9 @@
     </div>
 
 	<div id="copyright">
-		&copy; 2018 <a href="https://jankossick.de" target="_blank">Jan Kossick</a>
+		&copy; 2018 <a href="https://jankossick.de" target="_blank">Jan Kossick</a><br />
+        <a href="https://kultopia.org/impressum/">Impressum</a><br />
+        <a href="https://kultopia.org/datenschutzerklaerung/">Datenschutzerklärung</a>
 	</div>
 </div>
 
@@ -145,39 +147,90 @@
             Füge dann die einzelnen Positionen (Ausgaben) den Kostenstellen 
             hinzu. Für jede Position gebe ggf. noch weitere Details und den
             Wert in Euro an.
-        </p>
+        </p><p class="bold">
+            Im KFP sind bereits Beispiele für Kostenstellen und Positionen 
+            angelegt. Diese können geändert und gelöscht werden. Das Hinzufügen
+            weiterer Kostenstellen und Positionen ist ebenfalls möglich.
+        </p><p>
+            Die Gesamtausgaben und Gesamteinnahmen müssen am Ende ausgeglichen
+            sein, also in der Differenz <b>0,00</b> ergeben.
+        </p>        
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
-        <form>
-            <div class="template">
-                <div class="category">
-                    <div class="category-name inline-block one"></div>
-                    <div class="category-value inline-block currency"></div>
+        
+        <table class="total">
+            <tr class="expenses">
+                <td class="bold">Gesamtausgaben</td>
+                <td class="value currency">0,00</td>
+            </tr>
+            <tr class="earnings">
+                <td class="bold">Gesamteinnahmen</td>
+                <td class="value currency">0,00</td>
+            </tr>
+            <tr class="balance">
+                <td>Differenz</td>
+                <td class="value currency">0,00</td>
+            </tr>
+        </table>
+                
+        <div class="template">
+            <div class="category">
+                <div class="category-name inline-block"></div>
+                <div class="category-value inline-block currency">0,00</div>
+                <a href="#" class="add-cost-center">Neue Kostenstelle hinzufügen</a>
+            </div>
+            <div class="cost-center">
+                <button class="del-cost-center delete" title="Kostenstelle löschen"></button>
+                <div class="cost-center-name  inline-block one">
+                    <input type="text" name="cost-center-name" />
                 </div>
-                <div class="cost-center">
-                    <div class="cost-center-name  inline-block one">
-                        <input type="text" name="cost-center-name" />
-                    </div>
-                    <div class="cost-center-value inline-block currency"></div>
+                <div class="cost-center-value inline-block currency">0,00</div>
+                <a href="#" class="add-position">Neue Position hinzufügen</a>
+            </div>
+            <div class="position">
+                <button class="del-position delete" title="Position löschen"></button>
+                <div class="position-name inline-block two">
+                    <input type="text" name="position-name" />
                 </div>
-                <div class="position">
-                    <div class="position-name inline-block two">
-                        <input type="text" name="position-name" />
-                    </div>
-                    <div class="position-detail inline-block text">
-                        <input type="text" name="position-detail" />
-                    </div>
-                    <div class="position-value inline-block currency">
-                        <input type="number" name="position-value" />
-                    </div>
+                <div class="position-detail inline-block two">
+                    <input type="text" name="position-detail" />
+                </div>
+                <div class="position-value inline-block currency">
+                    <input type="text" name="position-value" value="0,00" />
                 </div>
             </div>
             
+            <div class="earning">
+                <button class="del-earning delete" title="Einnahme löschen"></button>
+                <div class="earning-name inline-block">
+                    <input type="text" name="earning-name" />
+                </div>
+                <div class="earning-detail inline-block">
+                    <input type="text" name="earning-detail" />
+                </div>
+                <div class="earning-status inline-block">
+                    <input type="text" name="earning-status" value="beantragt" />
+                </div>
+                <div class="earning-value inline-block currency">
+                    <input type="text" name="earning-value" value="0,00" />
+                </div>
+            </div>
+        </div>
+        
+        <form>
             <h3>Ausgaben</h3>
             <div class="expenses"></div>
             
             <h3>Einnahmen</h3>
-            <div class="earnings"></div>
+            <div class="earnings">
+                <div style="margin-left: 30px;">
+                    <div class="earning-name inline-block bold">Position</div>
+                    <div class="earning-detail inline-block bold">Details</div>
+                    <div class="earning-status inline-block bold">Status</div>
+                    <div class="earning-value inline-block currency">&nbsp;</div>
+                </div>
+                <a href="#" class="add-earning">Neue Einnahme hinzufügen</a>
+            </div>
         </form>
 	</div>
 

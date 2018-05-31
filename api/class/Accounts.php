@@ -144,6 +144,9 @@ class Accounts {
                 . "\n"
                 . Config::$_['apiUrl'] . "activate/$id/$key\n"
                 . "\n"
+                . "Nachdem der Account aktiviert wurde, kannst du dich unter "
+                . "https://tool.kultopia.org einloggen."
+                . "\n"
                 . "Gutes Gelingen!";
         
         if(Helper::mail($email, 'Account für Kultopia aktivieren', $body,

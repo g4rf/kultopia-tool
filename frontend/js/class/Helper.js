@@ -1,3 +1,5 @@
+/* global parseFloat */
+
 /**
  * Holds some general functions.
  * @namespace
@@ -135,5 +137,13 @@ var Helper = {
         
         return "rgba(" + parseInt(r, 16) + "," + parseInt(g, 16) + "," +
                 parseInt(b, 16) + "," + a + ")";
+    },
+    
+    withComma: function(number) {
+        return parseFloat(number).toFixed(2).replace(".", ",");
+    },
+    
+    toDecimal: function(string) {
+        return parseFloat(string.replace(",", "."));
     }
 };

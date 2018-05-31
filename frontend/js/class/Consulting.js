@@ -11,6 +11,7 @@ var Consulting = {
     load: function() {        
         Projects.get(function(project) {                
             $(".section.project-consulting").empty()
+                    .append($("<h1 />").append(project.name))
                     .append(project.consultingText);
         });        
     }
