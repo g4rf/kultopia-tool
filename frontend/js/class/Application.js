@@ -51,9 +51,9 @@ var Application = {
         var form = $(".project-application form");
         API.call("application/" + Projects.current.id, {
             "200": function(data) {
-                console.log(data);
+                //console.log(data);
                 // fill in the data in the form
-                Helper.fillFields(data, form);
+                //Helper.fillFields(data, form);
             }
         }, "PUT", form.serialize());
     }
