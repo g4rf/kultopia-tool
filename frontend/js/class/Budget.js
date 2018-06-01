@@ -157,14 +157,9 @@ var Budget = {
     }
 };
 
-/** save inputs **/
-$(".project-budget form").on("change", "textare, input", function() {
+/** save inputs, calculate sums **/
+$(".project-budget form").on("keyup", "textare, input", function() {
     Budget.save();
-    Budget.updateSums();
-});
-
-/** calculate sums **/
-$(".project-budget form").on("keyup", ".currency", function() {
     Budget.updateSums();
 });
 
