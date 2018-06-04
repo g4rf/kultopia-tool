@@ -60,4 +60,4 @@ var Application = {
 };
 
 /** save inputs **/
-$(".project-application form").on("keyup", "textare, input", Application.save);
+$(".project-application form").on("keyup", "textarea, input", Application.save);
