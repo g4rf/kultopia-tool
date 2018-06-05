@@ -41,7 +41,19 @@ class Projects {
                 'parent' => $project->parent,
                 'consultingText' => $project->consultingText,
                 'templateApplication' => $project->templateApplication
-            ];
+            ];            
+            
+            $now = new DateTime();            
+            // application closed?
+            $applicationClosing = DB::mongo2ApiDate($project->applicationClosing);
+            if(Auth::isAdmin()) $temp['applicationClosing'] = $applicationClosing;
+            if(new DateTime($applicationClosing) < $now) $temp['applicationClosed'] = true;
+            else $temp['applicationClosed'] = false;
+            // budget closed?
+            $budgetClosing = DB::mongo2ApiDate($project->budgetClosing);
+            if(Auth::isAdmin()) $temp['budgetClosing'] = $budgetClosing;
+            if(new DateTime($budgetClosing) < $now) $temp['budgetClosed'] = true;
+            else $temp['budgetClosed'] = false;
             
             // parent
             $parent = DB::$db->projects->findOne([
@@ -131,6 +143,18 @@ class Projects {
             'consultingText' => $result->consultingText,
             'templateApplication' => $result->templateApplication
         ];
+        
+        $now = new DateTime();            
+        // application closed?
+        $applicationClosing = DB::mongo2ApiDate($result->applicationClosing);
+        if(Auth::isAdmin()) $project['applicationClosing'] = $applicationClosing;
+        if(new DateTime($applicationClosing) < $now) $project['applicationClosed'] = true;
+        else $project['applicationClosed'] = false;
+        // budget closed?
+        $budgetClosing = DB::mongo2ApiDate($result->budgetClosing);
+        if(Auth::isAdmin()) $project['budgetClosing'] = $budgetClosing;
+        if(new DateTime($budgetClosing) < $now) $project['budgetClosed'] = true;
+        else $project['budgetClosed'] = false;
             
         // parent
         $parent = DB::$db->projects->findOne([
@@ -189,6 +213,10 @@ class Projects {
      * @apiParam {String} [name] The name.
      * @apiParam {String} [description] The description.
      * @apiParam {String} [templateApplication] The template for the application.
+     * @apiParam {String} [applicationClosingDate] The closing date for the application.
+     * @apiParam {String} [applicationClosingTime] The closing time for the application.
+     * @apiParam {String} [budgetClosingDate] The closing date for the budget.
+     * @apiParam {String} [budgetClosingTime] The closing time for the budget.
      * @apiParam {Array} [applicants] The applicants.
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
@@ -229,6 +257,20 @@ class Projects {
             }
         }
         
+        // closing times
+        if(array_key_exists('applicationClosing', $data)) {
+            DB::$db->projects->updateOne(['id' => $id],[
+                '$set' => ['applicationClosing' =>
+                            DB::api2MongoDate($data['applicationClosing'])]
+            ]);
+        }
+        if(array_key_exists('budgetClosing', $data)) {
+            DB::$db->projects->updateOne(['id' => $id],[
+                '$set' => ['budgetClosing' =>
+                            DB::api2MongoDate($data['budgetClosing'])]
+            ]);
+        }
+        
         // allowed fields
         $allowed = ['name', 'description', 'consultingText', 'applicants',
             'curators', 'active', 'parent', 'created', 'templateApplication'];
@@ -258,7 +300,8 @@ class Projects {
      * @apiParam {String} name The name.
      * @apiParam {String} [description] The description.
      * @apiParam {Array} [applicants] The applicants.
-     * @apiParam {Array} [templateApplication] The template for the application.
+     * @apiParam {String} [templateApplication] The id of the template for the application.
+     * @apiParam {String} [budgetApplication] The id of the template for the budget.
      * @apiParam {Array} [curators] The curators.
      * @apiParam {String} [parent] The id of the parent project.
      * @apiSuccess (201) project Project created.
@@ -288,6 +331,15 @@ class Projects {
         // check if application template is set
         $templateApplication = filter_input(INPUT_POST, 'templateApplication');
         if(! $templateApplication) $templateApplication = null;
+                        
+        // closing times
+        $applicationClosing = filter_input(INPUT_POST, 'applicationClosing');
+        if(! $applicationClosing) $applicationClosing = DB::api2MongoDate ();
+        else $applicationClosing = DB::api2MongoDate($applicationClosing);
+        
+        $budgetClosing = filter_input(INPUT_POST, 'budgetClosing');
+        if(! $budgetClosing) $budgetClosing = DB::api2MongoDate ();
+        else $budgetClosing = DB::api2MongoDate($budgetClosing);
         
         // check if parent is set
         $parentId = filter_input(INPUT_POST, 'parent');
@@ -319,6 +371,8 @@ class Projects {
             'description' => $description,
             'consultingText' => $consultingText,
             'templateApplication' => $templateApplication,
+            'applicationClosing' => $applicationClosing,
+            'budgetClosing' => $budgetClosing,
             'active' => true,
             'parent' => $parentId,
             'applicants' => $applicants,

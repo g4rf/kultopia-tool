@@ -87,7 +87,23 @@ var Helper = {
                 // string
                 var field = $("[name='" + key + "']", form);
 
-                if(field.is("input") && field.prop("type") !== "file") {
+                if(field.is("input") && field.hasClass("datetime")) {
+                    var parent = field.parent();
+                    var date = $("input[type='date']", parent);
+                    var time = $("input[type='time']", parent);
+
+                    field.val(value);
+                    
+                    var d = new Date(value);                    
+                    
+                    var day = ("0" + d.getDate()).slice(-2);
+                    var month = ("0" + (d.getMonth() + 1)).slice(-2);
+                    date.val(d.getFullYear() + "-" + month + "-" + day);
+                    
+                    var hours = ("0" + d.getHours()).slice(-2);
+                    var minutes = ("0" + d.getMinutes()).slice(-2);
+                    time.val(hours + ":" + minutes);
+                } else if(field.is("input") && field.prop("type") !== "file") {
                     field.val(value);
                 } else if(field.hasClass("trumbowyg-textarea")) {
                     field.trumbowyg('html', value);

@@ -46,6 +46,7 @@ class Applications {
      * @apiGroup Applications
      * @apiSuccess (200) {Object} application The updated application.
      * @apiError (401) Unauthorized Only admins, and for the project registered users can update the application.
+     * @apiError (403) Forbidden When the application closing time is reached, the application can't be changed anymore.
      */
     public static function update($projectId) {        
         Auth::checkkey();
@@ -66,6 +67,10 @@ class Applications {
             ]);
         }        
         if(! $project) Helper::exitCleanWithCode(401);
+        
+        // check if application is closed
+        $closing = new DateTime(DB::mongo2ApiDate($project->applicationClosing));
+        if($closing < new DateTime()) Helper::exitCleanWithCode(403);
         
         //*** get data
         parse_str(file_get_contents('php://input'), $data);

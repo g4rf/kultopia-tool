@@ -247,6 +247,11 @@ input[type='number'] {
 	text-align: right;
 }
 
+[readonly] {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
 form select {
 	width: 100%;
 }

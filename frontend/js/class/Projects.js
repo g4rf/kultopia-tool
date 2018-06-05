@@ -53,8 +53,14 @@ var Projects = {
                         "id": project.id
                     });
                     
-                    // add name
+                    // add infos
                     $(".name", newRow).append(project.name);
+                    // applicants
+                    jQuery.each(project.applicants, function(index, applicant) {
+                        var name = applicant.name;
+                        if(! name) name = applicant.email;
+                        $(".applicants", newRow).append(name).append("<br />");
+                    });
                                        
                     // select project
                     newRow.css("cursor", "pointer").click(function() {
@@ -66,8 +72,7 @@ var Projects = {
                     // add to table
                     if(Auth.isAdmin() && project.parent) { // has parent
                         newRow.insertAfter($("#" + project.parent.id, table));
-                        $("td:first", newRow).css("padding-left", "20px")
-                                .prepend("&rdsh;");
+                        $("td:first", newRow).css("padding-left", "20px"); //.prepend("&rdsh;");
                     } else $(table).append(newRow);
                 });
             }

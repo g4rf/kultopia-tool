@@ -11,6 +11,8 @@ var Application = {
     load: function() {
         // load template from database
         Templates.get(Projects.current.templateApplication, function(template) {
+            
+            
             // parse the structure
             var structure = JSON.parse(template.structure);
             
@@ -23,15 +25,22 @@ var Application = {
                 $("<legend />").append(section.heading).appendTo(htmlSection);
                 jQuery.each(section.inputs, function(index, input) {
                     var htmlInput = $("<" + input.tag + " />")
-                            .attr(input.attributes);                    
+                            .attr(input.attributes);
                     $("<label />")
                         .append("<div class='label-caption'>" + input.label + "</div>")
                         .append(htmlInput).appendTo(htmlSection);
                 });
                 htmlSection.appendTo(form);
             });
-            // trumbowyg
-            $("textarea.wysiwyg", form).trumbowyg();
+            // application closed
+            if(Projects.current.applicationClosed) {
+                $(".project-application .closed").removeClass("hidden");
+                $("input, textarea", form).attr("readonly", "readonly");
+            } else {
+                // trumbowyg
+                $("textarea.wysiwyg", form).trumbowyg();
+                $(".project-application .closed").addClass("hidden");
+            }            
 
             // load the application data from database
             API.call("application/" + Projects.current.id, {

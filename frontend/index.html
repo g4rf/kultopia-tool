@@ -94,16 +94,16 @@
 
 		<table><tr class="head">
 			<th>Name</th>
-			<th>Beratung</th>
+            <th>Antragsstellende</th>
 			<th>Gesamtkosten</th>
-			<th>Personalkosten/VwU</th>
+			<th>VwU</th>
 			<th>Abgerufene Mittel</th>
-			<th>Bewilligungsstatus</th>
+			<th>Status</th>
 		</tr><tr class="template">
 			<td class="name"></td>
-			<td class="consulting"></td>
+            <td class="applicants"></td>
 			<td class="total-cost"></td>
-			<td class="staff-cost"></td>
+			<td class="administration-cost"></td>
 			<td class="used-funds"></td>
 			<td class="status"></td>
 		</tr><tr class="no-data">
@@ -119,6 +119,8 @@
 		<h1>Konzeption / Antrag</h1>
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
+        <p class="hidden red bold closed">Der Antragsschluss ist vorbei. Änderungen
+            am Antrag sind nicht mehr möglich.</p>
 		<form></form>
 	</div>
     
@@ -136,6 +138,8 @@
         </p>        
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
+        <p class="hidden red bold closed">Der Antragsschluss ist vorbei. Änderungen
+            am KFP sind nicht mehr möglich.</p>
         
         <table class="total">
             <tr class="expenses">
@@ -266,8 +270,20 @@
 				<select name="templateApplication"></select>
 			</fieldset>
             <fieldset>
+				<legend>Bearbeitungsschluss für Konzeption/Antrag</legend>
+				<input type="date" />
+                <input type="time" />
+                <input type="hidden" name="applicationClosing" class="datetime" />
+			</fieldset>
+            <fieldset>
 				<legend>Vorlage für KFP</legend>
 				<select name="templateBudget"></select>
+			</fieldset>
+            <fieldset>
+				<legend>Bearbeitungsschluss für den KFP</legend>
+				<input type="date" />
+                <input type="time" />
+                <input type="hidden" name="budgetClosing" class="datetime" />
 			</fieldset>
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
@@ -303,10 +319,22 @@
 				<legend>Vorlage für Konzeption/Antrag</legend>
 				<select name="templateApplication"></select>
 			</fieldset>
+            <fieldset>
+				<legend>Bearbeitungsschluss für Konzeption/Antrag</legend>
+                <input type="date" />
+                <input type="time" />
+                <input type="hidden" name="applicationClosing" class="datetime" />
+			</fieldset>
             <!--fieldset> It has no effext to change the budget template later, as it is only used while creating a project.
 				<legend>Vorlage für KFP</legend>
 				<select name="templateBudget"></select>
 			</fieldset-->
+            <fieldset>
+				<legend>Bearbeitungsschluss für den KFP</legend>
+                <input type="date" />
+                <input type="time" />
+                <input type="hidden" name="budgetClosing" class="datetime" />
+			</fieldset>
 			<fieldset>
 				<legend>Antragsteller:in(en)</legend>
 				<div class="applicants checkboxgroup"></div>

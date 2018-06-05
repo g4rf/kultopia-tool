@@ -39,6 +39,7 @@ class Budget {
      * @apiGroup Budget
      * @apiSuccess (200) {Object} budget The updated budget.
      * @apiError (401) Unauthorized Only admins, and for the project registered users can update the budget.
+     * @apiError (403) Forbidden When the budget closing time is reached, the budget can't be changed anymore.
      */
     public static function update($projectId) {
         Auth::checkkey();
@@ -52,6 +53,10 @@ class Budget {
             $project = Auth::isApplicantOrCurator($projectId);
         }        
         if(! $project) Helper::exitCleanWithCode(401);
+        
+        // check if budget is closed
+        $closing = new DateTime(DB::mongo2ApiDate($project->budgetClosing));
+        if($closing < new DateTime()) Helper::exitCleanWithCode(403);
         
         //*** get data
         parse_str(file_get_contents('php://input'), $data);

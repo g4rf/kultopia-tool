@@ -322,6 +322,7 @@ var Administration = {
     }
 };
 
+/* save front-page */
 $(".section.administration-frontpage .save").click(function() {
     Options.set("frontpage", 
         $(".section.administration-frontpage textarea").trumbowyg("html"));

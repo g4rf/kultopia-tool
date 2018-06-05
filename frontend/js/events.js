@@ -15,6 +15,18 @@ $(document).on("submit", "form", function(e) {
     return false;
 });
 
+/* fill a hidden input with an iso date based on date and a time input */
+$("body").on("change", "input[type='date'], input[type='time']", function() {    
+    var parent = $(this).parent();
+    
+    var date = $("input[type='date']", parent);
+    var time = $("input[type='time']", parent);
+    var input = $("input[type='hidden']", parent);
+    
+    var d = new Date(date.val() + "T" + time.val());
+    input.val(d.toISOString());
+});
+
 /* dialog background click */
 $("#dialog-background").click(Helper.closeDialog);
 

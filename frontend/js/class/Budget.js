@@ -56,6 +56,16 @@ var Budget = {
                 
                 // update sums
                 Budget.updateSums();
+                
+                // budget closed?
+                if(Projects.current.budgetClosed) {
+                    $("input", form).attr("readonly", "readonly");
+                    $("a, button", form).addClass("hidden");
+                    $(".project-budget .closed").removeClass("hidden");
+                } else {                    
+                    $("a, button", form).removeClass("hidden");
+                    $(".project-budget .closed").addClass("hidden");
+                }
             }
         });
     },
