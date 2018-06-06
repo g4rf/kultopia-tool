@@ -137,5 +137,9 @@ $(".menu-item").click(function() {
             $("#menu-administration").addClass("selected");
             Administration.loadFrontpage();
             break;
+        case "administration-export":
+            $("#menu-administration").addClass("selected");
+            Administration.loadExport();
+            break;
     }
 });

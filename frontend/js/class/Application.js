@@ -11,8 +11,6 @@ var Application = {
     load: function() {
         // load template from database
         Templates.get(Projects.current.templateApplication, function(template) {
-            
-            
             // parse the structure
             var structure = JSON.parse(template.structure);
             

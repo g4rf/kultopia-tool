@@ -61,6 +61,9 @@
 			 class="menu-item">Vorlagen</div>
 		<div data-section="administration-accounts"
 			 class="menu-item">Accounts</div>
+        <hr />
+        <div data-section="administration-export"
+			 class="menu-item">Export</div>
     </div>
 
     <div id="menu" class="menu hidden">
@@ -467,6 +470,31 @@
 			</fieldset>
 		</form>
 	</div>
+
+    <div class="administration-export section hidden">
+		<h1>Export</h1>
+        
+        <h2>Projekte auswählen</h2>
+        <div class="projects checkboxgroup"></div>
+        
+        <h3>Konzeptions-Daten auswählen</h3>
+        <label>
+            <input type="checkbox" class="applications" checked />
+            Konzeptionen in den Export einbinden
+        </label>
+        <div class="application-data checkboxgroup"></div>
+        
+        <h3>Kosten- und Finanzierungspläne</h3>
+        <label>
+            <input type="checkbox" class="applications" checked />
+            KFPs in den Export einbinden
+        </label>
+        
+        <hr />
+        <button class="start-export please-wait" 
+                title="Bitte warten..."
+                disabled="disabled">Erzeuge druckbaren Export</button>
+    </div>
 
 </div>
 

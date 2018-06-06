@@ -319,6 +319,109 @@ var Administration = {
                 });
             }
         });
+    },
+    
+    /**
+     * Holds the data to export.
+     */
+    export: {
+        projects: {},
+        applications: {},
+        budgets: {}
+    },
+    
+    /**
+     * Sets the export button in a wait state.
+     */
+    disableExportButton() {
+        var button = $(".administration-export .start-export");
+        button.addClass("please-wait");
+        button.attr({
+            disabled: "disabled",
+            title: _("Bitte warten...")
+        });
+    },
+    
+    /**
+     * Enables the export button.
+     */
+    enableExportButton() {
+        var button = $(".administration-export .start-export");
+        button.removeClass("please-wait");
+        button.removeAttr("disabled");
+        button.removeAttr("title");
+    },
+    
+    /**
+     * Loads the data for the export.
+     */
+    loadExport: function() {
+        Administration.disableExportButton();
+        
+        var section = $(".administration-export");
+        
+        // projects
+        API.call("projects", { "200": function(projects) {
+            var applicationTemplates = []; // collect application templates
+            
+            jQuery.each(projects, function(index, project) {
+                // add projects to export
+                Administration.export.projects[project.id] = project;                
+                
+                // collect applications
+                API.call("application/" + project.id, { "200": function(application) {
+                    Administration.export.applications[project.id] = application;
+                }});
+                
+                // collect budgets
+                API.call("budget/" + project.id, { "200": function(budget) {
+                    Administration.export.budgets[project.id] = budget;
+                }});                        
+                
+                // collect application templates
+                applicationTemplates.push(project.templateApplication);
+                
+                // add elements to checkboxgroup
+                $("<label />").append(
+                    $("<input />").attr({
+                        type: "checkbox",
+                        value: project.id
+                })).append(
+                    $("<span />").append(project.name)
+                ).appendTo($(".projects", section));
+            });
+            
+            // collect application data
+            API.call("templates", { "200": function(templates) {
+                jQuery.each(templates, function(index, template) {
+                    if(template.type != "application") return;
+                    if($.inArray(template.id, applicationTemplates) == -1) return;
+
+                    var form = $(".application-data", section);
+                    var structure = JSON.parse(template.structure);
+
+                    // build the form
+                    $("<div class='bold underline' />")
+                            .append(_("Vorlage: ") + template.name)
+                            .appendTo(form);
+                    jQuery.each(structure, function(index, part) {                    
+                        $("<div />").append(part.heading).appendTo(form);
+                        jQuery.each(part.inputs, function(index, input) {
+                            $("<label />").append(
+                                $("<input />").attr({
+                                    type: "checkbox",
+                                    value: input.attributes.name,
+                                    checked: "checked"
+                            })).append(
+                                $("<span />").append(input.label)
+                            ).appendTo(form);
+                        });
+                    });
+                });
+                
+                Administration.enableExportButton();
+            }});
+        }});
     }
 };
 
@@ -458,4 +561,90 @@ $(".section.administration-accounts .add").click(function() {
             }
         }]
     );
+});
+
+/* generate PDF */
+$(".administration-export .start-export").click(function() {
+    var section = $(".administration-export");
+
+    var projectIds = [];
+    $(".projects input:checked", section).each(function() {
+        projectIds.push($(this).val());
+    });
+    if(projectIds.length == 0) {
+        Helper.hint(_("Bitte wähle mindestens ein Projekt aus."));
+        return;
+    }
+
+    var applicationData = [];
+    $(".application-data input:checked", section).each(function() {
+        applicationData.push($(this).val());
+    });
+    
+    var report = $("<div />");
+    
+    var firstpage = true;
+    jQuery.each(Administration.export.projects, function(projectId, project) {
+        if($.inArray(projectId, projectIds) == -1) return;
+                
+        // internal project data
+        var pagebreak = "pagebreak";
+        if(firstpage) {
+            pagebreak = "";
+            firstpage = false;
+        }
+        $("<h2 />", { "class": pagebreak }).append(project.name).appendTo(report);
+        
+        report.append("<h3>Internes</h3>");
+        var p = $("<p />");
+        p.append(_("<b>Kennung</b> ") + project.name + "<br />");
+        if(project.description)
+            p.append(_("<b>Beschreibung</b> ") + project.description + "<br />");
+        jQuery.each(project.applicants, function(index, applicant) {
+            p.append(_("<b>Antragssteller:in</b> ") + applicant.name);
+        });
+        p.appendTo(report);
+        p = null;
+        
+        // application
+        if($(".applications", section).is(":checked")) {
+            report.append("<h3>Konzeption</h3>");
+            
+            jQuery.each(Administration.export.applications[project.id], function(key, value) {
+                if($.inArray(key, applicationData) == -1) return;
+                
+                p = $("<p />");
+                p.append("<b>" + key + "</b><br />" + value);
+                p.appendTo(report);
+                p = null;
+            });            
+        }
+    });
+    
+    // generate pdf name
+    var name = "projekte";
+    if(projectIds.length == 1) {
+        name = Administration.export.projects[projectIds[0]].name;
+    }
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    name += "-" + now.getFullYear() + month + day;
+        
+    var print = window.open('', 'Drucken', 'height=500,width=700');
+
+    print.document.write('<html><head><title>' + name  + '</title>');
+    print.document.write('<link rel="stylesheet" href="https://tool.kultopia.org/css/vendor/normalize.css">');
+    print.document.write('<link rel="stylesheet" href="https://tool.kultopia.org/css/main.css">');
+    print.document.write('</head><body>');
+    print.document.write(report.html());
+    print.document.write('</body></html>');
+
+    print.document.close(); // necessary for IE >= 10
+    print.focus(); // necessary for IE >= 10*/
+
+    print.print();
+    print.close();
+
+    return true;
 });

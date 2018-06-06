@@ -124,6 +124,10 @@ button:hover {
 button:focus {
 	border-color: #957fcc;
 }
+button[disabled="disabled"], button[disabled="disabled"]:hover {
+    background-color: #ddd;
+    color: #888;
+}
 button.cancel {
 	opacity: 0.6;
 }
@@ -342,6 +346,9 @@ form img {
 .italic {
 	font-style: italic;
 }
+.underline {
+    text-decoration: underline;
+}
 
 .small {
 	font-size: 0.75em;
@@ -368,7 +375,14 @@ form img {
 }
 
 .pointer {
-	cursor: pointer;
+	cursor: pointer !important;
+}
+.please-wait {
+    cursor: wait !important;
+}
+
+.pagebreak {
+    page-break-before: always;
 }
 
 /***** ajax ****/
@@ -623,6 +637,11 @@ form img {
     width: 13%;
 }
 
+/***** administration export *****/
+.administration-export .application-data {
+    height: 350px;
+}
+
 
 /* ==========================================================================
    Vendor classes
@@ -799,7 +818,8 @@ form img {
     }
 
     h2,
-    h3 {
+    h3,
+    br {
         page-break-after: avoid;
     }
 }
