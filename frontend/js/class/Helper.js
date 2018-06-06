@@ -159,6 +159,10 @@ var Helper = {
         return parseFloat(number).toFixed(2).replace(".", ",");
     },
     
+    toCurrency: function(number) {
+        return parseFloat(number).toLocaleString(undefined, { style: "currency", currency: "EUR" });
+    },
+    
     toDecimal: function(string) {
         return parseFloat(string.replace(",", "."));
     }

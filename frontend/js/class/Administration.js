@@ -411,7 +411,8 @@ var Administration = {
                                 $("<input />").attr({
                                     type: "checkbox",
                                     value: input.attributes.name,
-                                    checked: "checked"
+                                    checked: "checked",
+                                    "data-readable": input.label
                             })).append(
                                 $("<span />").append(input.label)
                             ).appendTo(form);
@@ -577,8 +578,10 @@ $(".administration-export .start-export").click(function() {
     }
 
     var applicationData = [];
+    var applicationReadable = [];
     $(".application-data input:checked", section).each(function() {
         applicationData.push($(this).val());
+        applicationReadable.push($(this).data("readable"));
     });
     
     var report = $("<div />");
@@ -599,7 +602,7 @@ $(".administration-export .start-export").click(function() {
         var p = $("<p />");
         p.append(_("<b>Kennung</b> ") + project.name + "<br />");
         if(project.description)
-            p.append(_("<b>Beschreibung</b> ") + project.description + "<br />");
+            p.append(_("<b>Beschreibung</b> ") + project.description + "<br class='no-pagebreak' />");
         jQuery.each(project.applicants, function(index, applicant) {
             p.append(_("<b>Antragssteller:in</b> ") + applicant.name);
         });
@@ -611,13 +614,106 @@ $(".administration-export .start-export").click(function() {
             report.append("<h3>Konzeption</h3>");
             
             jQuery.each(Administration.export.applications[project.id], function(key, value) {
-                if($.inArray(key, applicationData) == -1) return;
+                var pos = $.inArray(key, applicationData);
+                if(pos == -1) return;
                 
                 p = $("<p />");
-                p.append("<b>" + key + "</b><br />" + value);
+                p.append("<b>" + applicationReadable[pos] + "</b><br />" + value);
                 p.appendTo(report);
                 p = null;
+            });
+        }
+        
+        // budget
+        if($(".budgets", section).is(":checked")) {
+            report.append("<h3 class='pagebreak'>Kosten- und Finanzierungsplan</h3>");
+            
+            $("<p><b>Projekt:</b> " + project.name + "</p>").appendTo(report);
+        
+            // expenses
+            var expensesSum = 0;
+            var expenses = $("<table />");            
+            jQuery.each(Administration.export.budgets[project.id].expenses, function(index, category) {
+                var categorySum = 0;
+                
+                var categoryRows = $("<table />");
+                
+                // cost centers                
+                jQuery.each(category.costcenters, function(index, costcenter) { // cost center (eng): Kostenstelle
+                    var costcenterSum = 0;                    
+                    
+                    var costcenterRows = $("<table />");
+                    
+                    // positions
+                    jQuery.each(costcenter.positions, function(index, position) {
+                        var value = Helper.toDecimal(position.value);
+                        if(! value) return;
+                        costcenterSum += value;
+                        categorySum += value;
+                        expensesSum += value;
+                        
+                        $("<tr />").append(
+                            $("<td />"), $("<td />"),
+                            $("<td />").append(position.name),
+                            $("<td />").append(position.detail),
+                            $("<td class='right' />").append(Helper.toCurrency(value))
+                        ).appendTo(costcenterRows);
+                    });
+                    
+                    if(! costcenterSum) return;
+                    
+                    $("<tr />").append(
+                        $("<td />"),
+                        $("<td colspan='3' class='underline' />").append(costcenter.name),
+                        $("<td class='right' />").append(Helper.toCurrency(costcenterSum)))
+                    .prependTo(costcenterRows);
+                    
+                    categoryRows.append(costcenterRows.contents());
+                });
+                
+                if(! categorySum) return;
+                
+                $("<tr />").append(
+                    $("<td colspan='4' class='bold' />").append(category.name),
+                    $("<td class='bold right' />").append(Helper.toCurrency(categorySum)))
+                .prependTo(categoryRows);
+        
+                expenses.append(categoryRows.contents());
             });            
+
+            // earnings
+            var earningsSum = 0;
+            var earnings = $("<table />");
+            jQuery.each(Administration.export.budgets[project.id].earnings, function(index, earning) {
+                var value = Helper.toDecimal(earning.value);
+                
+                if(! value) return;
+                
+                earningsSum += value;
+                
+                $("<tr />").append(
+                    $("<td />").append(earning.name),
+                    $("<td />").append(earning.detail),
+                    $("<td />").append(earning.status),
+                    $("<td />").append(Helper.toCurrency(value))
+                ).appendTo(earnings);
+            });
+            
+            var total = $("<table />");                    
+            total.append(
+                $("<tr class='bold' />").append(
+                    "<td colspan='4'>Gesamtausgaben</td>",
+                    "<td class='right'>" + Helper.toCurrency(expensesSum) + "</td>"),
+                $("<tr class='bold' />").append(
+                    "<td colspan='4'>Gesamteinnahmen</td>",
+                    "<td class='right'>" + Helper.toCurrency(earningsSum) + "</td>"),
+                $("<tr class='bold' />").append(
+                    "<td colspan='4'>Differenz</td>",
+                    "<td class='right'>" + Helper.toCurrency(earningsSum - expensesSum) + "</td>")
+            );
+    
+            report.append(total, "<h4>Ausgaben</h4>", expenses, 
+                "<h4>Einnahmen</h4>", earnings);            
         }
     });
     
@@ -630,7 +726,8 @@ $(".administration-export .start-export").click(function() {
     var day = ("0" + now.getDate()).slice(-2);
     var month = ("0" + (now.getMonth() + 1)).slice(-2);
     name += "-" + now.getFullYear() + month + day;
-        
+    
+    // print
     var print = window.open('', 'Drucken', 'height=500,width=700');
 
     print.document.write('<html><head><title>' + name  + '</title>');
