@@ -360,6 +360,9 @@ form img {
 .red {
 	color: #ff8080;
 }
+.greyback, table tr td.greyback {
+    background-color: #999;
+}
 
 .inline-block {
     display: inline-block;
@@ -832,5 +835,22 @@ form img {
     tr {
         font-size: 0.75em !important;
         line-height: 0.8em !important;
+    }
+    
+    /* hack for making background-color visible */
+    .greyback {
+        position: relative;
+        overflow: hidden; /* this might not work well in all situations */
+    }
+    .greyback:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        /* and here it is, the background color */
+        border: 99999px #999 solid;
+        z-index: -1;
     }
 }
