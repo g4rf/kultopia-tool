@@ -604,7 +604,7 @@ $(".administration-export .start-export").click(function() {
         if(project.description)
             p.append(_("<b>Beschreibung</b> ") + project.description + "<br class='no-pagebreak' />");
         jQuery.each(project.applicants, function(index, applicant) {
-            p.append(_("<b>Antragssteller:in</b> ") + applicant.name);
+            p.append(_("<b>Antragssteller:in</b> ") + applicant.name + "<br />");
         });
         p.appendTo(report);
         p = null;
@@ -617,10 +617,10 @@ $(".administration-export .start-export").click(function() {
                 var pos = $.inArray(key, applicationData);
                 if(pos == -1) return;
                 
-                p = $("<p />");
-                p.append("<b>" + applicationReadable[pos] + "</b><br />" + value);
-                p.appendTo(report);
-                p = null;
+                $("<p />").append(
+                    "<b>" + applicationReadable[pos] + "</b><br class='no-pagebreak' />" 
+                    + value.replace(/(?:\r\n|\r|\n)/g, '<br />'))
+                .appendTo(report);
             });
         }
         
@@ -671,11 +671,9 @@ $(".administration-export .start-export").click(function() {
                     categoryRows.append(costcenterRows.contents());
                 });
                 
-                if(! categorySum) return;
-                
                 $("<tr />").append(
-                    $("<td colspan='4' class='bold' />").append(category.name),
-                    $("<td class='bold right' />").append(Helper.toCurrency(categorySum)))
+                    $("<td colspan='4' class='bold greyback' />").append(category.name),
+                    $("<td class='bold right greyback' />").append(Helper.toCurrency(categorySum)))
                 .prependTo(categoryRows);
         
                 expenses.append(categoryRows.contents());

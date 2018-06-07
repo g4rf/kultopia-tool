@@ -850,7 +850,7 @@ form img {
         left: 0;
         bottom: 0;
         /* and here it is, the background color */
-        border: 99999px #999 solid;
+        border: 99999px #aaa solid;
         z-index: -1;
     }
 }
