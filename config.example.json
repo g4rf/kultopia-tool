@@ -1,5 +1,6 @@
 {  
 	"logApiAccess": "log/api.log",
+    "uploadDirectory": "uploads",
 
 	"apiUrl": "/",
 	

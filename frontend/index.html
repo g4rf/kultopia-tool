@@ -76,6 +76,10 @@
         <!--div data-section="project-report" class="menu-item">Sachbericht</div-->
 		<!--div data-section="project-press" class="menu-item">Presse</div-->
 		<!--div data-section="project-uploads" class="menu-item">Dokumente & Bilder</div-->
+        <div class="curation hidden">
+            <div class="separator">Kuration</div>
+            <div data-section="project-curation-upload" class="menu-item">Upload</div>
+        </div>
     </div>
 
 	<div id="copyright">
@@ -220,6 +224,32 @@
         </form>
 	</div>
 
+    <!--***** Konzeption / Antrag *****-->
+	<div class="project-curation-upload section hidden">
+		<h1>Kuration - Upload</h1>
+        
+        <h2>Vorhandene Dateien</h2>
+        <div class="uploads">
+            <div class="file template">
+                <button class="delete">Löschen</button>
+                <div class="description"></div>                
+            </div>
+            <div class="no-data">Keine Dateien hochgeladen.</div>
+        </div>
+
+        <h2>Dateien hochladen</h2>        
+        <form class="uploader">
+            <div class="file template">
+                <input type="file" class="input-file" /><br />
+                Beschreibung:<br />
+                <input type="text" class="input-description" />
+            </div>
+        </form>
+        
+        <button class="upload">Hochladen</button>
+        <span class="upload-info"></span>
+	</div>
+    
 <!--***** Administration *****-->
     <div class="administration-frontpage section hidden">
 		<h1>Startseite</h1>
@@ -540,6 +570,7 @@
 <script src="js/class/Consulting.js"></script>
 <script src="js/class/Application.js"></script>
 <script src="js/class/Budget.js"></script>
+<script src="js/class/Curation.js"></script>
 
 <!-- other stuff -->
 <script src="js/events.js"></script>

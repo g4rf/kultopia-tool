@@ -66,6 +66,10 @@ class Projects {
                 ];
             }
             
+            // is curator?
+            if(in_array(Auth::getEmail(), iterator_to_array($project->curators)))
+                    $temp['isCurator'] = true;
+            
             // created, applicants & curators
             if(Auth::isAdmin()) {
                 // created

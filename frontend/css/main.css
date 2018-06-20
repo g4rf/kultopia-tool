@@ -252,7 +252,7 @@ input[type='number'] {
 }
 
 [readonly] {
-    background-color: #ddd;
+    background-color: #eee;
     cursor: not-allowed;
 }
 
@@ -544,8 +544,15 @@ form img {
 }
 
 #menu .project-name {
-	font-size: 1.5em;
+	font-size: 1.2em;
 	word-wrap: break-word;
+}
+
+#menu .separator {
+    margin-top: 10%;
+    border-top: solid 1px #aaa;
+    font-size: 0.8em;    
+    color: #999;
 }
 
 /***** content ****/
@@ -617,8 +624,11 @@ form img {
     margin-left: 20px;
     font-weight: normal;
     margin-bottom: 15px;
-    border-top: dotted 1px #aaa;
-    background-color: #eee;
+    border: dotted 1px #aaa;
+    background-color: #ddd;
+}
+.project-budget .cost-center:nth-child(odd) {
+    background-color: #ccc;
 }
 .project-budget .add-cost-center {
     margin-left: 20px;
@@ -627,10 +637,7 @@ form img {
 .project-budget .position {
     margin-left: 40px;
     font-style: italic;
-    background-color: #bbb;
-}
-.project-budget .position:nth-child(odd) {
-    background-color: #ddd;
+    background-color: transparent;
 }
 .project-budget .add-position {
     margin-left: 40px;
@@ -641,6 +648,12 @@ form img {
 }
 .project-budget .earning-status {
     width: 13%;
+}
+
+/***** curation upload *****/
+.project-curation-upload .uploader .file {
+    border: dotted 1px #888;
+    padding: 10px;
 }
 
 /***** administration export *****/

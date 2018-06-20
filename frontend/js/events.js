@@ -1,4 +1,4 @@
-/* global Auth, Helper, Administration, Application, Projects, Consulting, Templates, Budget */
+/* global Auth, Helper, Administration, Application, Projects, Consulting, Templates, Budget, Curation */
 
 /* click, load and other events */
 
@@ -116,6 +116,11 @@ $(".menu-item").click(function() {
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");
             Budget.load();            
+            break;
+        case "project-curation-upload":
+            $("#menu").removeClass("hidden");
+            $("#administration-menu").addClass("hidden");
+            Curation.loadUpload();
             break;
         case "administration-projects":
             $("#menu").addClass("hidden");

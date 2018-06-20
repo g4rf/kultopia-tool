@@ -66,6 +66,14 @@ var Projects = {
                     newRow.css("cursor", "pointer").click(function() {
                         Projects.current = project;
                         $(".project-name").empty().append(project.name);
+                        
+                        // show curator menu
+                        if(project.isCurator === true || Auth.isAdmin()) {
+                            $("#menu .curation").removeClass("hidden");
+                        } else {
+                            $("#menu .curation").addClass("hidden");
+                        }
+                        
                         $(".menu-item[data-section='project-consulting']").click();
                     });
                     
