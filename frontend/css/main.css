@@ -575,6 +575,11 @@ form img {
 	margin-top: 50px;
 }
 
+/***** consulting *****/
+.project-consulting .uploads .file {
+    display: block;
+}
+
 /***** budget *****/
 .project-budget .total {
     width: auto;
@@ -651,6 +656,26 @@ form img {
 }
 
 /***** curation upload *****/
+.project-curation-upload .uploads .file {
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.project-curation-upload .uploads .file:hover {
+    background-color: #eee;
+}
+.project-curation-upload .uploads .file .description,
+.project-curation-upload .uploads .file .delete,
+.project-curation-upload .uploads .file .download {
+    display: inline-block;
+    vertical-align: top;
+}
+.project-curation-upload .uploads .file .download {
+    float: right;
+    margin-top: 0;
+}
+
 .project-curation-upload .uploader .file {
     border: dotted 1px #888;
     padding: 10px;

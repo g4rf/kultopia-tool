@@ -125,6 +125,7 @@ if($request[0] == 'login') {
 } elseif($request[0] == 'project' && $requestMethod == 'PUT') {
     Projects::update($request[1]);
 
+    
 // Curation uploads
 } elseif($request[0] == 'curation-upload' && $requestMethod == 'GET') {
     Curation::getUploads($request[1]);
@@ -132,6 +133,10 @@ if($request[0] == 'login') {
 } elseif($request[0] == 'curation-upload' && $requestMethod == 'POST') {
     Curation::upload($request[1]);
 
+} elseif($request[0] == 'curation-upload' && $requestMethod == 'DELETE') {
+    Curation::deleteUpload($request[1]);
+
+    
 // Templates
 } elseif($request[0] == 'templates') {
     if($requestMethod == 'GET') Templates::get();

@@ -4,6 +4,8 @@
  * Functions for the curation.
  */
 class Curation {
+    const CURATION_UPLOAD = 'curation-upload';
+    
     /**
      * @api {get} /curation-upload/:projectId Gets the uploads for the given project.
      * @apiGroup Curation
@@ -25,7 +27,8 @@ class Curation {
         
         // get uploads
         $result = DB::$db->uploads->find([
-            'project' => $projectId
+            'project' => $projectId,
+            'type' => self::CURATION_UPLOAD
         ],[
             'projection' => ['_id' => 0]
         ]);
@@ -61,17 +64,20 @@ class Curation {
         foreach ($_FILES['file']['error'] as $index => $error) {
             if ($error == UPLOAD_ERR_OK) {
                 $tmpName = $_FILES['file']['tmp_name'][$index];
-                $name = '../' . Config::$_['uploadDirectory'] . "/" . Helper::createKey() .
-                        '_' . basename($_FILES['file']['name'][$index]);
+                $name = basename($_FILES['file']['name'][$index]);
+                $fileName = $projectId . '_curation-upload_' . Helper::createKey() .
+                        '_' . $name;
+                $path = '../' . Config::$_['uploadDirectory'] . "/" . $fileName;
                 
-                if(move_uploaded_file($tmpName, $name)) {
+                if(move_uploaded_file($tmpName, $path)) {
                     DB::$db->uploads->insertOne([
-                        'file' => $name,
-                        'name' => basename($_FILES['file']['name'][$index]),
-                        'description' => $descriptions[$index],
-                        'type' => $_FILES['file']['type'][$index],
+                        'file' => $fileName,
+                        'filetype' => $_FILES['file']['type'][$index],
                         'size' => $_FILES['file']['size'][$index],
-                        'project' => $projectId
+                        'name' => $name,
+                        'description' => $descriptions[$index],                        
+                        'project' => $projectId,
+                        'type' => self::CURATION_UPLOAD
                     ]);
                 }
             }
@@ -79,7 +85,8 @@ class Curation {
         
         // get uploads
         $result = DB::$db->uploads->find([
-            'project' => $projectId
+            'project' => $projectId,
+            'type' => self::CURATION_UPLOAD
         ],[
             'projection' => ['_id' => 0]
         ]);
@@ -89,28 +96,54 @@ class Curation {
     }
     
     /**
-     * This is not an api function! Creates the first budget whilst creating a project.
-     * ATTENTION: If you do this with an existing project, it will overwrite the existing budget with the template.
-     * @param string $projectId The id of the project.
-     * @param string $templateId The id of the budget template.
-     * @return object|boolean On success the new budget, false on failure.
+     * @api {delete} /curation-upload/:file Deletes the file.
+     * @apiGroup Curation
+     * @apiSuccess (200) {Object} uploads The remaining curation uploads for the project.
+     * @apiError (401) Unauthorized Only admins and for the project registered curators can delete uploads.
+     * @apiError (404) NotFound File not found in database.
      */
-    public static function create($projectId, $templateId) {        
-        // get template
-        $budgetTemplate = DB::$db->templates->findOne(['id' => $templateId]);
-        if(! $budgetTemplate) return false;
+    public static function deleteUpload($file) {
+        Auth::checkkey();
         
-        $newBudget = json_decode($budgetTemplate->structure, true);
-        $newBudget['id'] = Helper::createId();
-        $budget = (object)$newBudget;
-
-        // insert into budget collection
-        DB::$db->budgets->insertOne($budget);
-        
-        // save budget id to project
-        DB::$db->projects->updateOne(['id' => $projectId],[
-            '$set' => ['budgetId' => $budget->id]
+        // get file
+        $info = DB::$db->uploads->findOne([
+            'file' => $file,
+            'type' => self::CURATION_UPLOAD
         ]);
-        return $budget;
+        
+        if(! $info) // file not found
+            Helper::exitCleanWithCode(404);
+            
+        $projectId = $info->project;
+        //*** get project
+        // if admin, get access to all projects
+        if(Auth::isAdmin()) {
+            $project = DB::$db->projects->findOne(['id' => $projectId]);
+        } else {
+            // if user, only active projects where user is curator
+            $project = Auth::isCurator($projectId);
+        }
+        if(! $project) Helper::exitCleanWithCode(401);
+        
+        // delete file in file system
+        $path = '../' . Config::$_['uploadDirectory'] . "/" . $info->file;
+        unlink($path);
+        
+        // delete upload in database
+        DB::$db->uploads->deleteOne([
+            'file' => $file,
+            'type' => self::CURATION_UPLOAD
+        ]);        
+        
+        // get uploads
+        $result = DB::$db->uploads->find([
+            'project' => $projectId,
+            'type' => self::CURATION_UPLOAD
+        ],[
+            'projection' => ['_id' => 0]
+        ]);
+        $uploads = [];
+        foreach($result as $upload) $uploads[] = $upload;        
+        print json_encode($uploads);
     }
 }
