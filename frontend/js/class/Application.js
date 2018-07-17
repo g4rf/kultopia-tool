@@ -25,7 +25,7 @@ var Application = {
                     var htmlInput = $("<" + input.tag + " />")
                             .attr(input.attributes);
                     $("<label />")
-                        .append("<div class='label-caption'>" + input.label + "</div>")
+                        .append("<span class='label-caption'>" + input.label + "</span>")
                         .append(htmlInput).appendTo(htmlSection);
                 });
                 htmlSection.appendTo(form);
@@ -34,16 +34,20 @@ var Application = {
             if(Projects.current.applicationClosed) {
                 $(".project-application .closed").removeClass("hidden");
                 $("input, textarea", form).attr("readonly", "readonly");
+                // radios and boxes
+                $("input[type='radio'],input[type='checkbox']", form)
+                        .not(":checked").parent().addClass("hidden");
+                $("input[type='radio'],input[type='checkbox']", form)
+                        .addClass("hidden");
             } else {
                 // trumbowyg
                 $("textarea.wysiwyg", form).trumbowyg();
                 $(".project-application .closed").addClass("hidden");
-            }            
+            }
 
             // load the application data from database
             API.call("application/" + Projects.current.id, {
                 "200": function(data) {
-                    console.log(data);
                     // fill in the data in the form
                     Helper.fillFields(data, form);
                 }
@@ -59,12 +63,10 @@ var Application = {
         API.call("application/" + Projects.current.id, {
             "200": function(data) {
                 //console.log(data);
-                // fill in the data in the form
-                //Helper.fillFields(data, form);
             }
         }, "PUT", form.serialize());
     }
 };
 
 /** save inputs **/
-$(".project-application form").on("keyup", "textarea, input", Application.save);
+$(".project-application form").on("change", "textarea, input", Application.save);

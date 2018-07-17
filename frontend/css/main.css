@@ -218,6 +218,7 @@ label {
 	display: block;
 	cursor: pointer;
 	margin-right: 5px;
+    margin-top: 7px;
 }
 label input {
 	margin: 0 5px;
@@ -230,7 +231,6 @@ label input {
 
 .label-caption {
     font-size: 0.9em;
-    padding: 0.5em 0;
 }
 
 input, textarea, select, .checkboxgroup {
@@ -672,8 +672,10 @@ form img {
     vertical-align: top;
 }
 .project-curation-upload .uploads .file .download {
-    float: right;
     margin-top: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .project-curation-upload .uploader .file {

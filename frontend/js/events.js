@@ -23,6 +23,8 @@ $("body").on("change", "input[type='date'], input[type='time']", function() {
     var time = $("input[type='time']", parent);
     var input = $("input[type='hidden']", parent);
     
+    if(! date.length || ! time.length || ! input.length) return;
+    
     var d = new Date(date.val() + "T" + time.val());
     input.val(d.toISOString());
 });

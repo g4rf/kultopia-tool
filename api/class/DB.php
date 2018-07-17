@@ -6,12 +6,16 @@
 class DB {
     public static $mongo;
     public static $db;
+    public static $username = 'kultopia';
+    public static $password = 'V0LnGbQZkBhapq2I9PgA';
     
     /**
      * Initializes the database.
      */
     public static function initialize() {
-        self::$mongo = new MongoDB\Client();
+        self::$mongo = new MongoDB\Client(
+            'mongodb://' . self::$username . ':' . self::$password . '@localhost/kultopiatool'
+        );
         self::$db = self::$mongo->kultopiatool;
     }
     
