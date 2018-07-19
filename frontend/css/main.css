@@ -587,9 +587,7 @@ form img {
 
 .project-budget form, .project-budget .total {
     cursor: default;
-    max-width: 800px;
-    border: solid 1px #888;
-    margin: 10px auto;
+    margin: 10px 0;
 }
 .project-budget .one {
     width: 74%;
