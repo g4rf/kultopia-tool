@@ -3,11 +3,9 @@
 /**
  * Functions for the curation.
  */
-class Curation {
-    const CURATION_UPLOAD = 'curation-upload';
-    
+class Curation { 
     /**
-     * @api {get} /curation-upload/:projectId Gets the uploads for the given project.
+     * @api {get} /curation/uploads/:projectId Gets the curation uploads for the given project.
      * @apiGroup Curation
      * @apiSuccess (200) {Object} uploads The informations for the upload.
      * @apiError (401) Unauthorized Only admins and for the project registered users can get the uploads.
@@ -26,9 +24,9 @@ class Curation {
         if(! $project) Helper::exitCleanWithCode(401);
         
         // get uploads
-        $result = DB::$db->uploads->find([
-            'project' => $projectId,
-            'type' => self::CURATION_UPLOAD
+        $result = DB::$db->files->find([
+            'projectId' => $projectId,
+            'type' => Files::CURATION_INFO
         ],[
             'projection' => ['_id' => 0]
         ]);
@@ -36,9 +34,47 @@ class Curation {
         foreach($result as $upload) $uploads[] = $upload;        
         print json_encode($uploads);
     }
+    
+    /**
+     * @api {get} /curation/files/:fileName Requests the file for download.
+     * @apiGroup Curation
+     * @apiSuccess (200) {Binary} file The file as a binary stream.
+     * @apiError (401) Unauthorized Only admins and for the project registered users can get the uploads.
+     * @apiError (404) NotFound File not found.
+     */
+    public static function download($fileName) {
+        // not implemented as we can't download files through ajax
+        Helper::exitCleanWithCode(501);
+        
+        /*Auth::checkkey();
+        
+        // get file
+        $file = DB::$db->files->findOne([
+            'fileName' => $fileName,
+            'type' => Files::CURATION_INFO
+        ]);
+        
+        if(! $file) // file not found
+            Helper::exitCleanWithCode(404);
+            
+        $projectId = $file->projectId;
+        //*** get project
+        // if admin, get access to all projects
+        if(Auth::isAdmin()) {
+            $project = DB::$db->projects->findOne(['id' => $projectId]);
+        } else {
+            // if user, only active projects where user is curator
+            $project = Auth::isApplicantOrCurator($projectId);
+        }
+        if(! $project) Helper::exitCleanWithCode(401);
+        
+        if(! Files::download($file->filename)) Helper::exitCleanWithCode(404);
+        
+         /**/
+    }
    
     /**
-     * @api {post} /curation-upload/:projectId Uploads a new info file from curator to the project.
+     * @api {post} /curation/files/:projectId Uploads new files from curator to the project.
      * @apiGroup Curation
      * @apiSuccess (200) {Object} uploads All curation uploads for the project.
      * @apiError (401) Unauthorized Only curators and admins may upload files.
@@ -60,33 +96,13 @@ class Curation {
         $descriptions = filter_input(INPUT_POST, 'description', FILTER_DEFAULT,
                 FILTER_REQUIRE_ARRAY);
         
-        // go through files
-        foreach ($_FILES['file']['error'] as $index => $error) {
-            if ($error == UPLOAD_ERR_OK) {
-                $tmpName = $_FILES['file']['tmp_name'][$index];
-                $name = basename($_FILES['file']['name'][$index]);
-                $fileName = $projectId . '_curation-upload_' . Helper::createKey() .
-                        '_' . $name;
-                $path = '../' . Config::$_['uploadDirectory'] . "/" . $fileName;
-                
-                if(move_uploaded_file($tmpName, $path)) {
-                    DB::$db->uploads->insertOne([
-                        'file' => $fileName,
-                        'filetype' => $_FILES['file']['type'][$index],
-                        'size' => $_FILES['file']['size'][$index],
-                        'name' => $name,
-                        'description' => $descriptions[$index],                        
-                        'project' => $projectId,
-                        'type' => self::CURATION_UPLOAD
-                    ]);
-                }
-            }
-        }
+        // upload files
+        Files::upload(Files::CURATION_INFO, $project->id, $_FILES, $descriptions);
         
         // get uploads
-        $result = DB::$db->uploads->find([
-            'project' => $projectId,
-            'type' => self::CURATION_UPLOAD
+        $result = DB::$db->files->find([
+            'projectId' => $projectId,
+            'type' => Files::CURATION_INFO
         ],[
             'projection' => ['_id' => 0]
         ]);
@@ -96,25 +112,25 @@ class Curation {
     }
     
     /**
-     * @api {delete} /curation-upload/:file Deletes the file.
+     * @api {delete} /curation/file/:fileName Deletes the file.
      * @apiGroup Curation
      * @apiSuccess (200) {Object} uploads The remaining curation uploads for the project.
      * @apiError (401) Unauthorized Only admins and for the project registered curators can delete uploads.
      * @apiError (404) NotFound File not found in database.
      */
-    public static function deleteUpload($file) {
+    public static function deleteUpload($fileName) {
         Auth::checkkey();
         
         // get file
-        $info = DB::$db->uploads->findOne([
-            'file' => $file,
-            'type' => self::CURATION_UPLOAD
+        $file = DB::$db->files->findOne([
+            'fileName' => $fileName,
+            'type' => Files::CURATION_INFO
         ]);
         
-        if(! $info) // file not found
+        if(! $file) // file not found
             Helper::exitCleanWithCode(404);
             
-        $projectId = $info->project;
+        $projectId = $file->projectId;
         //*** get project
         // if admin, get access to all projects
         if(Auth::isAdmin()) {
@@ -125,20 +141,13 @@ class Curation {
         }
         if(! $project) Helper::exitCleanWithCode(401);
         
-        // delete file in file system
-        $path = '../' . Config::$_['uploadDirectory'] . "/" . $info->file;
-        unlink($path);
-        
-        // delete upload in database
-        DB::$db->uploads->deleteOne([
-            'file' => $file,
-            'type' => self::CURATION_UPLOAD
-        ]);        
+        // delete file
+        Files::delete($file->fileName);
         
         // get uploads
-        $result = DB::$db->uploads->find([
-            'project' => $projectId,
-            'type' => self::CURATION_UPLOAD
+        $result = DB::$db->files->find([
+            'projectId' => $projectId,
+            'type' => Files::CURATION_INFO
         ],[
             'projection' => ['_id' => 0]
         ]);

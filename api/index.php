@@ -70,8 +70,13 @@ if(! empty($jsonp)) print "$jsonp(";
  *      start with the same parts.
  */
 
+// Download
+if($request[0] == 'download') {
+    Files::download($request[1]);
+
+    
 // Auth
-if($request[0] == 'login') {
+} elseif($request[0] == 'login') {
     Auth::login(filter_input(INPUT_POST, 'email'), 
             filter_input(INPUT_POST, 'password'));
     
@@ -126,16 +131,25 @@ if($request[0] == 'login') {
     Projects::update($request[1]);
 
     
-// Curation uploads
-} elseif($request[0] == 'curation-upload' && $requestMethod == 'GET') {
-    Curation::getUploads($request[1]);
-    
-} elseif($request[0] == 'curation-upload' && $requestMethod == 'POST') {
-    Curation::upload($request[1]);
-
-} elseif($request[0] == 'curation-upload' && $requestMethod == 'DELETE') {
-    Curation::deleteUpload($request[1]);
-
+// Curation
+} elseif($request[0] == 'curation') {
+    // get files
+    if($request[1] == 'files' && $requestMethod == 'GET') {
+        Curation::getUploads($request[2]);
+    // upload files
+    } elseif($request[1] == 'files' && $requestMethod == 'POST') {
+        Curation::upload($request[2]);
+    // download file
+    } elseif($request[1] == 'file' && $requestMethod == 'GET') {
+        // won't work as we can't download files through ajax
+        Helper::exitCleanWithCode(501);
+        //Curation::download($request[2]);
+    // delete file
+    } elseif($request[1] == 'file' && $requestMethod == 'DELETE') {
+        Curation::deleteUpload($request[2]);
+    } else {
+        Helper::exitCleanWithCode(400);
+    }
     
 // Templates
 } elseif($request[0] == 'templates') {

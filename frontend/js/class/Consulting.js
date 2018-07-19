@@ -1,4 +1,4 @@
-/* global Projects, API */
+/* global Projects, API, Helper */
 
 /**
  * Holds functions for the consulting section.
@@ -19,7 +19,7 @@ var Consulting = {
             // get uploads
             $(".link-uploads, .uploads", section).addClass("hidden");
             $(".file", uploads).not(".template").remove();
-            API.call("curation-upload/" + Projects.current.id, {
+            API.call("curation/files/" + Projects.current.id, {
                 "200": function(files) {
                     if(files.length == 0) return;
                     
@@ -31,7 +31,7 @@ var Consulting = {
                         $(".file.template", uploads).clone()
                                 .removeClass("template")
                                 .append(file.name + description)
-                                .attr("href", file.file)
+                                .attr("href", Helper.createDownloadLink(file.fileName))
                                 .appendTo(uploads);
                     });
                 }

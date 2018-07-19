@@ -15,7 +15,7 @@ var Curation = {
         
         // get uploads
         $(".file", uploads).not(".template").remove();
-        API.call("curation-upload/" + Projects.current.id, {
+        API.call("curation/files/" + Projects.current.id, {
             "200": function(files) {
                 if(files.length == 0) {
                     $(".no-data", uploads).removeClass("hidden");
@@ -29,6 +29,8 @@ var Curation = {
                             .data("info", file);
                     $(".name", newFile).append(file.name);
                     $(".description", newFile).append(file.description);
+                    $(".download", newFile).attr("href", 
+                                    Helper.createDownloadLink(file.fileName));
                 });
             }
         });
@@ -45,7 +47,7 @@ var Curation = {
 /** delete file **/
 $(".project-curation-upload .uploads").on("click", "button.delete", function() {
     var info = $(this).parent().data("info");
-    API.call("curation-upload/" + info.file, {
+    API.call("curation/file/" + info.fileName, {
         "200": function() {
             Curation.loadUpload();
             Helper.hint(_("Datei gelöscht."));
@@ -56,10 +58,6 @@ $(".project-curation-upload .uploads").on("click", "button.delete", function() {
         }
     }, "DELETE");
 });
-
-/** download file **/
-// TODO
-
 
 /** add more file fields **/
 $(".project-curation-upload .uploader").on("change", ".input-file", function() {
@@ -98,7 +96,7 @@ $(".project-curation-upload button.upload").click(function() {
     
     info.empty().append(_("Lade Dateien hoch..."));
     
-    API.call("curation-upload/" + Projects.current.id, {
+    API.call("curation/files/" + Projects.current.id, {
         "200": function() {
             info.empty();
             Curation.loadUpload();

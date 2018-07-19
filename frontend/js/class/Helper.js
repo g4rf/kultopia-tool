@@ -1,10 +1,14 @@
-/* global parseFloat */
+/* global parseFloat, Config */
 
 /**
  * Holds some general functions.
  * @namespace
  */
 var Helper = {    
+    createDownloadLink: function(fileName) {
+       return Config.apiUrl + "download/" + fileName;
+    },
+    
     /**
      * Shows a dialog with some buttons.
      * @param {String|DOM|jQuery} main Something to paste in the main pane.
