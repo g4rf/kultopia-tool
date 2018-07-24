@@ -54,9 +54,11 @@ class Budget {
         }        
         if(! $project) Helper::exitCleanWithCode(401);
         
-        // check if budget is closed
-        $closing = new DateTime(DB::mongo2ApiDate($project->budgetClosing));
-        if($closing < new DateTime()) Helper::exitCleanWithCode(403);
+        // check if budget is closed (if user isn't admin or curator)
+        if(! Auth::isAdmin() || ! Auth::isCurator($project->id)) {
+            $closing = new DateTime(DB::mongo2ApiDate($project->budgetClosing));
+            if($closing < new DateTime()) Helper::exitCleanWithCode(403);
+        }
         
         //*** get data
         parse_str(file_get_contents('php://input'), $data);

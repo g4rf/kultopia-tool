@@ -162,7 +162,9 @@ table tr.inactive td {
 	background-color: #fdd;
 }
 table tr:hover td {
-	background-color: #eee;
+    border-top: solid 1px #333;
+    border-bottom: solid 1px #333;
+	/*background-color: #eee;*/
 }
 
 table tr.unconfirmed td {
@@ -573,6 +575,14 @@ form img {
 
 .subsection {
 	margin-top: 50px;
+}
+
+/***** projects *****/
+.projects tr.bewilligt td:first-child {
+    background-color:  #cfc;
+}
+.projects tr.abgelehnt td:first-child {
+    background-color:  #fcc;
 }
 
 /***** consulting *****/

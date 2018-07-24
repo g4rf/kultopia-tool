@@ -119,6 +119,11 @@ $(".menu-item").click(function() {
             $("#administration-menu").addClass("hidden");
             Budget.load();            
             break;
+        case "project-curation-settings":
+            $("#menu").removeClass("hidden");
+            $("#administration-menu").addClass("hidden");
+            Curation.loadSettings();
+            break;
         case "project-curation-upload":
             $("#menu").removeClass("hidden");
             $("#administration-menu").addClass("hidden");

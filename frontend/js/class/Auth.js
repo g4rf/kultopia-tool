@@ -127,5 +127,15 @@ var Auth = {
     isAdmin: function() {
         if(Cookies.get("user-isadmin")) return true;
         return false;
+    },
+    
+    /**
+     * Checks if the user is curator for the current project. Admins are always curators.
+     * @returns {Boolean} true if curator, false otherwise
+     */
+    isCurator: function() {
+        if(Auth.isAdmin()) return true;
+        if(Projects.current.isCurator) return true;
+        return false;
     }
 };

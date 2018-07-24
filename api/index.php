@@ -133,8 +133,12 @@ if($request[0] == 'download') {
     
 // Curation
 } elseif($request[0] == 'curation') {
+    // set settings
+    if($request[1] == 'settings' && $requestMethod == 'PUT') {
+        Curation::setSettings($request[2]);
+        
     // get files
-    if($request[1] == 'files' && $requestMethod == 'GET') {
+    } elseif($request[1] == 'files' && $requestMethod == 'GET') {
         Curation::getUploads($request[2]);
     // upload files
     } elseif($request[1] == 'files' && $requestMethod == 'POST') {

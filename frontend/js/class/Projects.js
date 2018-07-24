@@ -55,11 +55,23 @@ var Projects = {
                     
                     // add infos
                     $(".name", newRow).append(project.name);
+                    
+                    $(".status", newRow).append(project.status);
+                    $(newRow).addClass(project.status);
+                    
                     // applicants
                     jQuery.each(project.applicants, function(index, applicant) {
                         var name = applicant.name;
                         if(! name) name = applicant.email;
+                        else name += " (" + applicant.email + ")";
                         $(".applicants", newRow).append(name).append("<br />");
+                    });
+                    // curators
+                    jQuery.each(project.curators, function(index, curator) {
+                        var name = curator.name;
+                        if(! name) name = curator.email;
+                        else name += " (" + curator.email + ")";
+                        $(".curation", newRow).append(name).append("<br />");
                     });
                                        
                     // select project

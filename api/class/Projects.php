@@ -37,6 +37,7 @@ class Projects {
                 'id' => $project->id,
                 'name' => $project->name,
                 'description' => $project->description,
+                'status' => $project->status,
                 'active' => $project->active,
                 'parent' => $project->parent,
                 'consultingText' => $project->consultingText,
@@ -66,15 +67,14 @@ class Projects {
                 ];
             }
             
-            // is curator?
-            if(in_array(Auth::getEmail(), iterator_to_array($project->curators)))
-                    $temp['isCurator'] = true;
+            // is curator -- why so complicated?
+            //if(in_array(Auth::getEmail(), iterator_to_array($project->curators)))
+            //        $temp['isCurator'] = true;
             
-            // created, applicants & curators
-            if(Auth::isAdmin()) {
-                // created
-                $temp['created'] = DB::mongo2ApiDate($project->created);
-                        
+            // applicants, curators
+            if(Auth::isCurator($project->id)) {
+                $temp['isCurator'] = true;
+                
                 // add applicants
                 $resultApplicants = DB::$db->users->find([
                     'email' => ['$in' => $project->applicants]
@@ -106,6 +106,12 @@ class Projects {
                 }
             }
             
+            // created
+            if(Auth::isAdmin()) {
+                // created
+                $temp['created'] = DB::mongo2ApiDate($project->created);
+            }
+            
             $projects[] = $temp;
         }
         
@@ -121,6 +127,7 @@ class Projects {
      */
     public static function getOne($id) {
         Auth::checkkey();
+        
         // if admin, get access to all projects
         if(Auth::isAdmin()) {
             $result = DB::$db->projects->findOne(['id' => $id]);
@@ -142,6 +149,7 @@ class Projects {
             'id' => $result->id,
             'name' => $result->name,
             'description' => $result->description,
+            'status' => $result->status,
             'active' => $result->active,
             'parent' => $result->parent,
             'consultingText' => $result->consultingText,
@@ -170,6 +178,11 @@ class Projects {
                 'name' => $parent->name
             ];
         }
+        
+        // is curator?
+        if(Auth::isCurator($project->id)) {
+            $project['isCurator'] = true;
+        } else $project['isCurator'] = false;
             
         // created, applicants & curators
         if(Auth::isAdmin()) {
@@ -373,6 +386,7 @@ class Projects {
             'created' => DB::api2MongoDate(),
             'name' => $name,
             'description' => $description,
+            'status' => '',
             'consultingText' => $consultingText,
             'templateApplication' => $templateApplication,
             'applicationClosing' => $applicationClosing,

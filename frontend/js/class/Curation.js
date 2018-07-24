@@ -6,6 +6,18 @@
  */
 var Curation = {
     /**
+     * Loads the settings section.
+     */
+    loadSettings: function() {
+        var section = $(".project-curation-settings");
+        
+        // status
+        if(typeof Projects.current.status != "undefined") {
+            $("[name='status']", section).val(Projects.current.status);
+        } else $("[name='status']", section).prop("selectedIndex", 0);
+    },
+    
+    /**
      * Loads the upload section.
      */
     loadUpload: function() {
@@ -43,6 +55,20 @@ var Curation = {
         $(".input-description", newFile).attr("name", "description[0]");
     }
 };
+
+
+/*===== Settings =====*/
+
+$(".project-curation-settings form").on("change", "select,input,textarea", function() {
+    API.call("curation/settings/" + Projects.current.id, {
+        "200": function(project) {
+            Projects.current = project;
+        }
+    }, "PUT", $(".project-curation-settings form").serialize());
+});
+
+
+/*===== Uploads =====*/
 
 /** delete file **/
 $(".project-curation-upload .uploads").on("click", "button.delete", function() {

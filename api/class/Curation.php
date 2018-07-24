@@ -3,7 +3,38 @@
 /**
  * Functions for the curation.
  */
-class Curation { 
+class Curation {
+    /**
+     * @api {put} /curation/settings/:projectId Sets the status for the given project.
+     * @apiGroup Curation
+     * @apiSuccess (200) {Object} project The changed project.
+     * @apiError (401) Unauthorized Only admins and for the project registered curators can set the status.
+     */
+    public static function setSettings($projectId) {
+        Auth::checkkey();
+        
+        //*** get project
+        // if admin, get access to all projects
+        if(Auth::isAdmin()) {
+            $project = DB::$db->projects->findOne(['id' => $projectId]);
+        } else {
+            // if user, only active projects where user is curator
+            $project = Auth::isCurator($projectId);
+        }        
+        if(! $project) Helper::exitCleanWithCode(401);
+        
+        parse_str(file_get_contents('php://input'), $data); // get data
+        
+        /** status **/
+        if(array_key_exists('status', $data)) {        
+            DB::$db->projects->updateOne(['id' => $project->id],[
+                '$set' => ['status' => $data['status']]
+            ]);
+        }
+        
+        Projects::getOne($project->id);
+    }
+
     /**
      * @api {get} /curation/uploads/:projectId Gets the curation uploads for the given project.
      * @apiGroup Curation

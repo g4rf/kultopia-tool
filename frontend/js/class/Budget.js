@@ -1,4 +1,4 @@
-/* global Projects, Templates, API, Helper */
+/* global Projects, Templates, API, Helper, Auth */
 
 /**
  * Holds functions for the budget section.
@@ -57,10 +57,12 @@ var Budget = {
                 // update sums
                 Budget.updateSums();
                 
-                // budget closed?
+                // budget closed?)
                 if(Projects.current.budgetClosed) {
-                    $("input", form).attr("readonly", "readonly");
-                    $("a, button", form).addClass("hidden");
+                    if(! Auth.isCurator()) {
+                        $("input", form).attr("readonly", "readonly");
+                        $("a, button", form).addClass("hidden");
+                    }
                     $(".project-budget .closed").removeClass("hidden");
                 } else {                    
                     $("a, button", form).removeClass("hidden");

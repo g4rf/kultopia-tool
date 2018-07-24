@@ -69,7 +69,7 @@
     <div id="menu" class="menu hidden">
 		<div class="bold project-name"></div>
 		<br />
-		<div data-section="project-consulting" class="menu-item">Beratung</div>
+		<div data-section="project-consulting" class="menu-item">Beratung / Infos</div>
         <div data-section="project-application" class="menu-item">Konzeption (Antrag)</div>
         <div data-section="project-budget" class="menu-item">KFP</div>
 		<!--div data-section="project-accounting" class="menu-item">Buchungen</div-->
@@ -78,7 +78,10 @@
 		<!--div data-section="project-uploads" class="menu-item">Dokumente & Bilder</div-->
         <div class="curation hidden">
             <div class="separator">Kuration</div>
-            <div data-section="project-curation-upload" class="menu-item">Upload</div>
+            <div data-section="project-curation-settings" 
+                 class="menu-item">Einstellungen</div>
+            <div data-section="project-curation-upload" 
+                 class="menu-item">Upload</div>
         </div>
     </div>
 
@@ -102,19 +105,15 @@
 		<table><tr class="head">
 			<th>Name</th>
             <th>Antragsstellende</th>
-			<th>Gesamtkosten</th>
-			<th>VwU</th>
-			<th>Abgerufene Mittel</th>
+            <th>Kuration</th>
 			<th>Status</th>
 		</tr><tr class="template">
 			<td class="name"></td>
             <td class="applicants"></td>
-			<td class="total-cost"></td>
-			<td class="administration-cost"></td>
-			<td class="used-funds"></td>
+			<td class="curation"></td>
 			<td class="status"></td>
 		</tr><tr class="no-data">
-			<td colspan="6">Keine Projekte gefunden.</td>
+			<td colspan="4">Keine Projekte gefunden.</td>
 		</tr></table>
 	</div>
 
@@ -158,7 +157,7 @@
         <p class="italic">Alle Eingaben und Änderungen werden sofort 
             gespeichert.</p>
         <p class="hidden red bold closed">Der Antragsschluss ist vorbei. Änderungen
-            am KFP sind nicht mehr möglich.</p>
+            am KFP sind nur noch durch die Kuration möglich.</p>
         
         <table class="total">
             <tr class="expenses">
@@ -236,6 +235,28 @@
         </form>
 	</div>
 
+    <!--***** Kuration: Settings *****-->
+	<div class="project-curation-settings section hidden">
+		<h1>Kuration - Einstellungen</h1>
+        <p class="italic">Alle Eingaben und Änderungen werden sofort 
+            gespeichert.</p>
+        
+        <form>
+            <table><tr>
+                <th>Antragsstatus</th>
+                <td>
+                    <select name="status">
+                        <option value="">--</option>
+                        <option value="in Erstellung">in Erstellung</option>
+                        <option value="beantragt">beantragt</option>
+                        <option value="bewilligt">bewilligt</option>
+                        <option value="abgelehnt">abgelehnt</option>
+                    </select>
+                </td>
+            </tr></table>
+        </form>
+	</div>
+    
     <!--***** Kuration: Upload *****-->
 	<div class="project-curation-upload section hidden">
 		<h1>Kuration - Upload</h1>
