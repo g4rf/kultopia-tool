@@ -1,4 +1,4 @@
-/* global API, Helper, Auth, Administration */
+/* global API, Helper, Auth, Administration, Budget */
 
 /**
  * Holds functions for the projects section.
@@ -59,20 +59,46 @@ var Projects = {
                     $(".status", newRow).append(project.status);
                     $(newRow).addClass(project.status);
                     
-                    // applicants
-                    jQuery.each(project.applicants, function(index, applicant) {
-                        var name = applicant.name;
-                        if(! name) name = applicant.email;
-                        else name += " (" + applicant.email + ")";
-                        $(".applicants", newRow).append(name).append("<br />");
-                    });
-                    // curators
-                    jQuery.each(project.curators, function(index, curator) {
-                        var name = curator.name;
-                        if(! name) name = curator.email;
-                        else name += " (" + curator.email + ")";
-                        $(".curation", newRow).append(name).append("<br />");
-                    });
+                    // expenses & earnings
+                    Budget.getSums(function(expenses, earnings) {
+                        if(expenses != 0) {
+                            $(".expenses", newRow).append(
+                                    Helper.toCurrency(expenses));
+                        }
+                        if(earnings != 0) {
+                            $(".earnings", newRow).append(
+                                    Helper.toCurrency(earnings));
+                        }
+                    }, project.id);
+                    
+                    if(Auth.isCurator()) {
+                        // applicants
+                        jQuery.each(project.applicants, function(index, applicant) {
+                            var name = applicant.name;
+                            if(! name) name = applicant.email;
+                            var a = $("<a />").attr({
+                                "href": "mailto:" + applicant.email,
+                                "title": applicant.email
+                            }).append(name).click(function(e) {
+                                e.stopPropagation();
+                            });
+                            $(".applicants", newRow).append(a).append("<br />");
+                        });
+                        // curators
+                        jQuery.each(project.curators, function(index, curator) {
+                            var name = curator.name;
+                            if(! name) name = curator.email;
+                            var a = $("<a />").attr({
+                                "href": "mailto:" + curator.email,
+                                "title": curator.email
+                            }).append(name).click(function(e) {
+                                e.stopPropagation();
+                            });
+                            $(".curation", newRow).append(a).append("<br />");
+                        });
+                    } else {
+                        $(".applicants, .curation", table).addClass("hidden");
+                    }
                                        
                     // select project
                     newRow.css("cursor", "pointer").click(function() {
@@ -80,7 +106,7 @@ var Projects = {
                         $(".project-name").empty().append(project.name);
                         
                         // show curator menu
-                        if(project.isCurator === true || Auth.isAdmin()) {
+                        if(project.isCurator === true) {
                             $("#menu .curation").removeClass("hidden");
                         } else {
                             $("#menu .curation").addClass("hidden");

@@ -615,7 +615,6 @@ form img {
     font-family: monospace;
     font-size: 1.5em;
     width: 20%;
-    padding: 5px;
     text-align: right;
 }
 .project-budget .currency input {
@@ -627,7 +626,7 @@ form img {
 .project-budget .category {
     font-weight: bold;
     border-top: solid 1px #aaa;
-    margin-bottom: 40px;
+    margin-bottom: 14px;
 }
 .project-budget .category-name {
     width: 77%;
@@ -636,7 +635,6 @@ form img {
 .project-budget .cost-center {
     margin-left: 20px;
     font-weight: normal;
-    margin-bottom: 15px;
     border: dotted 1px #aaa;
     background-color: #ddd;
 }

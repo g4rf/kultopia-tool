@@ -166,6 +166,47 @@ var Budget = {
         $(".earnings .value", total).empty().append(Helper.withComma(earningsSum));
         $(".balance .value", total).empty().append(
                 Helper.withComma(earningsSum - expensesSum));
+    },
+    
+    /**
+     * Returns the expenses and earnings for the given project to a callback.
+     * @param {Function} callback The callback, with parameters func(expenses, earnings).
+     * @param {String} projectId The id of the project. Defaults to Projects.current.id.
+     * @returns The expenses and earning to the callback func(expenses, earnings).
+     */
+    getSums: function(callback, projectId) {
+        var id;
+        if(typeof projectId != "undefined") id = projectId;
+        else if(Projects.current) id = Projects.current.id;
+        else {
+            callback(0, 0);
+            return;
+        }
+            
+        var expensesSum = 0;
+        var earningsSum = 0;
+        
+        API.call("budget/" + id, {
+            "200": function(budget) {
+                // expenses
+                jQuery.each(budget.expenses, function(index, category) {
+                    // cost centers
+                    jQuery.each(category.costcenters, function(index, costcenter) {
+                        // positions
+                        jQuery.each(costcenter.positions, function(index, position) {
+                            expensesSum += Helper.toDecimal(position.value);
+                        });
+                    });
+                });
+
+                // earnings
+                jQuery.each(budget.earnings, function(index, earning) {
+                    earningsSum += Helper.toDecimal(earning.value);
+                });
+
+                callback(expensesSum, earningsSum);                
+            }
+        });
     }
 };
 

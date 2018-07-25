@@ -168,6 +168,7 @@ var Helper = {
     },
     
     toDecimal: function(string) {
+        if(typeof string == "number") return string;
         return parseFloat(string.replace(",", "."));
     }
 };
