@@ -148,10 +148,10 @@ var Budget = {
                     expensesSum += value;
                 });
                 $(".cost-center-value", this).empty()
-                        .append(Helper.withComma(costcenterSum));
+                        .append(Helper.toCurrency(costcenterSum));
             });
             $(".category-value", category).empty()
-                    .append(Helper.withComma(categorySum));
+                    .append(Helper.toCurrency(categorySum));
         });
         
         // earnings
@@ -162,10 +162,10 @@ var Budget = {
         });
         
         // total
-        $(".expenses .value", total).empty().append(Helper.withComma(expensesSum));
-        $(".earnings .value", total).empty().append(Helper.withComma(earningsSum));
+        $(".expenses .value", total).empty().append(Helper.toCurrency(expensesSum));
+        $(".earnings .value", total).empty().append(Helper.toCurrency(earningsSum));
         $(".balance .value", total).empty().append(
-                Helper.withComma(earningsSum - expensesSum));
+                Helper.toCurrency(earningsSum - expensesSum));
     },
     
     /**
