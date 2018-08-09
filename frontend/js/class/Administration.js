@@ -647,7 +647,7 @@ $(".administration-export .start-export").click(function() {
                     // positions
                     jQuery.each(costcenter.positions, function(index, position) {
                         var value = Helper.toDecimal(position.value);
-                        if(! value) return;
+                        //if(! value) return;
                         costcenterSum += value;
                         categorySum += value;
                         expensesSum += value;
@@ -665,7 +665,7 @@ $(".administration-export .start-export").click(function() {
                     $("<tr />").append(
                         $("<td />"),
                         $("<td colspan='3' class='underline' />").append(costcenter.name),
-                        $("<td class='right' />").append(Helper.toCurrency(costcenterSum)))
+                        $("<td class='right underline' />").append(Helper.toCurrency(costcenterSum)))
                     .prependTo(costcenterRows);
                     
                     categoryRows.append(costcenterRows.contents());
@@ -685,7 +685,7 @@ $(".administration-export .start-export").click(function() {
             jQuery.each(Administration.export.budgets[project.id].earnings, function(index, earning) {
                 var value = Helper.toDecimal(earning.value);
                 
-                if(! value) return;
+                //if(! value) return;
                 
                 earningsSum += value;
                 
@@ -693,7 +693,7 @@ $(".administration-export .start-export").click(function() {
                     $("<td />").append(earning.name),
                     $("<td />").append(earning.detail),
                     $("<td />").append(earning.status),
-                    $("<td />").append(Helper.toCurrency(value))
+                    $("<td class='right' />").append(Helper.toCurrency(value))
                 ).appendTo(earnings);
             });
             
