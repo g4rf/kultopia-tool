@@ -72,7 +72,7 @@ class Projects {
             //        $temp['isCurator'] = true;
             
             // applicants, curators
-            if(Auth::isCurator($project->id)) {
+            if(Auth::isAdmin() || Auth::isCurator($project->id)) {
                 $temp['isCurator'] = true;
                 
                 // add applicants
