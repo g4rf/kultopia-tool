@@ -62,22 +62,22 @@ $("#auth button").click(function() {
     
     if(saveCredentials) {
         // save credentials
-        Cookies.set("auth-save-credentials", saveCredentials, { expires: 5 });
-        Cookies.set("auth-email", email, { expires: 5 });
-        Cookies.set("auth-password", password, { expires: 5 });
+        Cookies.set("auth-save-credentials", saveCredentials, { expires: 30 });
+        Cookies.set("auth-email", email, { expires: 30 });
+        Cookies.set("auth-password", password, { expires: 30 });
     } else {
         // delete credentials
-        Cookies.remove("auth-save-credentials", { expires: 5 });
-        Cookies.remove("auth-email", { expires: 5 });
-        Cookies.remove("auth-password", { expires: 5 });
+        Cookies.remove("auth-save-credentials", { expires: 30 });
+        Cookies.remove("auth-email", { expires: 30 });
+        Cookies.remove("auth-password", { expires: 30 });
     }
     
     Auth.login(email, password);
 });
 $("#logout").click(function() {
-    Cookies.remove("auth-save-credentials", { expires: 5 });
-    Cookies.remove("auth-email", { expires: 5 });
-    Cookies.remove("auth-password", { expires: 5 });
+    Cookies.remove("auth-save-credentials", { expires: 30 });
+    Cookies.remove("auth-email", { expires: 30 });
+    Cookies.remove("auth-password", { expires: 30 });
     Auth.logout().always(function() {
         window.location.reload();
     });

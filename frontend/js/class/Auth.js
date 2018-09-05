@@ -135,7 +135,7 @@ var Auth = {
      */
     isCurator: function() {
         if(Auth.isAdmin()) return true;
-        if(Projects.current.isCurator) return true;
+        if(Projects.current && Projects.current.isCurator) return true;
         return false;
     }
 };
