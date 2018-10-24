@@ -186,6 +186,27 @@ if($request[0] == 'download') {
     Budget::update($request[1]);
     
     
+// Documents
+} elseif($request[0] == 'documents') {
+    
+    // get documents
+    if($request[1] == 'files' && $requestMethod == 'GET') {
+        Documents::get($request[2]);
+    // upload documents
+    } elseif($request[1] == 'files' && $requestMethod == 'POST') {
+        Documents::upload($request[2]);
+    // download file
+    } elseif($request[1] == 'file' && $requestMethod == 'GET') {
+        // won't work as we can't download files through ajax
+        Helper::exitCleanWithCode(501);
+        //Documents::download($request[2]);
+    // delete file
+    } elseif($request[1] == 'file' && $requestMethod == 'DELETE') {
+        Documents::delete($request[2]);
+    } else {
+        Helper::exitCleanWithCode(400);
+    }
+    
 // nothing matched - bad request
 } else {
     Helper::exitCleanWithCode(400);

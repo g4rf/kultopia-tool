@@ -1,33 +1,21 @@
 /* global API, Projects, Helper */
 
 /**
- * Holds functions for the curation section.
+ * Holds functions for the documents section.
  * @namespace
  */
-var Curation = {
+var Documents = {  
     /**
-     * Loads the settings section.
+     * Loads the document section.
      */
-    loadSettings: function() {
-        var section = $(".project-curation-settings");
-        
-        // status
-        if(typeof Projects.current.status != "undefined") {
-            $("[name='status']", section).val(Projects.current.status);
-        } else $("[name='status']", section).prop("selectedIndex", 0);
-    },
-    
-    /**
-     * Loads the upload section.
-     */
-    loadUpload: function() {
-        var section = $(".project-curation-upload");
+    load: function() {
+        var section = $(".project-documents");
         var uploads = $(".uploads", section);
         var uploader = $(".uploader", section);
         
         // get uploads
         $(".file", uploads).not(".template").remove();
-        API.call("curation/files/" + Projects.current.id, {
+        API.call("documents/files/" + Projects.current.id, {
             "200": function(files) {
                 if(files.length == 0) {
                     $(".no-data", uploads).removeClass("hidden");
@@ -56,59 +44,45 @@ var Curation = {
     }
 };
 
-
-/*===== Settings =====*/
-
-$(".project-curation-settings form").on("change", "select,input,textarea", function() {
-    API.call("curation/settings/" + Projects.current.id, {
-        "200": function(project) {
-            Projects.current = project;
-        }
-    }, "PUT", $(".project-curation-settings form").serialize());
-});
-
-
-/*===== Uploads =====*/
-
 /** delete file **/
-$(".project-curation-upload .uploads").on("click", "button.delete", function() {
+$(".project-documents .uploads").on("click", "button.delete", function() {
     var info = $(this).parent().data("info");
-    API.call("curation/file/" + info.fileName, {
+    API.call("documents/file/" + info.fileName, {
         "200": function() {
-            Curation.loadUpload();
+            Documents.load();
             Helper.hint(_("Datei gelöscht."));
         },
         "404": function() {
-            Curation.loadUpload();
+            Documents.load();
             Helper.hint(_("Datei nicht (mehr) gefunden."));
         }
     }, "DELETE");
 });
 
 /** add more file fields **/
-$(".project-curation-upload .uploader").on("change", ".input-file", function() {
-    var uploader = $(".project-curation-upload .uploader");
+$(".project-documents .uploader").on("change", ".input-file", function() {
+    var uploader = $(".project-documents .uploader");
     var self = $(this);
     var description = $(".input-description", self.parent());
         
     if(self[0].files.length > 0) {
-        // set focus to description
+        // focus to description
         description.focus();
         
         // add new field
         var length = $(".file", uploader).not(".template").length;
         var newFile = $(".file.template", uploader).clone().removeClass("template")
-                .appendTo(uploader);        
+                .appendTo(uploader);    
         $(".input-file", newFile).attr("name", "file[" + length + "]");
         $(".input-description", newFile).attr("name", "description[" + length + "]");
     }
 });
 
 /** upload button **/
-$(".project-curation-upload button.upload").click(function() {
+$(".project-documents button.upload").click(function() {
     var button = $(this);
-    var uploader = $(".project-curation-upload .uploader");
-    var info = $(".project-curation-upload .upload-info");
+    var uploader = $(".project-documents .uploader");
+    var info = $(".project-documents .upload-info");
     var data = new FormData();
     
     button.hide();
@@ -124,11 +98,11 @@ $(".project-curation-upload button.upload").click(function() {
     
     info.empty().append(_("Lade Dateien hoch. Bitte warten..."));
     
-    API.call("curation/files/" + Projects.current.id, {
+    API.call("documents/files/" + Projects.current.id, {
         "200": function() {
             info.empty();
             button.show();
-            Curation.loadUpload();
+            Documents.load();
             Helper.hint(_("Dateien hochgeladen."));
         }
     }, "POST", data, null, {

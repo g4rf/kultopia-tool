@@ -5,6 +5,7 @@
  */
 class Files {    
     const CURATION_INFO = 'curation-info';
+    const PROJECT_DOCUMENT = 'project-document';
     
     /**
      * Downloads a file.

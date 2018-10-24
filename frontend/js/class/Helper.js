@@ -4,7 +4,12 @@
  * Holds some general functions.
  * @namespace
  */
-var Helper = {    
+var Helper = {
+    /**
+     * Creates the api call for a download request.
+     * @param {String} fileName The fileName to download.
+     * @returns {String} The full api request url.
+     */
     createDownloadLink: function(fileName) {
        return Config.apiUrl + "download/" + fileName;
     },

@@ -296,6 +296,35 @@ form img {
 	height: auto;
 }
 
+/* uploads */
+.uploads .file {
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.uploads .file:hover {
+    background-color: #eee;
+}
+.uploads .file .description,
+.uploads .file .delete,
+.uploads .file .download {
+    display: inline-block;
+    vertical-align: top;
+}
+.uploads .file .download {
+    margin-top: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.uploader .file {
+    border: dotted 1px #888;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
 /*
  * animations 
  */
@@ -659,34 +688,6 @@ form img {
 }
 .project-budget .earning-status {
     width: 13%;
-}
-
-/***** curation upload *****/
-.project-curation-upload .uploads .file {
-    position: relative;
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-}
-.project-curation-upload .uploads .file:hover {
-    background-color: #eee;
-}
-.project-curation-upload .uploads .file .description,
-.project-curation-upload .uploads .file .delete,
-.project-curation-upload .uploads .file .download {
-    display: inline-block;
-    vertical-align: top;
-}
-.project-curation-upload .uploads .file .download {
-    margin-top: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.project-curation-upload .uploader .file {
-    border: dotted 1px #888;
-    padding: 10px;
 }
 
 /***** administration export *****/
