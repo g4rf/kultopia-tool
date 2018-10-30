@@ -71,6 +71,19 @@ var Projects = {
                         }
                     }, project.id);
                     
+                    // earnings Kulturjhar Sucht
+                    if(Auth.isCurator()) {
+                        API.call("budget/" + project.id, {
+                            "200": function(budget) {
+                                if(budget.earnings[0].value) {
+                                    $(".earning-first", newRow).append(
+                                        Helper.toCurrency(budget.earnings[0].value));
+                                }
+                            }
+                        });
+                    }
+                    
+                    // applicants & curators
                     if(Auth.isCurator()) {
                         // applicants
                         jQuery.each(project.applicants, function(index, applicant) {

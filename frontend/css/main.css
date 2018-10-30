@@ -613,6 +613,9 @@ form img {
 .projects tr.abgelehnt td:first-child {
     background-color:  #fcc;
 }
+.projects .earning-first {
+    color: #888;
+}
 
 /***** consulting *****/
 .project-consulting .uploads .file {
