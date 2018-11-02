@@ -62,18 +62,18 @@ class Budget {
         
         //*** get data
         parse_str(file_get_contents('php://input'), $data);
-        
+                
         //*** get budget        
         $id = $project->budgetId;
         
-        // delete existing budget
-        DB::$db->budgets->deleteOne(['id' => $id]);
+        // delete existing budget (using deleteMany is needed as through 
+        // race conditions there can be temporarily more then one budget)
+        DB::$db->budgets->deleteMany(['id' => $id]);
         
         // build new one
-        $budget = $data;
-        $budget['id'] = $id;
-        $budget = (object)$budget;
-        
+        $data['id'] = $id;
+        $budget = (object)$data;
+                
         // insert budget in database
         DB::$db->budgets->insertOne($budget);
         

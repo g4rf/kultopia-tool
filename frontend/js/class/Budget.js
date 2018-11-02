@@ -5,6 +5,8 @@
  * @namespace
  */
 var Budget = {
+    keyTimer: null,
+    
     /**
      * Loads the current budget form and the data from the database.
      */
@@ -212,8 +214,11 @@ var Budget = {
 
 /** save inputs, calculate sums **/
 $(".project-budget form").on("keyup", "textare, input", function() {
-    Budget.save();
-    Budget.updateSums();
+    window.clearTimeout(Budget.keyTimer);
+    Budget.keyTimer = window.setTimeout(function() {
+        Budget.save();
+        Budget.updateSums();        
+    }, 1000);
 });
 
 /** add  **/
