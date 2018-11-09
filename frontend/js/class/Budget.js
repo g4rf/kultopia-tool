@@ -1,4 +1,4 @@
-/* global Projects, Templates, API, Helper, Auth */
+/* global Projects, Templates, API, Helper, Auth, Config */
 
 /**
  * Holds functions for the budget section.
@@ -11,6 +11,13 @@ var Budget = {
      * Loads the current budget form and the data from the database.
      */
     load: function() {
+        // update export-to-csv link
+        if(Auth.isCurator()) {
+            $(".project-budget .export-to-csv").attr("href", 
+                Config.apiUrl + "budget/export/" + Projects.current.id)
+                        .removeClass("hidden");
+        }
+        
         // load budget from database    
         API.call("budget/" + Projects.current.id, {
             "200": function(budget) {

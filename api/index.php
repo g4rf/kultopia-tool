@@ -180,7 +180,11 @@ if($request[0] == 'download') {
     
 // Budget
 } elseif($request[0] == 'budget' && $requestMethod == 'GET') {
-    Budget::get($request[1]);
+    if($request[1] == 'export') {
+        Budget::export($request[2]);
+    } else {
+        Budget::get($request[1]);
+    }
     
 } elseif($request[0] == 'budget' && $requestMethod == 'PUT') {
     Budget::update($request[1]);

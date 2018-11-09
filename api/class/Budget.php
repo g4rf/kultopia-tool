@@ -23,7 +23,7 @@ class Budget {
         }
         if(! $project) Helper::exitCleanWithCode(401);
         
-        //*** get application
+        //*** get budget
         $budget = DB::$db->budgets->findOne([
             'id' => $project->budgetId
         ],[
@@ -32,6 +32,100 @@ class Budget {
         if(! $budget) $budget = new stdClass();
         
         print json_encode($budget);
+    }
+    
+    /**
+     * Exports the budget to an CSV file.
+     * @param String $projectId The id of the project of the budget.
+     */
+    public static function export($projectId) {
+        //Auth::checkkey();
+        
+        //*** get project
+        // if admin, get access to all projects
+        //if(Auth::isAdmin()) {
+            $project = DB::$db->projects->findOne(['id' => $projectId]);
+        //} else {
+            // if user, only active projects where user is curator
+        //    $project = Auth::isCurator($projectId);
+        //}
+        
+        // NotFound
+        if(! $project) {
+            ob_clean();
+            http_response_code(404);
+            exit;
+        }
+        
+        //*** get budget
+        $budget = DB::$db->budgets->findOne([
+            'id' => $project->budgetId
+        ],[
+            'projection' => ['_id' => 0, 'id' => 0]
+        ]);
+        if(! $budget) $budget = new stdClass();
+        
+        // Ausgaben
+        $csv = "Ausgaben\t\t\t\t\t\t\t";
+        $row = 1 + 1;
+        
+        $expenses = '';
+        $expFrom = $row + 1;
+        foreach($budget->expenses as $expense) {
+            $expenses .= "{$expense->name}\t\t\t\t\t\t";
+            $row++; $row++;
+            
+            // costcenters
+            $costcenters = '';
+            $ccFrom = $row;
+            foreach($expense->costcenters as $costcenter) {
+                $costcenters .= "\t{$costcenter->name}\t\t\t\t";
+                $row++;
+                
+                // positions
+                $positions = '';
+                $posFrom = $row;
+                foreach($costcenter->positions as $position) {
+                    $positions .= "\t\t{$position->name}\t{$position->detail}\t{$position->value}\n";
+                    $row++;
+                }
+                
+                $costcenters .= "=SUMME(E$posFrom:E$row)\n$positions";
+            }
+            
+            $expenses .= "=SUMME(F$ccFrom:F$row)\n$costcenters\n";         
+        }
+        $csv .= "=SUMME(G$expFrom:G$row)\n\n$expenses";
+        
+        // Einnahmen
+        $csv .= "\n\nEinnahmen\t\t\t\t\t\t\t";
+        $row++; $row++; $row++;
+        
+        $earnings = '';
+        $earnFrom = $row + 1;
+        foreach($budget->earnings as $earning) {           
+            $earnings .= "\t{$earning->name}\t{$earning->detail}\t{$earning->status}\t{$earning->value}\n";
+            $row++;
+        }
+        $csv .= "=SUMME(E$earnFrom:E$row)\n$earnings";
+        
+
+        ob_clean(); // clear output buffer        
+        http_response_code(200); // response code
+        
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/plain;');
+        header('Content-Type: text/comma-separated-values; charset=utf-8');
+        header('Content-Disposition: attachment; filename="KFP ' . $project->name . '.csv"');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . strlen($csv));
+        
+        print $csv;
+        
+        exit;
     }
    
     /**
