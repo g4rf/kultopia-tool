@@ -17,6 +17,9 @@
 		
 		"pear/Mail": "^1.4",
 		"pear/net_smtp": "^1.7",
-		"pear/auth_sasl": "^1.1"
+		"pear/auth_sasl": "^1.1",
+        
+        "pear/spreadsheet_excel_writer": "^0.9.4",
+        "pear/ole": "@dev"
     }
 }

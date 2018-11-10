@@ -135,4 +135,13 @@ class Helper {
         
         file_put_contents($file, $log, FILE_APPEND);
     }
+    
+    /**
+     * Converts a german number to a float.
+     * @param string $string The number.
+     * @return float The float value.
+     */
+    public static function convertDe2Decimal($string) {
+        return floatval(str_replace(',', '.', str_replace('.', '', $string)));
+    }
 }

@@ -13,9 +13,12 @@ var Budget = {
     load: function() {
         // update export-to-csv link
         if(Auth.isCurator()) {
-            $(".project-budget .export-to-csv").attr("href", 
+            $(".project-budget .export-to-excel").attr("href", 
                 Config.apiUrl + "budget/export/" + Projects.current.id)
                         .removeClass("hidden");
+        } else {
+            $(".project-budget .export-to-excel").attr("href", "")
+                .addClass("hidden");
         }
         
         // load budget from database    
