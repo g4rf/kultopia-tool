@@ -304,6 +304,227 @@ class Budget {
         $workbook->close();
         exit;
     }
+    
+    /**
+     * Tests the export of the budget to an Excel file.
+     * @param String $projectId The id of the project of the budget.
+     */
+    public static function exportTest($projectId) {
+        $project = DB::$db->projects->findOne(['id' => $projectId]);
+        
+        // NotFound
+        if(! $project) {
+            ob_clean();
+            http_response_code(404);
+            exit;
+        }
+        
+        //*** get budget
+        $budget = DB::$db->budgets->findOne([
+            'id' => $project->budgetId
+        ],[
+            'projection' => ['_id' => 0, 'id' => 0]
+        ]);
+        if(! $budget) $budget = new stdClass();
+        
+        //*** header
+        ob_clean();
+        http_response_code(200);
+        header('Expires: 0');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+                
+        //*** column indexes
+        $A = 0; $B = 1; $C = 2; $D = 3; $E = 4; $F = 5; $G = 6; $H = 7; $I = 8;
+        
+        //*** create excel
+        $workbook = new Spreadsheet_Excel_Writer();
+        $workbook->setVersion(8); // Excel97 - 2003
+
+        // sending HTTP headers
+        $workbook->send("KFP {$project->name}.xls");
+
+        // creating a worksheet
+        $kfp =& $workbook->addWorksheet('KFP');
+        
+        // set encoding
+        $kfp->setInputEncoding('UTF-8');
+        
+        // adding formats
+        $currency = '#,##0.00 [$€];[Red]-#,##0.00 [$€]';
+        
+        $lightred = 20;
+        $workbook->setCustomColor($lightred, 255, 200, 200);
+        $lightgreen = 21;
+        $workbook->setCustomColor($lightgreen, 200, 255, 200);
+        $gray = 22;
+        $workbook->setCustomColor($gray, 175, 175, 175);
+        $lightgray = 23;
+        $workbook->setCustomColor($lightgray, 210, 210, 210);
+        
+        $formatBold =& $workbook->addFormat();
+        $formatBold->setBold();
+        
+        $formatBoldCenter =& $workbook->addFormat();
+        $formatBoldCenter->setBold();
+        $formatBoldCenter->setAlign('center');
+        
+        $formatExpenses =& $workbook->addFormat();
+        $formatExpenses->setBold();
+        $formatExpenses->setFgColor($lightred);
+        $formatExpenses->setNumFormat($currency);
+        
+        $formatEarnings =& $workbook->addFormat();
+        $formatEarnings->setBold();
+        $formatEarnings->setFgColor($lightgreen);
+        $formatEarnings->setNumFormat($currency);
+        
+        $formatCategory =& $workbook->addFormat();
+        $formatCategory->setBold();
+        $formatCategory->setBottom(1);
+        $formatCategory->setBottomColor('black');        
+        $formatCategory->setNumFormat($currency);
+        $formatCategory->setFgColor($gray);
+        
+        $formatCostcenter =& $workbook->addFormat();
+        $formatCostcenter->setNumFormat($currency);
+        $formatCostcenter->setFgColor($lightgray);
+        
+        $formatCostcenterCurrency =& $workbook->addFormat();
+        $formatCostcenterCurrency->setBold();
+        $formatCostcenterCurrency->setNumFormat($currency);
+        $formatCostcenterCurrency->setFgColor($lightgray);
+        
+        $formatPosition =& $workbook->addFormat();
+        $formatPosition->setNumFormat($currency);
+        
+        $formatDifference =& $workbook->addFormat();
+        $formatDifference->setBold();
+        $formatDifference->setAlign('right');
+        $formatDifference->setNumFormat($currency);
+        
+        // meta
+        $kfp->writeString(0, $A, 'Projektname:', $formatBold);
+        $kfp->writeString(0, $B, $project->name);
+        $kfp->writeString(1, $A, 'Beschreibung:', $formatBold);
+        $kfp->writeString(1, $B, $project->description);
+        $kfp->writeString(2, $A, 'Status:', $formatBold);
+        $kfp->writeString(2, $B, $project->status);
+        $kfp->writeString(3, $A, 'Kontakt:', $formatBold);
+        $kfp->writeString(3, $B, implode(', ', iterator_to_array($project->applicants)));
+        
+        // headlines
+        $kfp->writeString(4, $D, 'Antrag', $formatBoldCenter);
+        $kfp->writeString(4, $E, 'Korrektur', $formatBoldCenter);
+        $kfp->writeString(4, $F, 'Final', $formatBoldCenter);
+        
+        // Ausgaben
+        $expStartRow = 6;
+        $kfp->writeRow($expStartRow, $A, ['Ausgaben','','','','',''], $formatExpenses);
+        
+        $row = $expStartRow + 2;
+        $catStartRow = $row;
+        $catDCells = []; $catECells = []; $catFCells = [];
+        foreach($budget->expenses as $category) {
+            $kfp->writeRow($row, $A, [$category->name,'','','','',''],
+                    $formatCategory);
+            $catRow = $row;
+            $row++;
+            $catDCells[] = "D$row";
+            $catECells[] = "E$row";
+            $catFCells[] = "F$row";
+            
+            // costcenters
+            $ccStartRow = $row;
+            if(! empty($category->costcenters)) {
+                $ccDCells = []; $ccECells = []; $ccFCells = [];
+                foreach($category->costcenters as $costcenter) {
+                    $kfp->writeRow($row, $A, [$costcenter->name,'','','','',''],
+                            $formatCostcenter);
+                    $ccRow = $row;
+                    $row++;
+                    $ccDCells[] = "D$row";
+                    $ccECells[] = "E$row";
+                    $ccFCells[] = "F$row";
+                    
+                    // positions
+                    $posStartRow = $row + 1;
+                    if(! empty($costcenter->positions)) {
+                        foreach($costcenter->positions as $position) {
+                            $kfp->writeRow($row, $B,
+                                    [$position->name, $position->detail, 
+                                        Helper::convertDe2Decimal($position->value),'',''],
+                                    $formatPosition);
+                            $row++;
+                        }
+                    }
+
+                    $kfp->writeFormula($ccRow, $D, "=SUM(D$posStartRow:D$row)", 
+                            $formatCostcenterCurrency);
+                    $kfp->writeFormula($ccRow, $E, "=SUM(E$posStartRow:E$row)", 
+                            $formatCostcenterCurrency);
+                    $kfp->writeFormula($ccRow, $F, "=SUM(F$posStartRow:F$row)", 
+                            $formatCostcenterCurrency);
+                }
+            }
+            
+            $kfp->writeFormula($catRow, $D, '=SUM(' . implode(',', $ccDCells) . ')', 
+                        $formatCategory);
+            $kfp->writeFormula($catRow, $E, '=SUM(' . implode(',', $ccECells) . ')', 
+                        $formatCategory);
+            $kfp->writeFormula($catRow, $F, '=SUM(' . implode(',', $ccFCells) . ')', 
+                        $formatCategory);
+            $row++; // empty row
+        }
+        $kfp->writeFormula($expStartRow, $D, '=SUM(' . implode(',', $catDCells) . ')', 
+                $formatExpenses);
+        $kfp->writeFormula($expStartRow, $E, '=SUM(' . implode(',', $catECells) . ')', 
+                $formatExpenses);
+        $kfp->writeFormula($expStartRow, $F, '=SUM(' . implode(',', $catFCells) . ')', 
+                $formatExpenses);
+        
+        $row++;
+        
+        // earnings
+        $earnRow = $row;
+        $kfp->writeRow($earnRow, $A, ['Einnahmen','','','','',''], $formatEarnings);
+        $row++;
+        
+        $earnStartRow = $row + 1;
+        foreach($budget->earnings as $earning) {           
+            $kfp->writeRow($row, $A,
+                [$earning->name, $earning->detail, $earning->status,
+                    Helper::convertDe2Decimal($earning->value), '', ''],
+                $formatPosition);
+            $row++;
+        }
+        $row++;
+        $kfp->writeFormula($earnRow, $D, "=SUM(D$earnStartRow:D$row)", 
+                $formatEarnings);
+        $kfp->writeFormula($earnRow, $E, "=SUM(E$earnStartRow:E$row)", 
+                $formatEarnings);
+        $kfp->writeFormula($earnRow, $F, "=SUM(F$earnStartRow:F$row)", 
+                $formatEarnings);
+        
+        // difference: earnings - expenses
+        $row++; $earnRow++; $expStartRow++;
+        $kfp->writeString($row, $C, 'Differenz:', $formatDifference);
+        $kfp->writeFormula($row, $D, '=D' . $earnRow . ' - D' . $expStartRow, 
+                $formatDifference);
+        $kfp->writeFormula($row, $E, '=E' . $earnRow . ' - E' . $expStartRow, 
+                $formatDifference);
+        $kfp->writeFormula($row, $F, '=F' . $earnRow . ' - F' . $expStartRow, 
+                $formatDifference);
+        
+        // set widths
+        $kfp->setColumn($A, $A, 15);
+        $kfp->setColumn($B, $C, 40);
+        $kfp->setColumn($D, $G, 12);
+
+        // send the file
+        $workbook->close();
+        exit;
+    }
    
     /**
      * @api {put} /budget/:projectId Updates the budget for the given project. Attention: As fields may disappear in a budget, the whole budget will be replaced by the given one.

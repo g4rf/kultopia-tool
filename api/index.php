@@ -182,6 +182,8 @@ if($request[0] == 'download') {
 } elseif($request[0] == 'budget' && $requestMethod == 'GET') {
     if($request[1] == 'export') {
         Budget::export($request[2]);
+    } elseif($request[1] == 'export-test') {
+        Budget::exportTest($request[2]);
     } else {
         Budget::get($request[1]);
     }

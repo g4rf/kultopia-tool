@@ -20,6 +20,14 @@ var Budget = {
             $(".project-budget .export-to-excel").attr("href", "")
                 .addClass("hidden");
         }
+        if(Auth.isCurator()) {
+            $(".project-budget .export-to-excel-test").attr("href", 
+                Config.apiUrl + "budget/export-test/" + Projects.current.id)
+                        .removeClass("hidden");
+        } else {
+            $(".project-budget .export-to-excel-test").attr("href", "")
+                .addClass("hidden");
+        }
         
         // load budget from database    
         API.call("budget/" + Projects.current.id, {
