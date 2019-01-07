@@ -12,14 +12,9 @@ var Budget = {
      */
     load: function() {
         // update export-to-csv link
-        if(Auth.isCurator()) {
-            $(".project-budget .export-to-excel").attr("href", 
-                Config.apiUrl + "budget/export/" + Projects.current.id)
-                        .removeClass("hidden");
-        } else {
-            $(".project-budget .export-to-excel").attr("href", "")
-                .addClass("hidden");
-        }
+        $(".project-budget .export-to-excel").attr("href", 
+            Config.apiUrl + "budget/export/" + Projects.current.id)
+                    .removeClass("hidden");
         /*if(Auth.isCurator()) {
             $(".project-budget .export-to-excel-test").attr("href", 
                 Config.apiUrl + "budget/export-test/" + Projects.current.id)
